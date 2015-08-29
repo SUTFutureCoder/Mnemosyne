@@ -1,4 +1,4 @@
 # Mnemosyne
-Project M
-###计算机03阿星 富帅 板砖联合出品
-test
+project M
+项目简介
+为迎接大四毕业准备的非纸质同学录计划
