@@ -55,7 +55,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @var	string
  *
  */
-	define('CI_VERSION', '3.0.2');
+	define('CI_VERSION', '3.0.0');
 
 /*
  * ------------------------------------------------------
@@ -528,7 +528,7 @@ if ( ! is_php('5.4'))
  *  Send the final rendered output to the browser
  * ------------------------------------------------------
  */
-	if ($EXT->call_hook('display_override') === FALSE)
+	if ($EXT->call_hook('display_override') === FALSE && !defined('PHPUNIT_TEST'))
 	{
 		$OUT->_display();
 	}
