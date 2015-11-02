@@ -99,6 +99,34 @@ class Response{
      * @param null $data
      */
     public function jsonSuccess($data = null){
-
+        $this->json(self::CODE_SUCCESS, 'ok', $data);
     }
+
+    /*
+     * 失败返回
+     *
+     * @param int $status
+     * @param string $description
+     */
+    public function jsonFail($status, $description = ''){
+        $description = $description ? $description :
+            (isset(self::$failDescList[$status]) ? self::$failDescList[$status] : $description);
+        $this->json($status, $description);
+    }
+
+    /*
+     * json格式发送
+     */
+    public function json($status, $description, $data = null){
+        header(self::HEADER_CONTENT_TYPE_JSON);
+        $retArr = array(
+            'status'        => $status,
+            'description'   => $description,
+        );
+
+        $data === null || $retArr['data'] = $data;
+        echo json_encode($retArr);
+        exit;
+    }
+
 }
