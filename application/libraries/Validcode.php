@@ -18,6 +18,7 @@ class Validcode{
             //使用第三方极限验证进行确认是否已经通过验证,需要使用原生session实现
             session_start();
             if ($_SESSION['gtMnemosyneValid'] === 1){
+                unset($_SESSION['gtMnemosyneValid']);
                 return true;
             }
         }

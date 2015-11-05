@@ -8,6 +8,8 @@
 class Account extends CI_Controller{
     public function __construct(){
         parent::__construct();
+        $this->load->library('validator.php');
+        $this->load->library('Response');
     }
 
     /**
@@ -37,7 +39,15 @@ class Account extends CI_Controller{
         $userMobile = $this->input->post('user_mobile', true);
         $userEmail  = $this->input->post('user_email',  true);
 
-        $clean = array();
+        if (!(Validator::isNotEmpty($userName,      '您的姓名不能为空')
+                && Validator::isNotEmpty($school,   '您的学校名称不能为空')
+                && Validator::isNotEmpty($class,    '您的班级不能为空')
+                && Validator::isNotEmpty($userMobile, '您的手机号码不能为空')
+                && Validator::isMobile($userMobile, '请输入合法的手机号码')
+                && Validator::isNotEmpty($userEmail,  '您的邮箱地址不能为空')
+                && Validator::isEmail($userEmail,   '请输入合法的邮箱地址'))){
+            $this->response->jsonFail(Response::CODE_PARAMS_WRONG, Validator::getMessage());
+        }
 
     }
 }
