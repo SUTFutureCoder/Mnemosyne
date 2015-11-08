@@ -30,24 +30,38 @@ class Account extends CI_Controller{
     public function regist(){
         //验证是否通过验证码验证
         $this->load->library('validcode');
+        $this->load->library('Token');
         $this->validcode->checkValidCodeAccess();
 
 
-        $userName   = $this->input->post('user_name',   true);
-        $school     = $this->input->post('school',      true);
-        $class      = $this->input->post('class',       true);
-        $userMobile = $this->input->post('user_mobile', true);
-        $userEmail  = $this->input->post('user_email',  true);
+        $userName   = trim($this->input->post('user_name',   true));
+        $school     = trim($this->input->post('school',      true));
+        $class      = trim($this->input->post('class',       true));
+        $userMobile = trim($this->input->post('user_mobile', true));
+        $userEmail  = trim($this->input->post('user_email',  true));
 
         if (!(Validator::isNotEmpty($userName,      '您的姓名不能为空')
+                && Validator::mbStringRange($userName, 0, 30, '您的姓名不能超过30个字符')
                 && Validator::isNotEmpty($school,   '您的学校名称不能为空')
+                && Validator::mbStringRange($school, 0, 30, '您的学校名称不能超过30个字符')
                 && Validator::isNotEmpty($class,    '您的班级不能为空')
+                && Validator::mbStringRange($class, 0, 30, '您的班级名称不能超过30个字符')
                 && Validator::isNotEmpty($userMobile, '您的手机号码不能为空')
                 && Validator::isMobile($userMobile, '请输入合法的手机号码')
                 && Validator::isNotEmpty($userEmail,  '您的邮箱地址不能为空')
                 && Validator::isEmail($userEmail,   '请输入合法的邮箱地址'))){
             $this->response->jsonFail(Response::CODE_PARAMS_WRONG, Validator::getMessage());
         }
+
+        //获取学校id
+
+        //获取班级id
+
+        //录入数据库
+
+        //返回token
+
+
 
     }
 }

@@ -21,7 +21,7 @@ class Token{
     }
 
     public function setTokenToRedis($userId, $token = '', $tokenType = 'access', $expire = 86400){
-        $this->load->library('RedisLib');
+        $this->_ci->load->library('RedisLib');
         if (empty($token)){
             $token = $this->getToken($userId);
         }
@@ -35,7 +35,7 @@ class Token{
             return false;
         }
 
-        $this->load->library('RedisLib');
+        $this->_ci->load->library('RedisLib');
         $redis = RedisLib::getInstance();
 
         if ($userToken !== $redis->get(RedisLib::$prefix . $this->_prefix . $tokenType . $userId)){
