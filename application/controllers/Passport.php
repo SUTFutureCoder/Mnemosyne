@@ -13,6 +13,7 @@ class Passport extends CI_Controller{
     public function testToken(){
         $this->load->library('Token');
         $token = $this->token->getToken('123456789', 'abc123');
+        echo $token;
     }
 
 }
