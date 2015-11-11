@@ -30,7 +30,21 @@ class Token{
         return $redis->setex(RedisLib::$prefix . $this->_prefix . $tokenType . $userId, $expire, $token);
     }
 
+    public function checkToken($userId, $userToken, $tokenType = 'access'){
+        if (empty($userId) || empty($userToken)){
+            return false;
+        }
 
+        $this->load->library('RedisLib');
+        $redis = RedisLib::getInstance();
+
+        if ($userToken !== $redis->get(RedisLib::$prefix . $this->_prefix . $tokenType . $userId)){
+            return false;
+        }
+
+        return true;
+
+    }
 
 
 }
