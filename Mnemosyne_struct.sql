@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS `academe` (
   KEY `academe_id` (`academe_id`,`academe_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='学院表' AUTO_INCREMENT=1 ;
 
+
 -- --------------------------------------------------------
 
 --
