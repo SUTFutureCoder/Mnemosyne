@@ -1,9 +1,15 @@
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
 
 --
 -- 数据库: `mnemosyne`
 --
-CREATE DATABASE IF NOT EXISTS `mnemosyne` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
-USE `mnemosyne`;
 
 -- --------------------------------------------------------
 
@@ -11,7 +17,6 @@ USE `mnemosyne`;
 -- 表的结构 `class`
 --
 
-DROP TABLE IF EXISTS `class`;
 CREATE TABLE IF NOT EXISTS `class` (
   `class_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '班级id',
   `class_name` char(32) NOT NULL COMMENT '班级名称',
@@ -26,13 +31,19 @@ CREATE TABLE IF NOT EXISTS `class` (
 -- 表的结构 `school`
 --
 
-DROP TABLE IF EXISTS `school`;
 CREATE TABLE IF NOT EXISTS `school` (
   `school_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '学校id',
-  `school_name` char(20) NOT NULL COMMENT '学校名称',
+  `school_name` varchar(32) NOT NULL COMMENT '学校名称',
   PRIMARY KEY (`school_id`),
   KEY `school_name` (`school_name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='学校表' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='学校表' AUTO_INCREMENT=2 ;
+
+--
+-- 转存表中的数据 `school`
+--
+
+INSERT INTO `school` (`school_id`, `school_name`) VALUES
+(1, '沈阳工业大学');
 
 -- --------------------------------------------------------
 
@@ -40,7 +51,6 @@ CREATE TABLE IF NOT EXISTS `school` (
 -- 表的结构 `school_class_user_map`
 --
 
-DROP TABLE IF EXISTS `school_class_user_map`;
 CREATE TABLE IF NOT EXISTS `school_class_user_map` (
   `map_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '关联表id',
   `school_id` int(11) NOT NULL COMMENT '学校id',
@@ -56,14 +66,13 @@ CREATE TABLE IF NOT EXISTS `school_class_user_map` (
 -- 表的结构 `user`
 --
 
-DROP TABLE IF EXISTS `user`;
 CREATE TABLE IF NOT EXISTS `user` (
   `user_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '用户id',
-  `user_name` varchar(20) NOT NULL COMMENT '用户姓名',
+  `user_name` varchar(32) NOT NULL COMMENT '用户姓名',
   `user_birthday` date NOT NULL COMMENT '用户生日',
   `user_sex` tinyint(4) NOT NULL COMMENT '用户性别',
   `user_password` varchar(256) NOT NULL COMMENT '用户密码',
-  `user_mobile` char(11) NOT NULL COMMENT '用户联系方式',
+  `user_mobile` varchar(16) NOT NULL COMMENT '用户联系方式',
   `user_email` varchar(64) NOT NULL COMMENT '用户email',
   `user_sign` varchar(256) NOT NULL COMMENT '用户签名',
   `user_status` tinyint(4) NOT NULL COMMENT '用户状态',
@@ -73,3 +82,6 @@ CREATE TABLE IF NOT EXISTS `user` (
   KEY `user_name` (`user_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户表' AUTO_INCREMENT=1 ;
 
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
