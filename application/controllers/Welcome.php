@@ -42,4 +42,9 @@ class Welcome extends CI_Controller {
 	public function testUnitTest(){
 		return 'hello world';
 	}
+
+	public function testSchoolId(){
+		$this->load->model('school');
+		echo $this->school->getSchoolId('沈阳工业大学');
+	}
 }

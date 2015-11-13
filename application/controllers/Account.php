@@ -31,7 +31,11 @@ class Account extends CI_Controller{
         //验证是否通过验证码验证
         $this->load->library('validcode');
         $this->load->library('Token');
-        $this->validcode->checkValidCodeAccess();
+
+
+        if (!$this->validcode->checkValidCodeAccess()){
+            $this->response->jsonFail(Response::CODE_UNAUTHORIZED, '请输入正确的验证码');
+        }
 
 
         $userName   = trim($this->input->post('user_name',   true));
@@ -53,13 +57,27 @@ class Account extends CI_Controller{
             $this->response->jsonFail(Response::CODE_PARAMS_WRONG, Validator::getMessage());
         }
 
+        $this->load->model('SchoolModels');
+        $this->load->model('ClassModels');
+
         //获取学校id
+        if (!$schoolId = $this->SchoolModels->getSchoolIdByName($school)){
+            $this->response->jsonFail(Response::CODE_PARAMS_WRONG, '抱歉，您的学校还未开放服务。请联系admin@bricksfx.cn');
+        }
 
         //获取班级id
+        if (!$classId  = $this->ClassModels->getClassIdByName($class)){
+            $this->response->jsonFail(Response::CODE_PARAMS_WRONG, '抱歉，请选择已有班级');
+        }
 
         //录入数据库
 
+
+        $userId = 0;
         //返回token
+        $this->response->jsonSuccess(array(
+            'token' => $this->token->setTokenToRedis($userId),
+        ));
 
 
 

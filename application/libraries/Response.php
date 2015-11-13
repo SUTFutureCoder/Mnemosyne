@@ -87,13 +87,6 @@ class Response{
     );
 
     /*
-     * 私有化构造函数，防止new
-     */
-    private function __construct(){
-
-    }
-
-    /*
      * 成功返回
      *
      * @param null $data
