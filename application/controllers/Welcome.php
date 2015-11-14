@@ -1,6 +1,16 @@
 <?php
+/**
+ * Api for Init pages
+ *
+ *
+ * @author  *Chen <linxingchen@baidu.com>
+ */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+/**
+ * A class to provide api for init
+ *
+ */
 class Welcome extends CI_Controller {
 
 	/**
@@ -21,5 +31,15 @@ class Welcome extends CI_Controller {
 	public function index()
 	{
 		$this->load->view('welcome_message');
+	}
+
+    /**
+     * Show how to test api in phpunit
+     *
+     *
+     * @access public
+     */
+	public function testUnitTest(){
+		return 'hello world';
 	}
 }
