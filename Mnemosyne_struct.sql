@@ -1,8 +1,11 @@
 
+-- --------------------------------------------------------
+
 --
 -- 表的结构 `academe`
 --
 
+DROP TABLE IF EXISTS `academe`;
 CREATE TABLE IF NOT EXISTS `academe` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `academe_id` char(16) NOT NULL,
@@ -11,13 +14,13 @@ CREATE TABLE IF NOT EXISTS `academe` (
   KEY `academe_id` (`academe_id`,`academe_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='学院表' AUTO_INCREMENT=1 ;
 
-
 -- --------------------------------------------------------
 
 --
 -- 表的结构 `class`
 --
 
+DROP TABLE IF EXISTS `class`;
 CREATE TABLE IF NOT EXISTS `class` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
   `class_id` char(16) NOT NULL,
@@ -34,6 +37,7 @@ CREATE TABLE IF NOT EXISTS `class` (
 -- 表的结构 `major`
 --
 
+DROP TABLE IF EXISTS `major`;
 CREATE TABLE IF NOT EXISTS `major` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `major_id` char(16) NOT NULL,
@@ -48,6 +52,7 @@ CREATE TABLE IF NOT EXISTS `major` (
 -- 表的结构 `school`
 --
 
+DROP TABLE IF EXISTS `school`;
 CREATE TABLE IF NOT EXISTS `school` (
   `school_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '学校id',
   `school_name` varchar(32) NOT NULL COMMENT '学校名称',
@@ -61,6 +66,7 @@ CREATE TABLE IF NOT EXISTS `school` (
 -- 表的结构 `school_class_user_map`
 --
 
+DROP TABLE IF EXISTS `school_class_user_map`;
 CREATE TABLE IF NOT EXISTS `school_class_user_map` (
   `map_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '关联表id',
   `school_id` int(11) NOT NULL COMMENT '学校id',
@@ -76,6 +82,7 @@ CREATE TABLE IF NOT EXISTS `school_class_user_map` (
 -- 表的结构 `student`
 --
 
+DROP TABLE IF EXISTS `student`;
 CREATE TABLE IF NOT EXISTS `student` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `student_id` char(16) NOT NULL,
@@ -91,6 +98,7 @@ CREATE TABLE IF NOT EXISTS `student` (
 -- 表的结构 `user`
 --
 
+DROP TABLE IF EXISTS `user`;
 CREATE TABLE IF NOT EXISTS `user` (
   `user_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '用户id',
   `user_name` varchar(32) NOT NULL COMMENT '用户姓名',
@@ -106,7 +114,3 @@ CREATE TABLE IF NOT EXISTS `user` (
   PRIMARY KEY (`user_id`),
   KEY `user_name` (`user_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户表' AUTO_INCREMENT=1 ;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
