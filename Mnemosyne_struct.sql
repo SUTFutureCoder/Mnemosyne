@@ -1,15 +1,16 @@
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET time_zone = "+00:00";
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
 
 --
--- 数据库: `mnemosyne`
+-- 表的结构 `academe`
 --
+
+CREATE TABLE IF NOT EXISTS `academe` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `academe_id` char(16) NOT NULL,
+  `academe_name` char(32) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `academe_id` (`academe_id`,`academe_name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='学院表' AUTO_INCREMENT=1 ;
+
 
 -- --------------------------------------------------------
 
@@ -18,12 +19,28 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE IF NOT EXISTS `class` (
-  `class_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '班级id',
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `class_id` char(16) NOT NULL,
   `class_name` char(32) NOT NULL COMMENT '班级名称',
   `class_describe` varchar(256) NOT NULL COMMENT '班级描述',
-  PRIMARY KEY (`class_id`),
-  KEY `class_name` (`class_name`)
+  PRIMARY KEY (`id`),
+  KEY `class_name` (`class_name`),
+  KEY `class_id` (`class_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='班级表' AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `major`
+--
+
+CREATE TABLE IF NOT EXISTS `major` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `major_id` char(16) NOT NULL,
+  `major_name` char(32) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `major_id` (`major_id`,`major_name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='专业表' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -37,13 +54,6 @@ CREATE TABLE IF NOT EXISTS `school` (
   PRIMARY KEY (`school_id`),
   KEY `school_name` (`school_name`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='学校表' AUTO_INCREMENT=2 ;
-
---
--- 转存表中的数据 `school`
---
-
-INSERT INTO `school` (`school_id`, `school_name`) VALUES
-(1, '沈阳工业大学');
 
 -- --------------------------------------------------------
 
@@ -59,6 +69,21 @@ CREATE TABLE IF NOT EXISTS `school_class_user_map` (
   PRIMARY KEY (`map_id`),
   KEY `class_id` (`class_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='学校班级用户关联表' AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `student`
+--
+
+CREATE TABLE IF NOT EXISTS `student` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `student_id` char(16) NOT NULL,
+  `student_name` char(8) NOT NULL,
+  `student_class` char(16) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `student_name` (`student_name`,`student_class`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='学生基本信息表' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
