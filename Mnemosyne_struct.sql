@@ -11,7 +11,8 @@ CREATE TABLE IF NOT EXISTS `academe` (
   `academe_id` char(16) NOT NULL,
   `academe_name` char(32) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `academe_id` (`academe_id`,`academe_name`)
+  KEY `academe_name` (`academe_name`),
+  KEY `academe_id` (`academe_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='学院表' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -23,10 +24,12 @@ CREATE TABLE IF NOT EXISTS `academe` (
 DROP TABLE IF EXISTS `class`;
 CREATE TABLE IF NOT EXISTS `class` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `school_id` char(16) NOT NULL COMMENT '学校id',
   `class_id` char(16) NOT NULL,
   `class_name` char(32) NOT NULL COMMENT '班级名称',
   `class_describe` varchar(256) NOT NULL COMMENT '班级描述',
   PRIMARY KEY (`id`),
+  KEY `school_id` (`school_id`),
   KEY `class_name` (`class_name`),
   KEY `class_id` (`class_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='班级表' AUTO_INCREMENT=1 ;
@@ -43,7 +46,8 @@ CREATE TABLE IF NOT EXISTS `major` (
   `major_id` char(16) NOT NULL,
   `major_name` char(32) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `major_id` (`major_id`,`major_name`)
+  KEY `major_name` (`major_name`),
+  KEY `major_id` (`major_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='专业表' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -54,10 +58,11 @@ CREATE TABLE IF NOT EXISTS `major` (
 
 DROP TABLE IF EXISTS `school`;
 CREATE TABLE IF NOT EXISTS `school` (
-  `school_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '学校id',
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `school_id` char(16) NOT NULL COMMENT '学校id',
   `school_name` varchar(32) NOT NULL COMMENT '学校名称',
-  PRIMARY KEY (`school_id`),
-  KEY `school_name` (`school_name`)
+  PRIMARY KEY (`id`),
+  KEY `school_name` (`school_id`, `school_name`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='学校表' AUTO_INCREMENT=2 ;
 
 -- --------------------------------------------------------
@@ -85,11 +90,15 @@ CREATE TABLE IF NOT EXISTS `school_class_user_map` (
 DROP TABLE IF EXISTS `student`;
 CREATE TABLE IF NOT EXISTS `student` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `school_id` char(16) NOT NULL,
   `student_id` char(16) NOT NULL,
   `student_name` char(8) NOT NULL,
   `student_class` char(16) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `student_name` (`student_name`,`student_class`)
+  KEY `school_id` (`school_id`),
+  KEY `student_id` (`student_id`),
+  KEY `student_name` (`student_name`),
+  KEY `student_class` (`student_class`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='学生基本信息表' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
