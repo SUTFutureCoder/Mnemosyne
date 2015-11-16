@@ -6,7 +6,7 @@
  * Time: 下午2:37
  */
 require APPPATH . '../application/tests/CITestCase.php';
-class AccountTest extends CITestCase{
+class WelcomeTest extends CITestCase{
     private $controller;
 
     public function __construct(){
