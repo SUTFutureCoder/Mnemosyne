@@ -40,7 +40,9 @@ class Welcome extends CI_Controller {
      * @access public
      */
 	public function testUnitTest(){
-		return 'hello world';
+		$test = $this->input->post('test');
+
+		echo 'hello world' . '-' . $test;
 	}
 
 	public function testSchoolId(){

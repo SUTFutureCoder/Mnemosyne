@@ -46,4 +46,21 @@ abstract class CITestCase extends PHPUnit_Framework_TestCase
 			require_once($filepath);
 		}
 	}
+
+	public function setParam($data, $method = 'POST'){
+		if ($method == 'GET'){
+			$_GET = $data;
+		} else if ($method == 'POST'){
+			$_POST = $data;
+		}
+	}
+
+	public function getApi($obj, $strFuncName){
+		ob_start();
+		$obj->$strFuncName();
+		$content = ob_get_contents();
+		ob_end_clean();
+		return $content;
+	}
+
 }
