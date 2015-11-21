@@ -11,10 +11,11 @@ class AccountTest extends CITestCase{
 
     public function __construct(){
         $this->requireController('Account');
-        $this->controller = new Welcome();
+        $this->controller = new Account();
     }
 
     public function testTestUnitTest(){
+        $_POST['']
         $this->assertEquals('hello world', $this->controller->testUnitTest());
     }
 }

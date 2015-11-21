@@ -5,7 +5,7 @@
 -- 表的结构 `academe`
 --
 
-DROP TABLE IF EXISTS `academe`;
+-- DROP TABLE IF EXISTS `academe`;
 CREATE TABLE IF NOT EXISTS `academe` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '学院唯一id',
   `academe_id` char(16) NOT NULL,
@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS `academe` (
 -- 表的结构 `class`
 --
 
-DROP TABLE IF EXISTS `class`;
+-- DROP TABLE IF EXISTS `class`;
 CREATE TABLE IF NOT EXISTS `class` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '班级唯一id',
   `school_id` char(16) NOT NULL COMMENT '学校id',
@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS `class` (
 -- 表的结构 `major`
 --
 
-DROP TABLE IF EXISTS `major`;
+-- DROP TABLE IF EXISTS `major`;
 CREATE TABLE IF NOT EXISTS `major` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '专业唯一id',
   `major_id` char(16) NOT NULL,
@@ -56,7 +56,7 @@ CREATE TABLE IF NOT EXISTS `major` (
 -- 表的结构 `school`
 --
 
-DROP TABLE IF EXISTS `school`;
+-- DROP TABLE IF EXISTS `school`;
 CREATE TABLE IF NOT EXISTS `school` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '学院唯一id',
   `school_id` char(16) NOT NULL COMMENT '学校id',
@@ -71,7 +71,7 @@ CREATE TABLE IF NOT EXISTS `school` (
 -- 表的结构 `school_class_user_map`
 --
 
-DROP TABLE IF EXISTS `school_class_user_map`;
+-- DROP TABLE IF EXISTS `school_class_user_map`;
 CREATE TABLE IF NOT EXISTS `school_class_user_map` (
   `map_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '关联表id',
   `school_unique_id` bigint(20) NOT NULL COMMENT '学校唯一id',
@@ -88,7 +88,7 @@ CREATE TABLE IF NOT EXISTS `school_class_user_map` (
 -- 表的结构 `student`
 --
 
-DROP TABLE IF EXISTS `student`;
+-- DROP TABLE IF EXISTS `student`;
 CREATE TABLE IF NOT EXISTS `student` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '学生唯一id',
   `school_id` char(16) NOT NULL,
@@ -108,7 +108,7 @@ CREATE TABLE IF NOT EXISTS `student` (
 -- 表的结构 `user`
 --
 
-DROP TABLE IF EXISTS `user`;
+-- DROP TABLE IF EXISTS `user`;
 CREATE TABLE IF NOT EXISTS `user` (
   `user_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '用户唯一id',
   `user_name` varchar(32) NOT NULL COMMENT '用户姓名',
@@ -124,4 +124,49 @@ CREATE TABLE IF NOT EXISTS `user` (
   PRIMARY KEY (`user_id`),
   KEY `user_name` (`user_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户表';
+
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `group`
+--
+
+-- DROP TABLE IF EXISTS `group`;
+CREATE TABLE IF NOT EXISTS `group` (
+  `group_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '群组id',
+  `group_name` char(32) NOT NULL COMMENT '群组名',
+  `img` varchar(256) NOT NULL DEFAULT '' COMMENT '群组图片logo',
+  `description` varchar(256) NOT NULL COMMENT '群备注',
+  `creater_id` int(11) NOT NULL COMMENT '创建者用户id',
+  `group_type` tinyint(4) NOT NULL DEFAULT '0' COMMENT '群组类型',
+  `disable` enum('0','1') NOT NULL DEFAULT '0' COMMENT '是否禁用：0，不禁用；1、 禁用',
+  `addtime` int(11) unsigned NOT NULL COMMENT '添加时间',
+  `modtime` int(11) unsigned NOT NULL COMMENT '修改时间',
+  PRIMARY KEY (`group_id`),
+  KEY `IDX_group_name` (`group_name`),
+  KEY `IDX_creater_id` (`creater_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `user_group_map`
+--
+
+-- DROP TABLE IF EXISTS `user_group_map`;
+CREATE TABLE IF NOT EXISTS `user_group_map` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '群组id',
+  `user_id` bigint(20) NOT NULL COMMENT '用户id',
+  `group_id` bigint(20) NOT NULL COMMENT '群组id',
+  `privilage` tinyint(4) NOT NULL DEFAULT '0' COMMENT '权限',
+  `addtime` int(11) unsigned NOT NULL COMMENT '添加时间',
+  `modtime` int(11) unsigned NOT NULL COMMENT '修改时间',
+  `adminid` bigint(20) NOT NULL COMMENT '修改用户id',
+  PRIMARY KEY (`id`),
+  KEY `IDX_group_id` (`group_id`),
+  KEY `IDX_user_id` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
 
