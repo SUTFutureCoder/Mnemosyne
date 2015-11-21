@@ -19,7 +19,7 @@ class UserModels extends CI_Model{
             'user_name' => $userName,
         ));
 
-          //把用户信息写入redis
+        //把用户信息写入redis
     }
 
 }

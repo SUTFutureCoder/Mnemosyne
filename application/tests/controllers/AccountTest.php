@@ -2,15 +2,15 @@
 /**
  * Created by PhpStorm.
  * User: lin
- * Date: 15-11-1
- * Time: 上午11:43
+ * Date: 15-11-21
+ * Time: 下午2:37
  */
 require APPPATH . '../application/tests/CITestCase.php';
-class WelcomeTest extends CITestCase{
+class AccountTest extends CITestCase{
     private $controller;
 
     public function __construct(){
-        $this->requireController('Welcome');
+        $this->requireController('Account');
         $this->controller = new Welcome();
     }
 

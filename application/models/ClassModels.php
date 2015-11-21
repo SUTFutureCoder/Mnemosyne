@@ -11,6 +11,13 @@ class ClassModels extends CI_Model{
         $this->load->database();
     }
 
+    //::NOTICE::目前仅支持单个学校的情况
+    /*
+     * 通过class id获取class name
+     *
+     * @param char $classId 班级id
+     * @return string 班级名称
+     */
     public function getClassNameById($classId){
         $this->db->select('class_name');
         $this->db->where('class_id', $classId);
