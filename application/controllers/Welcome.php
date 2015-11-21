@@ -49,4 +49,9 @@ class Welcome extends CI_Controller {
 		$this->load->model('school');
 		echo $this->school->getSchoolId('沈阳工业大学');
 	}
+    public function testSmarty(){
+        $test = "testSmarty";
+        $this->template->assign("test", $test);
+        $this->template->display("test.html");
+    }
 }

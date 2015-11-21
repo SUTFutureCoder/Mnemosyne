@@ -505,3 +505,13 @@ $config['rewrite_short_tags'] = FALSE;
 | Array:		array('10.0.1.200', '192.168.5.0/24')
 */
 $config['proxy_ips'] = '';
+
+
+
+/* 全局配置 */
+date_default_timezone_set('Asia/Shanghai');//定义时区
+defined('TempLates') || define("TempLates",APPPATH."libraries/smarty/Smarty.class.php"); //smarty 配置类库
+defined('TempLates_Dir') || define("TempLates_Dir",APPPATH."views/templates"); //模板文件
+defined('TempLates_C') || define("TempLates_C",APPPATH."views/templates_c"); //编译文件
+/* End of file config.php */
+/* Location: ./application/config/config.php */
