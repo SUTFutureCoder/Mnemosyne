@@ -14,7 +14,7 @@ class UserModels extends CI_Model{
         $this->load->database();
     }
 
-    public function addUser($userName, $school, $class, $userMobile, $userEmail){
+    public function addUser($userName, $schoolId, $classId, $userMobile, $userEmail){
         $this->db->insert('user', array(
             'user_name' => $userName,
         ));

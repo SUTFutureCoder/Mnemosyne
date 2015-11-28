@@ -41,6 +41,7 @@ class Account extends CI_Controller{
         $userName   = trim($this->input->post('user_name',   true));
         $school     = trim($this->input->post('school',      true));
         $class      = trim($this->input->post('class',       true));
+        $passWd     = trim($this->input->post('password',    true));
         $userMobile = trim($this->input->post('user_mobile', true));
         $userEmail  = trim($this->input->post('user_email',  true));
 
@@ -50,6 +51,7 @@ class Account extends CI_Controller{
                 && Validator::mbStringRange($school, 0, 30, '您的学校名称不能超过30个字符')
                 && Validator::isNotEmpty($class,    '您的班级不能为空')
                 && Validator::mbStringRange($class, 0, 30, '您的班级名称不能超过30个字符')
+                && Validator::mbStringRange($passWd, 0, 20, '您的密码不能超过20位')
                 && Validator::isNotEmpty($userMobile, '您的手机号码不能为空')
                 && Validator::isMobile($userMobile, '请输入合法的手机号码')
                 && Validator::isNotEmpty($userEmail,  '您的邮箱地址不能为空')
@@ -66,7 +68,7 @@ class Account extends CI_Controller{
         }
 
         //获取班级id
-        if (!$classId  = $this->ClassModels->getClassIdByName($class)){
+        if (!$classId  = $this->ClassModels->getClassIdByName($schoolId, $class)){
             $this->response->jsonFail(Response::CODE_PARAMS_WRONG, '抱歉，请选择已有班级');
         }
 

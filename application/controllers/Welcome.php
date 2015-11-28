@@ -54,4 +54,9 @@ class Welcome extends CI_Controller {
         $this->template->assign("test", $test);
         $this->template->display("test.html");
     }
+
+	public function testPasswd(){
+		$testPwd = '12345678910abcdefghijk';
+		echo password_hash($testPwd, PASSWORD_DEFAULT);
+	}
 }
