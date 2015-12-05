@@ -59,4 +59,9 @@ class Welcome extends CI_Controller {
 		$testPwd = '12345678910abcdefghijk';
 		echo password_hash($testPwd, PASSWORD_DEFAULT);
 	}
+
+	public function testPlatform(){
+		$this->load->library('CoreConst');
+		print_r(CoreConst::PLATFORM_MOBILE);
+	}
 }
