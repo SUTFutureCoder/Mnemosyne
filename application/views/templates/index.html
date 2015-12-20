@@ -1,4 +1,4 @@
-{include file='index_header.html'}
+{{include file='index_header.html'}}
 <header class="header">
 <h1>Mnemosyne</h1>
 </header>
@@ -20,4 +20,13 @@
         </div>
     </div>
 </div>
-{include file='footer.html'}
+<script type="text/javascript">
+    function setCommentWidth(){
+        var width = $(document.body).height();
+        $('.main-content').height(width);
+    }
+    $(document).ready(function(){
+        setCommentWidth();
+    });
+</script>
+{{include file='footer.html'}}

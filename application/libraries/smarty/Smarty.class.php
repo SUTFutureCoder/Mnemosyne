@@ -253,14 +253,14 @@ class Smarty
      *
      * @var string
      */
-    var $left_delimiter  =  '{';
+    var $left_delimiter  =  '{{';
 
     /**
      * The right delimiter used for the template tags.
      *
      * @var string
      */
-    var $right_delimiter =  '}';
+    var $right_delimiter =  '}}';
 
     /**
      * The order in which request variables are registered, similar to
