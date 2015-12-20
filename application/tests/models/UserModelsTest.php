@@ -24,13 +24,11 @@ class UserModelsTest extends PHPUnit_Framework_TestCase
             'userPW'        => 'passwd',
             'userMobile'    => 15101669791,
             'userEmail'     => 'FutureCoder@aliyun.com',
-            'userPlatform'  => 0,
         );
         $ret = self::$model->addUser($arrInput['userName'],
             $arrInput['userPW'],
             $arrInput['userMobile'],
-            $arrInput['userEmail'],
-            $arrInput['userPlatform']);
+            $arrInput['userEmail']);
 
         $this->assertEquals(1, $ret);
     }
@@ -38,10 +36,7 @@ class UserModelsTest extends PHPUnit_Framework_TestCase
 
     public function testGetUserBasicInfo(){
         $data = $this->getFirstUser();
-        if (empty($data['user_id'])){
-            $this->testAddUser();
-            $this->testGetUserBasicInfo();
-        }
+
         $ret = self::$model->getUserBasicInfo($data['user_id']);
 
         $this->assertArrayHasKey('user_id',     $ret);
@@ -53,10 +48,6 @@ class UserModelsTest extends PHPUnit_Framework_TestCase
 
     public function testUpdateUser(){
         $data = $this->getFirstUser();
-        if (empty($data['user_id'])){
-            $this->testAddUser();
-            $this->testUpdateUser();
-        }
 
         $arrInput = array(
             'user_id'       => $data['user_id'],
@@ -67,7 +58,6 @@ class UserModelsTest extends PHPUnit_Framework_TestCase
             'user_email'    => 'linxingchen@iwaimai.baidu.com',
             'user_sign'     => 'f*ck',
             'user_status'   => 0,
-            'user_platform' => 0,
         );
         $ret = self::$model->updateUser($arrInput['user_id'],
             $arrInput['user_name'],
@@ -76,8 +66,7 @@ class UserModelsTest extends PHPUnit_Framework_TestCase
             $arrInput['user_mobile'],
             $arrInput['user_email'],
             $arrInput['user_sign'],
-            $arrInput['user_status'],
-            $arrInput['user_platform']
+            $arrInput['user_status']
         );
         $this->assertEquals(1, $ret);
 
@@ -106,9 +95,42 @@ class UserModelsTest extends PHPUnit_Framework_TestCase
         }
     }
 
-    private function getFirstUser(){
+    //可以被其他单测调用
+    public function getFirstUser(){
         $result = self::$ci->db->get(self::$tableName);
         $data = $result->row_array();
+
+        if (empty($data['user_id'])){
+            $this->testAddUser();
+            return $data;
+        }
         return $data;
+    }
+
+    //重置密码
+    public function testResetPassWd(){
+
+    }
+
+    //检测是否重复
+    public function testCheckUserExists(){
+        //主要通过手机号和邮箱进行验证
+        $data = $this->getFirstUser();
+
+        //传入手机和Email
+        $arrInput = array(
+            'user_mobile' => $data['user_mobile'],
+            'user_email'  => $data['user_email'],
+        );
+        $ret = self::$model->checkUserExists($arrInput['user_mobile'], $arrInput['user_email']);
+        $this->assertNotEquals(0, $ret);
+
+        //传入手机和Email
+        $arrInput = array(
+            'user_mobile' => 15101669999,
+            'user_email'  => 'linxingchen@baidu.com',
+        );
+        $ret = self::$model->checkUserExists($arrInput['user_mobile'], $arrInput['user_email']);
+        $this->assertEquals(0, $ret);
     }
 }

@@ -8,7 +8,8 @@
 //常量存储库
 class CoreConst{
     //平台常量
-    const PLATFORM_TEST     = 0;
+    const PLATFORM_TEST     = -1;
+    const PLATFORM_UNKNOWN  = 0;
     const PLATFORM_ADMIN    = 1;
     const PLATFORM_PC       = 2;
     const PLATFORM_MOBILE   = 3;
