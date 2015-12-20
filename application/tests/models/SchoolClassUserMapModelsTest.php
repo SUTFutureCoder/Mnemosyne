@@ -30,7 +30,7 @@ class SchoolClassUserMapModelsTest extends PHPUnit_Framework_TestCase{
             'user_unique_id'   => self::$userId,
         );
         $ret = self::$model->bind($arrInput['school_unique_id'], $arrInput['class_unique_id'], $arrInput['user_unique_id']);
-        print_r($ret);
+        $this->assertEquals(1, $ret);
 
 
         $arrInput = array(
@@ -40,7 +40,7 @@ class SchoolClassUserMapModelsTest extends PHPUnit_Framework_TestCase{
             'student_id'=> '120406305X',
         );
         $ret = self::$model->bind($arrInput['school_unique_id'], $arrInput['class_unique_id'], $arrInput['user_unique_id'], $arrInput['student_id']);
-        print_r($ret);
+        $this->assertEquals(1, $ret);
     }
 
     //检查是否已经存在绑定

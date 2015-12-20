@@ -52,6 +52,22 @@ class SchoolClassUserMapModels extends CI_Model{
     }
 
     /**
+     * 检查是否已经重复绑定
+     *
+     * @param $schoolId
+     * @param $classId
+     * @param $userId
+     */
+    public function checkBindExists($schoolId, $classId, $userId){
+        $this->db->where(array(
+            'school_unique_id' => $schoolId,
+            'class_unique_id'  => $classId,
+            'user_unique_id'   => $userId,
+        ));
+        return $this->db->count_all_results(self::$tableName);
+    }
+
+    /**
      * 获取用户绑定班级列表
      *
      * @param $userId
@@ -59,8 +75,11 @@ class SchoolClassUserMapModels extends CI_Model{
      */
     public function getUserBindList($userId){
         $this->db->where('user_unique_id', $userId);
-        $query  = $this->db->get(self::$tableName);
-        $result = $query->row_array();
-        return $result;
+        $query      = $this->db->get(self::$tableName);
+        return $query->result_array();
+    }
+
+    public function unBind($mapId){
+
     }
 }
