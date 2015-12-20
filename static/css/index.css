@@ -18,6 +18,10 @@ body{
     text-align: center;
     font-size:25px;
 }
+#div_geetest_lib{
+    margin: 0 auto 0 auto;
+    text-align: center;
+}
 form p label{
     color: #ffffff;
 }
@@ -42,3 +46,9 @@ label {
     color: #ffffff;
     font-family: Consolas;
 }
+
+.box{
+    width:300px;
+    margin: 30px auto;
+}
+
