@@ -16,34 +16,7 @@ class UserModels extends CI_Model{
         $this->load->model('UserLogModels');
     }
 
-    /**
-     * 通过手机号获取用户信息
-     *
-     * @param $userMobile
-     * @return Array
-     */
-    public function getUserInfoByMobile($userMobile)
-    {
-        $this->db->where('user_mobile', $userMobile);
-        $query  = $this->db->get(self::$tableName);
-        $result = $query->row_array();
-        return $result;
-    }
 
-    /**
-     * 通过手机号获取用户信息
-     *
-     * @param $userEmail
-     * @return Array
-     */
-
-    public function getUserInfoByEmail($userEmail)
-    {
-        $this->db->where('user_mobile', $userEmail);
-        $query  = $this->db->get(self::$tableName);
-        $result = $query->row_array();
-        return $result;
-    }
     /**
      * 新增用户
      *
@@ -107,6 +80,21 @@ class UserModels extends CI_Model{
      */
     public function getUserBasicInfo($userId){
         $this->db->where('user_id', $userId);
+        $query  = $this->db->get(self::$tableName);
+        $result = $query->row_array();
+        return $result;
+    }
+
+    /**
+     * 通过登陆的手机号或邮箱获取用户信息
+     *
+     * @param $userLoginName
+     * @return Array
+     */
+    public function getUserInfoByLoginName($userLoginName)
+    {
+        $this->db->where('user_mobile', $userLoginName);
+        $this->db->or_where('user_email', $userLoginName);
         $query  = $this->db->get(self::$tableName);
         $result = $query->row_array();
         return $result;

@@ -133,4 +133,15 @@ class UserModelsTest extends PHPUnit_Framework_TestCase
         $ret = self::$model->checkUserExists($arrInput['user_mobile'], $arrInput['user_email']);
         $this->assertEquals(0, $ret);
     }
+
+    public function testGetUserInfoByLoginName(){
+        $data = $this->getFirstUser();
+        $userMobile = $data['user_mobile'];
+        $userEmail  = $data['user_email'];
+        $retMobile  = self::$model->getUserInfoByLoginName($userMobile);
+        $retEmail   = self::$model->getUserInfoByLoginName($userEmail);
+        $retNull    = self::$model->getUserInfoByLoginName('test');
+        $this->assertEquals($retMobile['user_id'], $retEmail['user_id']);
+        $this->assertEquals(true, empty($retNull));
+    }
 }

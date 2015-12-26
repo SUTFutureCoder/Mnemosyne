@@ -43,10 +43,8 @@ class Account extends CI_Controller{
         }
         $this->load->model("UserModels");
 
-        if (Validator::isEmail($login_name)) {
-            $userInfo = $this->UserModels->getUserInfoByEmail($login_name);
-        } elseif(Validator::isMobile($login_name)){
-            $userInfo = $this->UserModels->getUserInfoByMobile($login_name);
+        if (Validator::isEmail($login_name) || Validator::isMobile($login_name)) {
+            $userInfo = $this->UserModels->getUserInfoByLoginName($login_name);
         } else{
             Validator::setMessage("请输入合法的邮箱地址或手机号");
             $this->response->jsonFail(Response::CODE_PARAMS_WRONG, Validator::getMessage());
