@@ -79,7 +79,8 @@ CREATE TABLE IF NOT EXISTS `school_class_user_map` (
   `user_unique_id` bigint(20) NOT NULL COMMENT '用户唯一id',
   `student_id` char(16) NOT NULL COMMENT '在教务处学号',
   PRIMARY KEY (`map_id`),
-  KEY `class_id` (`class_unique_id`)
+  KEY `class_id` (`class_unique_id`),
+  KEY `user_unique_id` (`user_unique_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='学校班级用户关联表';
 
 -- --------------------------------------------------------
@@ -168,5 +169,22 @@ CREATE TABLE IF NOT EXISTS `user_group_map` (
   KEY `IDX_user_id` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `user_log`
+--
+
+CREATE TABLE IF NOT EXISTS `user_log` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '唯一id',
+  `user_id` bigint(20) unsigned NOT NULL COMMENT '用户id',
+  `content` varchar(1024) NOT NULL COMMENT '日志正文',
+  `platform` tinyint(4) NOT NULL COMMENT '平台id',
+  `create_time` int(10) unsigned NOT NULL COMMENT '创建时间',
+  `type` varchar(255) NOT NULL COMMENT '类型',
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='日志表' AUTO_INCREMENT=99 ;
 
 

@@ -26,7 +26,7 @@ class UserModels extends CI_Model{
      * @param $userPlatform
      * @return bool
      */
-    public function addUser($userName, $userPW, $userMobile, $userEmail, $userPlatform){
+    public function addUser($userName, $userPW, $userMobile, $userEmail){
         $this->db->trans_start();
         $this->db->insert(self::$tableName, array(
             'user_name'         => $userName,
@@ -44,7 +44,7 @@ class UserModels extends CI_Model{
             $userName,
             $userMobile,
             $userEmail);
-        $this->UserLogModels->addUserLog($userId, $logContent, $userPlatform, '新建用户');
+        $this->UserLogModels->addUserLog($userId, $logContent, '新建用户');
 
         $this->db->trans_complete();
         if (!$this->db->trans_status()){
@@ -53,12 +53,25 @@ class UserModels extends CI_Model{
         return true;
     }
 
+    /**
+     * 检查用户是否已经存在
+     *
+     *
+     * @param $userMobile
+     * @param $userEmail
+     */
+    public function checkUserExists($userMobile, $userEmail){
+        $this->db->where('user_mobile', $userMobile);
+        $this->db->or_where('user_email', $userEmail);
+        return $this->db->count_all_results(self::$tableName);
+    }
+
 
     /**
      * 获取用户基本信息
      *
      * @param $userId
-     * @return mixed
+     * @return array
      */
     public function getUserBasicInfo($userId){
         $this->db->where('user_id', $userId);
@@ -81,7 +94,7 @@ class UserModels extends CI_Model{
      * @return bool
      */
     public function updateUser($userId, $userName, $userBirthday, $userSex,
-                               $userMobile, $userEmail, $userSign, $userStatus, $userPlatform){
+                               $userMobile, $userEmail, $userSign, $userStatus){
         $this->db->trans_start();
 
         $this->db->where('user_id', $userId);
@@ -107,7 +120,7 @@ class UserModels extends CI_Model{
             $userSign,
             $userStatus
         );
-        $this->UserLogModels->addUserLog($userId, $logContent, $userPlatform, '修改用户');
+        $this->UserLogModels->addUserLog($userId, $logContent, '修改用户');
 
 
         $this->db->trans_complete();
@@ -117,4 +130,5 @@ class UserModels extends CI_Model{
             return true;
         }
     }
+
 }
