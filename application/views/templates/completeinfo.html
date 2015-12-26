@@ -1,0 +1,100 @@
+{{include file='header.html'}}
+{{$navbar}}
+<div class="main-content">
+    <div class="a4page">
+
+        <div class="container a4content">
+            <div class="row">
+                <div class="col-xs-12 completeUserInfo">
+                    <form class="completeInfo">
+                        <center><h1 class="page-header">我的信息</h1></center>
+                        <div class="user">
+                            <div class="col-xs-12">
+                            <div class="col-xs-6 photo_sticker">
+                                <input type="image" alt="贴照片" width="280px" height="280px"/>
+                            </div><!--col-xs-6!-->
+
+                            <div class="col-xs-6" style="backtround-color:black">
+
+                                <p>
+                                    <label for="name">姓名</label>
+                                    <input type="text" id="name" name="name">
+                                </p>
+                                <p>
+                                    <label for="birthday">生日</label>
+                                    <input type="text" id="birthday" name="birthday">
+                                </p>
+                                <p>
+                                    <label for="sex">性别</label>
+                                    <input type="text" id="sex" name="sex">
+                                </p>
+                                <p>
+                                    <label for="phone">电话</label>
+                                    <input type="text" id="phone" name="phone">
+                                </p>
+                                <p>
+                                    <label for="email">邮箱</label>
+                                    <input type="text" id="email" name="email">
+                                </p>
+                                <p>
+                                    <label for="sign">个性签名</label>
+                                    <input type="text" id="sign" name="sign">
+                                </p>
+                            </div><!--col-xs-6!-->
+                            </div>
+                        </div><!--user!-->
+
+                        <div class="col-xs-12 userProfile">
+
+                            <div class="col-xs-6">
+
+                                <p>
+                                    <label for="nickname">绰号</label>
+                                    <input type="text" id="nickname" name="nickname"/>
+                                </p>
+                                <p>
+                                    <label for="birthday">血型</label>
+                                    <input type="text" id="birthday" name="birthday"/>
+                                </p>
+                            </div><!--col-xs-6!-->
+
+                            <div class="col-xs-6">
+
+                                <p>
+                                    <label for="phone">体型</label>
+                                    <input type="text" id="phone" name="phone">
+                                </p>
+                                <p>
+                                    <label for="speciality">特长</label>
+                                    <input type="text" id="speciality" name="speciality">
+                                </p>
+                            </div><!--col-xs-6!-->
+
+                            <div class="col-xs-12 content-block">
+                                <p>
+                                    <label for="school">学校</label>
+                                    <input type="school" id="school" name="school" onclick="alert('test')">
+                                </p>
+                                <p>
+                                    <label for="birth_place">出生地</label>
+                                    <input type="birth_place" id="birth_place" name="birth_place">
+                                </p>
+                                <p>
+                                    <label for="sex">近期心愿</label>
+                                    <input type="text" id="sex" name="sex">
+                                </p>
+                            </div>
+                        </div><!--userProfile!-->
+
+                    </form>
+                </div><!--col-xs-12!-->
+            </div><!--row!-->
+        </div><!--container a4content!-->
+
+    </div><!--a4page--!-->
+
+    <div class=a4page">
+    </div>
+
+</div><!--main-content!-->
+{{include file='footer.html'}}

@@ -13,8 +13,32 @@ class Index extends CI_Controller
     {
         parent::__construct();
     }
-    public function index()
+    public function login()
     {
-        $this->template->display("index.html");
+        $this->template->display("login.html");
+    }
+    public function completeInfo()
+    {
+        $navbar = getHorizontalNavbar(1);
+        $this->template->assign("navbar", $navbar);
+        $this->template->display("completeinfo.html");
+    }
+    public function edit()
+    {
+        $navbar = getHorizontalNavbar(3);
+        $this->template->assign("navbar", $navbar);
+       $this->template->display("edit.html");
+    }
+    public function send()
+    {
+        $navbar = getHorizontalNavbar(2);
+        $this->template->assign("navbar", $navbar);
+        $this->template->display("send.html");
+    }
+    public function expressLove()
+    {
+        $navbar = getHorizontalNavbar(0);
+        $this->template->assign("navbar", $navbar);
+        die("此功能尚未添加");
     }
 }

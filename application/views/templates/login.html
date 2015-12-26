@@ -89,19 +89,63 @@
                 </div><!--div_geetest_lib!-->
 
                 <button type="submit">翻开同学录</button>
+                <p><button type="button" data-toggle="modal" data-target="#register">注册新用户</button></p>
             </form>
 
 
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="register" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">注册新用户</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="username">用户名</label>
+                        <input type="email" class="form-control" id="username" placeholder="Email">
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">手机号</label>
+                        <input type="email" class="form-control" id="phone" placeholder="Email">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">邮箱</label>
+                        <input type="email" class="form-control" id="email" placeholder="Email">
+                    </div>
+                    <div class="form-group">
+                        <label for="passwordnew">密码</label>
+                        <input type="password" class="form-control" id="passwordnew" placeholder="Password">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="passwordconfirm">确认密码</label>
+                        <input type="password" class="form-control" id="passwordconfirm" placeholder="Password">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary">注册</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <script type="text/javascript">
     function setCommentWidth(){
         var width = $(document.body).height();
         $('.main-content').height(width);
     }
+
     $(document).ready(function(){
         setCommentWidth();
     });
+
 </script>
 {{include file='footer.html'}}

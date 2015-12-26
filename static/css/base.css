@@ -1,0 +1,65 @@
+.main-content{
+    width:100%;
+    height:100%;
+}
+.a4page{
+    padding: 50px 50px 50px 50px;
+    margin:0px auto;
+    width: 840px;
+    /*height:1188px;*/
+    height:900px;
+    font-size:1.5em;
+    /*background-color: #33CCFF;*/
+
+    background-color:#33CCFF;
+    background-image:
+    radial-gradient(circle at 100% 150%, #33CCFF 24%, white 25%, white 28%, #33CCFF 29%, #33CCFF 36%, white 36%, white 40%, transparent 40%, transparent),
+    radial-gradient(circle at 0    150%, #33CCFF 24%, white 25%, white 28%, #33CCFF 29%, #33CCFF 36%, white 36%, white 40%, transparent 40%, transparent),
+    radial-gradient(circle at 50%  100%, white 10%, #33CCFF 11%, #33CCFF 23%, white 24%, white 30%, #33CCFF 31%, #33CCFF 43%, white 44%, white 50%, #33CCFF 51%, #33CCFF 63%, white 64%, white 71%, transparent 71%, transparent),
+    radial-gradient(circle at 100% 50%, white 5%, #33CCFF 6%, #33CCFF 15%, white 16%, white 20%, #33CCFF 21%, #33CCFF 30%, white 31%, white 35%, #33CCFF 36%, #33CCFF 45%, white 46%, white 49%, transparent 50%, transparent),
+    radial-gradient(circle at 0    50%, white 5%, #33CCFF 6%, #33CCFF 15%, white 16%, white 20%, #33CCFF 21%, #33CCFF 30%, white 31%, white 35%, #33CCFF 36%, #33CCFF 45%, white 46%, white 49%, transparent 50%, transparent);
+    background-size:100px 50px;
+}
+
+.a4page label{
+    width: 4em;
+}
+
+.a4page .page-header{
+    font-family: cursive;
+    margin: 1em auto;
+}
+.a4page .a4content{
+    margin:0 auto;
+    width:100%;
+    height:100%;
+    background-color: #ffffff;
+    font-family: cursive;
+}
+
+
+.a4page p input {
+    background: none;
+    border: none;
+    border-bottom: 1px #616363 solid;
+    outline: none;
+}
+
+.a4page .completeUserInfo{
+    padding:0;
+}
+
+.a4page .user label{
+    width: 4em;
+}
+
+.a4page .userProfile{
+    margin-top: 2em;
+}
+.a4page .content-block input{
+    width:28em;
+}
+
+.photo_sticker{
+    /*background-color: blue;*/
+}
