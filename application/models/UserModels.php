@@ -17,6 +17,31 @@ class UserModels extends CI_Model{
     }
 
     /**
+     * 登陆验证
+     *
+     * @Param $loginName
+     * @Param  $password
+     * $return array()
+     */
+    public function isValidlogin($loginName, $password, $type)
+    {
+        $this->load->library('validcode');
+        if($type == 'email') {
+            $this->db->where('user_mobile', $loginName);
+        }else if($type == 'mobile'){
+            $this->db->where('user_email', $loginName) ;
+        }else{
+            return array();
+        }
+
+        $userInfo = $this->db->from(self::$tableName)->result_array();
+
+        if(!empty($userInfo) && $userInfo['password'] === password_hash($password, PASSWORD_DEFAULT)){
+            return $userInfo;
+        }
+        return array();
+    }
+    /**
      * 新增用户
      *
      * @param $userName
@@ -100,14 +125,14 @@ class UserModels extends CI_Model{
     public function updateUser($userId, $userName, $userBirthday, $userSex,
                                $userMobile, $userEmail, $userSign, $userStatus){
         $arrUpdateConds = array(
-                'user_name'     => $userName,
-                'user_birthday' => $userBirthday,
-                'user_sex'      => $userSex,
-                'user_mobile'   => $userMobile,
-                'user_email'    => $userEmail,
-                'user_sign'     => $userSign,
-                'user_status'   => $userStatus,
-            );
+            'user_name'     => $userName,
+            'user_birthday' => $userBirthday,
+            'user_sex'      => $userSex,
+            'user_mobile'   => $userMobile,
+            'user_email'    => $userEmail,
+            'user_sign'     => $userSign,
+            'user_status'   => $userStatus,
+        );
 
         $this->db->trans_start();
 

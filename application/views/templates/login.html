@@ -1,15 +1,15 @@
 {{include file='index_header.html'}}
 <header class="header">
-<h1>Mnemosyne</h1>
+    <h1>Mnemosyne</h1>
 </header>
 <div class="main-content">
     <div class="big_center_title">
         <h1>Hidden in your memory</h1>
         <div class="login">
-            <form>
+            <form method="post" action="/index.php/account/login">
                 <p>
-                    <label for="name">姓名</label>
-                    <input id="name" name="name"/>
+                    <label for="login_name">姓名</label>
+                    <input id="login_name" name="login_name"/>
                 </p>
                 <p>
                     <label for="password">密码</label>
