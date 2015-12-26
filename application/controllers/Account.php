@@ -18,8 +18,6 @@ class Account extends CI_Controller{
      * <table class="table table-hover table-bordered">
      *     <tr><th>POST</th><th>type</th><th>explain</th></tr>
      *     <tr><td>user_name</td><td>string</td><td>用户姓名</td></tr>
-     *     <tr><td>school</td><td>string</td><td>用户学校</td></tr>
-     *     <tr><td>class</td><td>string</td><td>用户班级</td></tr>
      *     <tr><td>user_mobile</td><td>string</td><td>用户手机号码</td></tr>
      *     <tr><td>user_email</td><td>string</td><td>用户邮箱</td></tr>
      * </table>
