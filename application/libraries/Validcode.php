@@ -21,13 +21,13 @@ class Validcode{
     public function checkValidCodeAccess($type = 0){
         if (!$type){
             //使用第三方极限验证进行确认是否已经通过验证,需要使用原生session实现
-            session_start();
-            if (empty($_SESSION['gtserver'])){
-                return false;
-            }
+//            session_start();
+//            if (empty($_SESSION['gtserver'])){
+//                return false;
+//            }
 
-            if ($_SESSION['gtserver'] == 1) {
-                unset($_SESSION['gtserver']);
+//            if ($_SESSION['gtserver'] == 1) {
+//                unset($_SESSION['gtserver']);
                 $result = $this->gtsdk->validate($_POST['geetest_challenge'], $_POST['geetest_validate'], $_POST['geetest_seccode']);
                 if ($result == TRUE) {
                     return true;
@@ -36,13 +36,14 @@ class Validcode{
                 } else {
                     return false;
                 }
-            }else{
-                if ($this->gtsdk->get_answer($_POST['geetest_validate'])) {
-                    return true;
-                }else{
-                    return false;
-                }
-            }
+//            }else{
+//                if ($this->gtsdk->get_answer($_POST['geetest_validate'])) {
+//                    return true;
+//                }else{
+//                    return false;
+//                }
+//            }
+//            session_destroy();
         }
     }
 }

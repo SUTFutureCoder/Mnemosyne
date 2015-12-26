@@ -6,11 +6,11 @@
 error_reporting(0);
 require_once dirname(dirname(__FILE__)) . '/lib/class.geetestlib.php';
 $GtSdk = new GeetestLib();
-session_start();
-$_SESSION['gtMnemosyneValid'] = 0;
+//session_start();
+//$_SESSION['gtMnemosyneValid'] = 0;
 $return = $GtSdk->register();
 if ($return) {
-    $_SESSION['gtserver'] = 1;
+//    $_SESSION['gtserver'] = 1;
     $result = array(
             'success' => 1,
             'gt' => CAPTCHA_ID,
@@ -18,7 +18,7 @@ if ($return) {
         );
     echo json_encode($result);
 }else{
-    $_SESSION['gtserver'] = 0;
+//    $_SESSION['gtserver'] = 0;
     $rnd1 = md5(rand(0,100));
     $rnd2 = md5(rand(0,100));
     $challenge = $rnd1 . substr($rnd2,0,2);
@@ -27,7 +27,7 @@ if ($return) {
             'gt' => CAPTCHA_ID,
             'challenge' => $challenge
         );
-    $_SESSION['challenge'] = $result['challenge'];
+//    $_SESSION['challenge'] = $result['challenge'];
     echo json_encode($result);
 }
         
