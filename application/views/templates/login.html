@@ -6,7 +6,7 @@
     <div class="big_center_title">
         <h1>Hidden in your memory</h1>
         <div class="login">
-            <form method="post" action="{{php}}echo base_url(){{/php}}account/login">
+            <form id="login_form" method="post" action="{{php}}echo base_url(){{/php}}account/login">
                 <p>
                     <label for="login_name">姓名</label>
                     <input id="login_name" name="login_name"/>
@@ -88,7 +88,7 @@
                     </script>
                 </div><!--div_geetest_lib!-->
 
-                <button type="submit">翻开同学录</button>
+                <button type="button" onclick="login()">翻开同学录</button>
                 <p><button type="button" data-toggle="modal" data-target="#register">注册新用户</button></p>
             </form>
 
@@ -138,6 +138,21 @@
 
 
 <script type="text/javascript">
+    function login(){
+        $.post("{{php}}echo base_url(){{/php}}account/login",
+                /*
+                {
+                    name:"Donald Duck",
+                    city:"Duckburg"
+                },
+                */
+                $("#login_form").serialize(),
+                function(data,status){
+                    console.log(data.status);
+                    console.log(data.description);
+                    alert("数据：" + data + "\n状态：" + status);
+                });
+    }
     function setCommentWidth(){
         var width = $(document.body).height();
         $('.main-content').height(width);

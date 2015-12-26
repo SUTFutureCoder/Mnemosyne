@@ -27,8 +27,7 @@ class Account extends CI_Controller{
      */
 
     public function login(){
-        //验证是否通过验证码验证
-        $type = '';
+        //验证是否通过;
         $this->load->library('validcode');
         $this->load->library('Token');
         if (!$this->validcode->checkValidCodeAccess()){
@@ -37,28 +36,29 @@ class Account extends CI_Controller{
 
         $login_name =  trim($this->input->post('login_name', true));
         $password   =  trim($this->input->post("password", true));
+
         if (!(Validator::isNotEmpty($login_name,   '您的姓名不能为空'))
             && !(Validator::isNotEmpty($password,  '您的密码不能为空'))) {
             $this->response->jsonFail(Response::CODE_PARAMS_WRONG, Validator::getMessage());
         }
+        $this->load->model("UserModels");
 
         if (Validator::isEmail($login_name)) {
-            $type = 'email';
+            $userInfo = $this->UserModels->getUserInfoByEmail($login_name);
         } elseif(Validator::isMobile($login_name)){
-            $type = 'mobile';
+            $userInfo = $this->UserModels->getUserInfoByMobile($login_name);
         } else{
             Validator::setMessage("请输入合法的邮箱地址或手机号");
             $this->response->jsonFail(Response::CODE_PARAMS_WRONG, Validator::getMessage());
         }
 
-        $this->load->model("UserModels");
-        $userInfo = $this->UserModels->isValidlogin($login_name, $password, $type);
-
-        if(empty($userInfo))
+        if(empty($userInfo)
+            && ($userInfo['password'] !== password_verify($password, PASSWORD_DEFAULT)))
         {
             Validator::setMessage("用户名或密码错误");
             $this->response->jsonFail(Response::CODE_PARAMS_WRONG, Validator::getMessage());
         }
+
         $this->response->jsonSuccess(array(
             'token' => $this->token->setTokenToRedis($userInfo['user_id']),
         ));

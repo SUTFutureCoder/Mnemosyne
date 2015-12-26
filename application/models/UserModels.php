@@ -17,29 +17,32 @@ class UserModels extends CI_Model{
     }
 
     /**
-     * 登陆验证
+     * 通过手机号获取用户信息
      *
-     * @Param $loginName
-     * @Param  $password
-     * $return array()
+     * @param $userMobile
+     * @return Array
      */
-    public function isValidlogin($loginName, $password, $type)
+    public function getUserInfoByMobile($userMobile)
     {
-        $this->load->library('validcode');
-        if($type == 'email') {
-            $this->db->where('user_mobile', $loginName);
-        }else if($type == 'mobile'){
-            $this->db->where('user_email', $loginName) ;
-        }else{
-            return array();
-        }
+        $this->db->where('user_mobile', $userMobile);
+        $query  = $this->db->get(self::$tableName);
+        $result = $query->row_array();
+        return $result;
+    }
 
-        $userInfo = $this->db->from(self::$tableName)->result_array();
+    /**
+     * 通过手机号获取用户信息
+     *
+     * @param $userEmail
+     * @return Array
+     */
 
-        if(!empty($userInfo) && $userInfo['password'] === password_verify($password, PASSWORD_DEFAULT)){
-            return $userInfo;
-        }
-        return array();
+    public function getUserInfoByEmail($userEmail)
+    {
+        $this->db->where('user_mobile', $userEmail);
+        $query  = $this->db->get(self::$tableName);
+        $result = $query->row_array();
+        return $result;
     }
     /**
      * 新增用户
