@@ -26,25 +26,26 @@ class UserLogModels extends CI_Model{
      *
      * @param $userId
      * @param $content
-     * @param $platform
-     * @param $type
+     * @param $module
+     * @param $method
      * @return bool
      */
-    public function addUserLog($userId, $content, $type){
+    public function addUserLog($userId, $content, $module, $method){
         //获取用户platform
         if ((!$platform = $this->session->userdata('platform'))
                 || (!in_array($platform, CoreConst::$platform))){
             $platform = 0;
         }
 
+        $content = json_encode($content);
 
         $this->db->trans_start();
-
         $this->db->insert(self::$tableName, array(
             'user_id'     => $userId,
             'content'     => $content,
             'platform'    => $platform,
-            'type'        => $type,
+            'module'      => $module,
+            'method'      => $method,
             'create_time' => time(),
         ));
 

@@ -40,17 +40,21 @@ class UserModels extends CI_Model{
         $userId = $this->db->insert_id();
 
         //打log
-        $logContent = sprintf('用户姓名: %s, 用户手机: %s, 用户邮箱: %s',
-            $userName,
-            $userMobile,
-            $userEmail);
-        $this->UserLogModels->addUserLog($userId, $logContent, '新建用户');
+        $logContent = array(
+            'user_name'     => $userName,
+            'user_mobile'   => $userMobile,
+            'user_email'    => $userEmail,
+        );
+
 
         $this->db->trans_complete();
         if (!$this->db->trans_status()){
-            return false;
+            $logContent['run_status'] = 0;
+        } else {
+            $logContent['run_status'] = 1;
         }
-        return true;
+        $this->UserLogModels->addUserLog($userId, $logContent, self::$tableName, __METHOD__);
+        return $logContent['run_status'];
     }
 
     /**
@@ -95,40 +99,32 @@ class UserModels extends CI_Model{
      */
     public function updateUser($userId, $userName, $userBirthday, $userSex,
                                $userMobile, $userEmail, $userSign, $userStatus){
+        $arrUpdateConds = array(
+                'user_name'     => $userName,
+                'user_birthday' => $userBirthday,
+                'user_sex'      => $userSex,
+                'user_mobile'   => $userMobile,
+                'user_email'    => $userEmail,
+                'user_sign'     => $userSign,
+                'user_status'   => $userStatus,
+            );
+
         $this->db->trans_start();
 
         $this->db->where('user_id', $userId);
-        $this->db->update(self::$tableName, array(
-            'user_name'     => $userName,
-            'user_birthday' => $userBirthday,
-            'user_sex'      => $userSex,
-            'user_mobile'   => $userMobile,
-            'user_email'    => $userEmail,
-            'user_sign'     => $userSign,
-            'user_status'   => $userStatus,
-        ));
+        $this->db->update(self::$tableName, $arrUpdateConds);
 
         //打log
-        $logContent = sprintf('影响行数: %s, 用户姓名: %s, 用户手机: %s, 用户邮箱:%s, ' .
-            '用户生日: %s, 用户性别: %s, 用户签名: %s, 用户状态: %s',
-            $this->db->affected_rows(),
-            $userName,
-            $userMobile,
-            $userEmail,
-            $userBirthday,
-            $userSex,
-            $userSign,
-            $userStatus
-        );
-        $this->UserLogModels->addUserLog($userId, $logContent, '修改用户');
-
+        $arrUpdateConds['affected_rows'] = $this->db->affected_rows();
 
         $this->db->trans_complete();
         if (!$this->db->trans_status()){
-            return false;
+            $arrUpdateConds['run_status'] = 0;
         } else {
-            return true;
+            $arrUpdateConds['run_status'] = 1;
         }
+        $this->UserLogModels->addUserLog($userId, $arrUpdateConds, self::$tableName, __METHOD__);
+        return $arrUpdateConds['run_status'];
     }
 
 }

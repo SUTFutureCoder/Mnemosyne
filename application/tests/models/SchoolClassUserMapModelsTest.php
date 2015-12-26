@@ -67,14 +67,26 @@ class SchoolClassUserMapModelsTest extends PHPUnit_Framework_TestCase{
             'user_unique_id' => self::$userId,
         );
         $ret = self::$model->getUserBindList($arrInput['user_unique_id']);
-        print_r($ret);
+        $this->assertArrayHasKey('map_id', $ret[0]);
+        $this->assertArrayHasKey('school_unique_id', $ret[0]);
+        $this->assertArrayHasKey('class_unique_id',  $ret[0]);
+        $this->assertArrayHasKey('user_unique_id',   $ret[0]);
+        $this->assertArrayHasKey('student_id',       $ret[0]);
+        return $ret;
     }
 
     public function testUnBind(){
+        $userBindList = $this->testGetUserBindList();
+        if (!$userBindList[0]){
+            $this->testBind();
+            $this->testUnBind();
+        }
+
         $arrInput = array(
-            'map_id'    => 6,
+            'map_id'         => $userBindList[0]['map_id'],
+            'user_unique_id' => $userBindList[0]['user_unique_id'],
         );
-        $ret = self::$model->unBind($arrInput['map_id']);
-        print_r($ret);
+        $ret = self::$model->unBind($arrInput['map_id'], $arrInput['user_unique_id']);
+        $this->assertEquals(1, $ret);
     }
 }

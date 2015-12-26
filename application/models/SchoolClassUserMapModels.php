@@ -35,20 +35,22 @@ class SchoolClassUserMapModels extends CI_Model{
             'student_id'       => $studentId,
         ));
 
-        $logContent = sprintf('用户Id: %s, 学校Id: %s, 班级Id: %s, 学生Id: %s',
-            $userId,
-            $schoolId,
-            $classId,
-            $studentId
+        $logContent = array(
+            'affected_row'  => $this->db->affected_rows(),
+            'user_id'       => $userId,
+            'school_id'     => $schoolId,
+            'class_id'      => $classId,
+            'student_id'    => $studentId,
         );
-        $this->UserLogModels->addUserLog($userId, $logContent, '绑定班级');
 
         $this->db->trans_complete();
         if (!$this->db->trans_status()){
-            return false;
+            $logContent['run_status'] = 0;
         } else {
-            return true;
+            $logContent['run_status'] = 1;
         }
+        $this->UserLogModels->addUserLog($userId, $logContent, self::$tableName, __METHOD__);
+        return $logContent['run_status'];
     }
 
     /**
@@ -79,7 +81,30 @@ class SchoolClassUserMapModels extends CI_Model{
         return $query->result_array();
     }
 
-    public function unBind($mapId){
+    /**
+     * 解绑用户班级
+     *
+     * @param $mapId
+     * @param $userId
+     * @return int
+     */
+    public function unBind($mapId, $userId){
+        $this->db->trans_start();
 
+        $this->db->delete('school_class_user_map',
+            array('map_id' => $mapId, 'user_unique_id' => $userId));
+
+        $this->db->trans_complete();
+        $logContent = array(
+                'map_id'            => $mapId,
+                'user_unique_id'    => $userId,
+            );
+        if (!$this->db->trans_status()){
+            $logContent['run_status'] = 0;
+        } else {
+            $logContent['run_status'] = 1;
+        }
+        $this->UserLogModels->addUserLog($userId, $logContent, self::$tableName, __METHOD__);
+        return $logContent['run_status'];
     }
 }

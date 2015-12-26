@@ -22,8 +22,8 @@ class UserModelsTest extends PHPUnit_Framework_TestCase
         $arrInput = array(
             'userName'      => 'test',
             'userPW'        => 'passwd',
-            'userMobile'    => 15101669791,
-            'userEmail'     => 'FutureCoder@aliyun.com',
+            'userMobile'    => '151' . substr(time(), 2),
+            'userEmail'     =>  md5(time()) . '@aliyun.com',
         );
         $ret = self::$model->addUser($arrInput['userName'],
             $arrInput['userPW'],
