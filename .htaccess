@@ -1,0 +1,5 @@
+RewriteEngine on 
+ 
+RewriteCond $1 !^(index\.php|gt-php-sdk|static|images|robots\.txt) 
+ 
+RewriteRule ^(.*)$ /Mnemosyne/index.php/$1 [L]

@@ -31,7 +31,6 @@ class Account extends CI_Controller{
         $type = '';
         $this->load->library('validcode');
         $this->load->library('Token');
-
         if (!$this->validcode->checkValidCodeAccess()){
             $this->response->jsonFail(Response::CODE_UNAUTHORIZED, '请输入正确的验证码');
         }

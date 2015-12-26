@@ -63,6 +63,8 @@ class Welcome extends CI_Controller {
 	public function testPasswd(){
 		$testPwd = '12345678910abcdefghijk';
 		echo password_hash($testPwd, PASSWORD_DEFAULT);
+
+
 	}
 
 	public function testPlatform(){
