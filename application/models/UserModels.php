@@ -36,7 +36,7 @@ class UserModels extends CI_Model{
 
         $userInfo = $this->db->from(self::$tableName)->result_array();
 
-        if(!empty($userInfo) && $userInfo['password'] === password_hash($password, PASSWORD_DEFAULT)){
+        if(!empty($userInfo) && $userInfo['password'] === password_verify($password, PASSWORD_DEFAULT)){
             return $userInfo;
         }
         return array();
