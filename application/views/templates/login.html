@@ -6,14 +6,14 @@
     <div class="big_center_title">
         <h1>Hidden in your memory</h1>
         <div class="login">
-            <form id="login_form" method="post" action="{{php}}echo base_url(){{/php}}account/login">
+            <form id="login-form">
                 <p>
-                    <label for="login_name">姓名</label>
-                    <input id="login_name" name="login_name"/>
+                    <label for="login-form-name">姓名</label>
+                    <input id="login-form-name" name="login-form-name"/>
                 </p>
                 <p>
-                    <label for="password">密码</label>
-                    <input id="password" name="passpord"/>
+                    <label for="login-form-password">密码</label>
+                    <input type="password" id="login-form-password" name="login-form-passpord"/>
                 </p>
                 <div class="box" id="div_geetest_lib">
                     <div id="div_id_embed"></div>
@@ -107,30 +107,30 @@
             <div class="modal-body">
                 <form id="reg-form">
                     <div class="form-group">
-                        <label for="username">用户名</label>
-                        <input type="email" class="form-control" id="username" placeholder="Email">
+                        <label for="reg-form-username">用户名</label>
+                        <input type="text" class="form-control" id="reg-form-username">
                     </div>
                     <div class="form-group">
-                        <label for="phone">手机号</label>
-                        <input type="email" class="form-control" id="phone" placeholder="Email">
+                        <label for="reg-form-phone">手机号</label>
+                        <input type="tel" class="form-control" id="reg-form-phone">
                     </div>
                     <div class="form-group">
-                        <label for="email">邮箱</label>
-                        <input type="email" class="form-control" id="email" placeholder="Email">
+                        <label for="reg-form-email">邮箱</label>
+                        <input type="email" class="form-control" id="reg-form-email">
                     </div>
                     <div class="form-group">
-                        <label for="passwordnew">密码</label>
-                        <input type="password" class="form-control" id="passwordnew" placeholder="Password">
+                        <label for="reg-form-password">密码</label>
+                        <input type="password" class="form-control" id="reg-form-password">
                     </div>
                     <div class="form-group">
-                        <label class="control-label" for="passwordconfirm">确认密码</label>
-                        <input type="password" class="form-control" id="passwordconfirm" placeholder="Password">
+                        <label class="control-label" for="reg-form-password-confirm">确认密码</label>
+                        <input type="password" class="form-control" id="reg-form-password-confirm">
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary">注册</button>
+                <button type="button" id="reg-form-confirm-btn" class="btn btn-primary">注册</button>
             </div>
         </div>
     </div>
@@ -140,7 +140,7 @@
 <script type="text/javascript">
     (function(){
         var dom = {
-            loginForm : $('#login_form'),
+            loginForm : $('#login-form'),
             regForm   : $('#reg-form'),
             mainContent : $('.main-content')
         };
@@ -149,7 +149,8 @@
 
             init : function(){
                 this.pageFn();
-                this.eventFn();
+                this.loginEventFn();
+                this.regEventFn();
             },
 
             pageFn:  function(){
@@ -157,12 +158,12 @@
                 dom.mainContent.height(width);
             },
 
-            eventFn: function(){
+            loginEventFn: function(){
                 dom.loginForm.on('click', '#login-form-access-btn', function(){
                     var loginFormData = $(this).parent();
                     var loginPostData = {
-                        'login_name' : loginFormData.find('#login_name').val(),
-                        'password'   : loginFormData.find('#password').val(),
+                        'login_name' : loginFormData.find('#login-form-name').val(),
+                        'password'   : loginFormData.find('#login-form-password').val(),
                         'geetest_challenge' : loginFormData.find('.geetest_challenge').val(),
                         'geetest_validate'  : loginFormData.find('.geetest_validate').val(),
                         'geetest_seccode'   : loginFormData.find('.geetest_seccode').val()
@@ -187,6 +188,10 @@
                         }
                     });
                 })
+            },
+
+            regEventFn: function(){
+
             }
 
         }
