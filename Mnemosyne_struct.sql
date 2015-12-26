@@ -123,8 +123,10 @@ CREATE TABLE IF NOT EXISTS `user` (
   `user_create_time` int(11) unsigned NOT NULL COMMENT '加入时间',
   `user_last_login_time` int(11) unsigned NOT NULL COMMENT '最后登录时间',
   PRIMARY KEY (`user_id`),
+  UNIQUE KEY `user_email_2` (`user_email`),
+  UNIQUE KEY `user_mobile_2` (`user_mobile`),
   KEY `user_name` (`user_name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户表';
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='用户表';
 
 
 -- --------------------------------------------------------
@@ -181,10 +183,10 @@ CREATE TABLE IF NOT EXISTS `user_log` (
   `user_id` bigint(20) unsigned NOT NULL COMMENT '用户id',
   `content` varchar(1024) NOT NULL COMMENT '日志正文',
   `platform` tinyint(4) NOT NULL COMMENT '平台id',
+  `module` varchar(32) NOT NULL COMMENT '模块',
   `create_time` int(10) unsigned NOT NULL COMMENT '创建时间',
-  `type` varchar(255) NOT NULL COMMENT '类型',
+  `method` varchar(32) NOT NULL COMMENT '方法',
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='日志表' AUTO_INCREMENT=99 ;
-
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='日志表';
 
