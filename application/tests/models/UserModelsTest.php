@@ -21,7 +21,7 @@ class UserModelsTest extends PHPUnit_Framework_TestCase
     public function testAddUser(){
         $arrInput = array(
             'userName'      => 'test',
-            'userPW'        => 'passwd',
+            'userPW'        => password_hash('passwd', PASSWORD_DEFAULT),
             'userMobile'    => '151' . substr(time(), 2),
             'userEmail'     =>  md5(time()) . '@aliyun.com',
         );

@@ -10,13 +10,14 @@ class RedisLib{
 
     public static $prefix = 'Mnemosyne_';
 
-    private function __construct(){
+    public function __construct(){
         //禁止new
     }
 
     public static function getInstance(){
         if (!self::$redis){
             self::$redis = new Redis();
+            self::$redis->connect("127.0.0.1",6379);
         }
         return self::$redis;
     }

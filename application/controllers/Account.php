@@ -41,7 +41,7 @@ class Account extends CI_Controller{
             && !(Validator::isNotEmpty($password,  '您的密码不能为空'))) {
             $this->response->jsonFail(Response::CODE_PARAMS_WRONG, Validator::getMessage());
         }
-        $this->load->model("UserModels");
+        $this->load->model('UserModels');
 
         if (Validator::isEmail($login_name) || Validator::isMobile($login_name)) {
             $userInfo = $this->UserModels->getUserInfoByLoginName($login_name);
@@ -51,8 +51,7 @@ class Account extends CI_Controller{
         }
 
         if(empty($userInfo)
-            && ($userInfo['password'] !== password_verify($password, PASSWORD_DEFAULT)))
-        {
+            || (!empty($userInfo) && !password_verify($password, $userInfo['user_password']))) {
             Validator::setMessage("用户名或密码错误");
             $this->response->jsonFail(Response::CODE_PARAMS_WRONG, Validator::getMessage());
         }
