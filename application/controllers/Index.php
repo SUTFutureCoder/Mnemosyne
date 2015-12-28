@@ -21,10 +21,10 @@ class Index extends CI_Controller
     }
     public function completeInfo()
     {
-        $this->load->library('session');
-        $this->session->set_userdata('test', '123456');
-        echo $this->session->test;
-        exit;
+//        $this->load->library('session');
+//        $this->session->set_userdata('test', '123456');
+//        echo $this->session->test;
+//        exit;
         $navbar     = getHorizontalNavbar(1);
         $userinfo   = checkLogin();
         $this->template->assign("navbar", $navbar);
