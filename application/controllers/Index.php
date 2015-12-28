@@ -21,8 +21,12 @@ class Index extends CI_Controller
     }
     public function completeInfo()
     {
-        $navbar = getHorizontalNavbar(1);
-        $userinfo = checkLogin();
+        $this->load->library('session');
+        $this->session->set_userdata('test', '123456');
+        echo $this->session->test;
+        exit;
+        $navbar     = getHorizontalNavbar(1);
+        $userinfo   = checkLogin();
         $this->template->assign("navbar", $navbar);
         $this->template->display("completeinfo.html");
     }
@@ -30,7 +34,7 @@ class Index extends CI_Controller
     {
         $navbar = getHorizontalNavbar(3);
         $this->template->assign("navbar", $navbar);
-       $this->template->display("edit.html");
+        $this->template->display("edit.html");
     }
     public function send()
     {

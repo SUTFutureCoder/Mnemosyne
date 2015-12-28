@@ -8,8 +8,6 @@
 
 
 function checkLogin(){
-    var_dump($_POST);
-    var_dump($_SESSION);
     $CI       =  & get_instance();
     $CI->load->library("session");
     $user_id  =  $CI->session->user_id;
