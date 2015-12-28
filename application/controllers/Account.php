@@ -58,7 +58,7 @@ class Account extends CI_Controller{
 
         $token = $this->token->setTokenToRedis($userInfo['user_id']);
         $this->load->library('session');
-        $this->session->set_userdata('user_id', "123") ;
+        $this->session->set_userdata('user_id', $userInfo['user_id']) ;
         $this->session->set_userdata('user_name', $userInfo['user_name']);
         $this->session->set_userdata('token', $token);
         if(isset($_SESSION['user_id']))
