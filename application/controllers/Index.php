@@ -13,6 +13,7 @@ class Index extends CI_Controller
     {
         parent::__construct();
         $this->load->library("template");
+        $this->load->helper("login");
     }
     public function login()
     {
@@ -21,6 +22,7 @@ class Index extends CI_Controller
     public function completeInfo()
     {
         $navbar = getHorizontalNavbar(1);
+        $userinfo = checkLogin();
         $this->template->assign("navbar", $navbar);
         $this->template->display("completeinfo.html");
     }

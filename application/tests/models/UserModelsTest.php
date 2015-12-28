@@ -54,7 +54,7 @@ class UserModelsTest extends PHPUnit_Framework_TestCase
             'user_name'     => '*Chen',
             'user_birthday' => '1994-05-29',
             'user_sex'      => 1,
-            'user_mobile'   => 15101669791,
+            'user_mobile'   => 13555791383,
             'user_email'    => 'linxingchen@iwaimai.baidu.com',
             'user_sign'     => 'f*ck',
             'user_status'   => 0,
