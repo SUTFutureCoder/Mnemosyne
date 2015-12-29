@@ -70,59 +70,54 @@ class Account extends CI_Controller{
     }
 
     public function regist(){
+
+        $this->load->library('Token');
+        /*开发期间验证码先注释掉
         //验证是否通过验证码验证
         $this->load->library('validcode');
-        $this->load->library('Token');
-
 
         if (!$this->validcode->checkValidCodeAccess()){
             $this->response->jsonFail(Response::CODE_UNAUTHORIZED, '请输入正确的验证码');
         }
+        */
 
 
-        $userName   = trim($this->input->post('user_name',   true));
-        $school     = trim($this->input->post('school',      true));
-        $class      = trim($this->input->post('class',       true));
-        $passWd     = trim($this->input->post('password',    true));
-        $userMobile = trim($this->input->post('user_mobile', true));
-        $userEmail  = trim($this->input->post('user_email',  true));
+        $userName       = trim($this->input->post('user_name',        true));
+        $userMobile     = trim($this->input->post('user_mobile',      true));
+        $userEmail      = trim($this->input->post('user_email',       true));
+        $passWd         = trim($this->input->post('password',         true));
+        $passWdConfirm  = trim($this->input->post('password_confirm', true));
 
         if (!(Validator::isNotEmpty($userName,      '您的姓名不能为空')
             && Validator::mbStringRange($userName, 0, 30, '您的姓名不能超过30个字符')
-            && Validator::isNotEmpty($school,   '您的学校名称不能为空')
-            && Validator::mbStringRange($school, 0, 30, '您的学校名称不能超过30个字符')
-            && Validator::isNotEmpty($class,    '您的班级不能为空')
-            && Validator::mbStringRange($class, 0, 30, '您的班级名称不能超过30个字符')
-            && Validator::mbStringRange($passWd, 0, 20, '您的密码不能超过20位')
             && Validator::isNotEmpty($userMobile, '您的手机号码不能为空')
             && Validator::isMobile($userMobile, '请输入合法的手机号码')
             && Validator::isNotEmpty($userEmail,  '您的邮箱地址不能为空')
-            && Validator::isEmail($userEmail,   '请输入合法的邮箱地址'))){
+            && Validator::isEmail($userEmail,   '请输入合法的邮箱地址')
+            && Validator::isNotEmpty($passWd, '您的密码不能为空')
+            && Validator::isNotEmpty($passWdConfirm, '您再次输入密码不能为空')
+            && Validator::mbStringRange($passWd, 0, 20, '您的密码不能超过20位')
+            && Validator::mbStringRange($passWdConfirm, 0, 20, '您的密码不能超过20位')
+            && Validator::isEqual($passWd, $passWdConfirm, "您两次输入的密码不一致")
+        )){
             $this->response->jsonFail(Response::CODE_PARAMS_WRONG, Validator::getMessage());
         }
 
-        $this->load->model('SchoolModels');
-        $this->load->model('ClassModels');
-
-        //获取学校id
-        if (!$schoolId = $this->SchoolModels->getSchoolIdByName($school)){
-            $this->response->jsonFail(Response::CODE_PARAMS_WRONG, '抱歉，您的学校还未开放服务。请联系admin@bricksfx.cn');
-        }
-
-        //获取班级id
-        if (!$classId  = $this->ClassModels->getClassIdByName($schoolId, $class)){
-            $this->response->jsonFail(Response::CODE_PARAMS_WRONG, '抱歉，请选择已有班级');
+        $this->load->model('UserModels');
+        //判断手机号或者邮箱是否被注册
+        if($this->UserModels->checkUserExists($userMobile, $userEmail))
+        {
+            $this->response->jsonFail(Response::CODE_PARAMS_WRONG, '抱歉, 您的邮箱或手机号已经被注册');
         }
 
         //录入数据库
-
+        $this->UserModels->addUser($userName, password_hash($passWd, PASSWORD_DEFAULT), $userMobile, $userEmail);
 
         $userId = 0;
         //返回token
         $this->response->jsonSuccess(array(
             'token' => $this->token->setTokenToRedis($userId),
         ));
-
 
 
     }

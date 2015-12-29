@@ -34,15 +34,15 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="myModalLabel">注册新用户</h4>
             </div>
+            <form id="reg-form">
             <div class="modal-body">
-                <form id="reg-form">
                     <div class="form-group">
                         <label for="reg-form-username">用户名</label>
                         <input type="text" class="form-control" id="reg-form-username">
                     </div>
                     <div class="form-group">
-                        <label for="reg-form-phone">手机号</label>
-                        <input type="tel" class="form-control" id="reg-form-phone">
+                        <label for="reg-form-mobile">手机号</label>
+                        <input type="tel" class="form-control" id="reg-form-mobile">
                     </div>
                     <div class="form-group">
                         <label for="reg-form-email">邮箱</label>
@@ -56,12 +56,12 @@
                         <label class="control-label" for="reg-form-password-confirm">确认密码</label>
                         <input type="password" class="form-control" id="reg-form-password-confirm">
                     </div>
-                </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
                 <button type="button" id="reg-form-confirm-btn" class="btn btn-primary">注册</button>
             </div>
+            </form>
         </div>
     </div>
 </div>
@@ -91,13 +91,14 @@
             loginEventFn: function(){
                 dom.loginForm.on('click', '#login-form-access-btn', function(){
                     var loginFormData = $(this).parent();
+                    console.log(loginFormData);
                     var loginPostData = {
                         'login_name' : loginFormData.find('#login-form-name').val(),
                         'password'   : loginFormData.find('#login-form-password').val(),
                         'geetest_challenge' : loginFormData.find('.geetest_challenge').val(),
                         'geetest_validate'  : loginFormData.find('.geetest_validate').val(),
                         'geetest_seccode'   : loginFormData.find('.geetest_seccode').val()
-                    }
+                    };
 
 
                     $.ajax({
@@ -122,10 +123,39 @@
             },
 
             regEventFn: function(){
+                dom.regForm.on('click', '#reg-form-confirm-btn', function(){
+                    var regFormData = $(this).parent().parent();
+                    var regPostData = {
+                        'user_name' : regFormData.find('#reg-form-username').val(),
+                        'user_mobile'   : regFormData.find('#reg-form-mobile').val(),
+                        'user_email'    : regFormData.find('#reg-form-email').val(),
+                        'password'    : regFormData.find('#reg-form-password').val(),
+                        'password_confirm'    : regFormData.find('#reg-form-password-confirm').val(),
+                    };
+                    console.log(regPostData);
 
-            }
+                    $.ajax({
+                        type: 'POST',
+                        url: '{{php}}echo base_url(){{/php}}account/regist',
+                        data: regPostData,
+                        dataType: 'json',
+                        success: function(data){
+                            if (data['status'] == 0){
+                                alert("注册成功");
+                                window.location.href='{{php}}echo base_url();{{/php}}index/login';
+                            } else {
+                                alert(data['description']);
+                            }
+                        },
+                        error: function(data){
+                            console.log(data);
+                            alert('操作失败');
+                        }
+                    });
+                })
+            },
 
-        }
+        };
 
         userLoginReg.init();
     })();
