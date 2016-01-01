@@ -105,6 +105,7 @@
     </div>
 
 </div><!--main-content!-->
+{{ include file='./public/load_script.html' }}
 <script type="text/javascript">
     (function(){
         var dom = {
@@ -121,7 +122,7 @@
             loadInfo: function(){
                 $.ajax({
                     type: 'GET',
-                    url: '{{php}}echo base_url(){{/php}}account/loadUserAlumniInfo',
+                    url: '{{php}}echo base_url(){{/php}}api/account/account/loadUserAlumniInfo',
                     success: function(data){
                         console.log(data);
                         if (data['status'] == 0){
@@ -155,7 +156,7 @@
 
                     $.ajax({
                         type: 'POST',
-                        url: '{{php}}echo base_url(){{/php}}account/loadUserAlumniInfo',
+                        url: '{{php}}echo base_url(){{/php}}api/account/account/loadUserAlumniInfo',
                         data: loginPostData,
                         dataType: 'json',
                         success: function(data){

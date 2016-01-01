@@ -16,7 +16,6 @@ class User extends CI_Controller{
     public function completeInfo()
     {
         $this->load->library('session');
-        $this->session->set_userdata('useid', '24');
         $navbar     = getHorizontalNavbar(1);
         //$userinfo   = checkLogin();
         $this->template->assign("navbar", $navbar);

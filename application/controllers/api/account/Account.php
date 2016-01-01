@@ -128,7 +128,6 @@ class Account extends CI_Controller{
         $this->load->model('AlumniModels');
 
         $userId = $this->session->user_id;
-        //$userId = '24'; //mac session 未修复之前只能这么挫的写了
         if (!(Validator::isNotEmpty($userId,      '您已经下线请重新登录')
         )){
             $this->response->jsonFail(Response::CODE_PARAMS_WRONG, Validator::getMessage());
