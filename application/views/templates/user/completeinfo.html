@@ -134,9 +134,12 @@
                             infoFormData.find('#info-form-mobile').val(data['data']['userinfo']['user_mobile']);
                             infoFormData.find('#info-form-email').val(data['data']['userinfo']['user_email']);
                             infoFormData.find('#info-form-sign').val(data['data']['userinfo']['user_sign']);
-                        } else {
+                        } else if(data['status'] == 401){
                             alert(data['description']);
-                        }
+                            window.location.href='{{php}}echo base_url();{{/php}}index/login';
+                        }else{
+                            alert(data['description']);
+			}
                     },
                     error: function(data){
                             console.log(data);
@@ -162,7 +165,7 @@
                         success: function(data){
                             console.log(data);
                             if (data['status'] == 0){
-                                window.location.href='{{php}}echo base_url();{{/php}}index/completeinfo';
+                                window.location.href='{{php}}echo base_url();{{/php}}user/completeinfo';
                             } else {
                                 alert(data['description']);
                             }

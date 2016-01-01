@@ -130,7 +130,7 @@ class Account extends CI_Controller{
         $userId = $this->session->user_id;
         if (!(Validator::isNotEmpty($userId,      '您已经下线请重新登录')
         )){
-            $this->response->jsonFail(Response::CODE_PARAMS_WRONG, Validator::getMessage());
+            $this->response->jsonFail(Response::CODE_UNAUTHENTICATED, Validator::getMessage());
         }
         $userInfo  = $this->UserModels->getUserBasicInfo($userId);
         $usrAlumni = $this->AlumniModels->getUserInfoByUserId($userId);
