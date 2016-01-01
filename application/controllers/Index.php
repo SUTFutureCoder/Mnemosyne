@@ -15,35 +15,10 @@ class Index extends CI_Controller
         $this->load->library("template");
         $this->load->helper("login");
     }
+
     public function login()
     {
-        $this->template->display("login.html");
+        $this->template->display("./login/login.html");
     }
-    public function completeInfo()
-    {
-        $this->load->library('session');
-        $this->session->set_userdata('useid', '24');
-        $navbar     = getHorizontalNavbar(1);
-        //$userinfo   = checkLogin();
-        $this->template->assign("navbar", $navbar);
-        $this->template->display("completeinfo.html");
-    }
-    public function edit()
-    {
-        $navbar = getHorizontalNavbar(3);
-        $this->template->assign("navbar", $navbar);
-        $this->template->display("edit.html");
-    }
-    public function send()
-    {
-        $navbar = getHorizontalNavbar(2);
-        $this->template->assign("navbar", $navbar);
-        $this->template->display("send.html");
-    }
-    public function expressLove()
-    {
-        $navbar = getHorizontalNavbar(0);
-        $this->template->assign("navbar", $navbar);
-        die("此功能尚未添加");
-    }
+
 }
