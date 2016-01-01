@@ -6,7 +6,7 @@
         <div class="container a4content">
             <div class="row">
                 <div class="col-xs-12 completeUserInfo">
-                    <form class="completeInfo">
+                    <form id="info-form">
                         <center><h1 class="page-header">我的信息</h1></center>
                         <div class="user">
                             <div class="col-xs-12">
@@ -14,31 +14,35 @@
                                 <input type="image" alt="贴照片" width="280px" height="280px"/>
                             </div><!--col-xs-6!-->
 
-                            <div class="col-xs-6" style="backtround-color:black">
+                            <div class="col-xs-6">
 
                                 <p>
-                                    <label for="name">姓名</label>
-                                    <input type="text" id="name" name="name">
+                                    <label for="info-form-name">姓名</label>
+                                    <input type="text" id="info-form-name">
                                 </p>
                                 <p>
-                                    <label for="birthday">生日</label>
-                                    <input type="text" id="birthday" name="birthday">
+                                    <label for="info-form-birthday">生日</label>
+                                    <input type="text" id="info-form-birthday">
                                 </p>
                                 <p>
-                                    <label for="sex">性别</label>
-                                    <input type="text" id="sex" name="sex">
+                                    <label for="info-form-sex">性别</label>
+                                    <select id="info-form-sex">
+                                        <option value="1">男</option>
+                                        <option value="0">女</option>
+                                        <option value="2">其他</option>
+                                    </select>
                                 </p>
                                 <p>
-                                    <label for="phone">电话</label>
-                                    <input type="text" id="phone" name="phone">
+                                    <label for="info-form-mobile">电话</label>
+                                    <input type="text" id="info-form-mobile">
                                 </p>
                                 <p>
-                                    <label for="email">邮箱</label>
-                                    <input type="text" id="email" name="email">
+                                    <label for="info-form-email">邮箱</label>
+                                    <input type="text" id="info-form-email">
                                 </p>
                                 <p>
-                                    <label for="sign">个性签名</label>
-                                    <input type="text" id="sign" name="sign">
+                                    <label for="info-form-sign">个性签名</label>
+                                    <input type="text" id="info-form-sign">
                                 </p>
                             </div><!--col-xs-6!-->
                             </div>
@@ -49,43 +53,47 @@
                             <div class="col-xs-6">
 
                                 <p>
-                                    <label for="nickname">绰号</label>
-                                    <input type="text" id="nickname" name="nickname"/>
+                                    <label for="info-form-nickname">绰号</label>
+                                    <input type="text" id="info-form-nickname"/>
                                 </p>
                                 <p>
-                                    <label for="birthday">血型</label>
-                                    <input type="text" id="birthday" name="birthday"/>
+                                    <label for="info-form-bloodgroup">血型</label>
+                                    <input type="text" id="info-form-bloodgroup" />
+                                </p>
+                                <p>
+                                    <label for="info-form-school">学校</label>
+                                    <input type="info-form-school" id="info-form-school">
                                 </p>
                             </div><!--col-xs-6!-->
 
                             <div class="col-xs-6">
 
                                 <p>
-                                    <label for="phone">体型</label>
-                                    <input type="text" id="phone" name="phone">
+                                    <label for="info-form-shape">体型</label>
+                                    <input type="text" id="info-form-shape">
                                 </p>
                                 <p>
-                                    <label for="speciality">特长</label>
-                                    <input type="text" id="speciality" name="speciality">
+                                    <label for="info-form-speciality">特长</label>
+                                    <input type="text" id="info-form-speciality" name="info-form-speciality">
+                                </p>
+                                <p>
+                                    <label for="info-form-class">班级</label>
+                                    <input type="text" id="info-form-class">
                                 </p>
                             </div><!--col-xs-6!-->
 
                             <div class="col-xs-12 content-block">
                                 <p>
-                                    <label for="school">学校</label>
-                                    <input type="school" id="school" name="school" onclick="alert('test')">
+                                    <label for="info-form-birth-place">出生地</label>
+                                    <input type="birth_place" id="info-form-birth-place">
                                 </p>
                                 <p>
-                                    <label for="birth_place">出生地</label>
-                                    <input type="birth_place" id="birth_place" name="birth_place">
-                                </p>
-                                <p>
-                                    <label for="sex">近期心愿</label>
-                                    <input type="text" id="sex" name="sex">
+                                    <label for="info-form-recent-dream">近期心愿</label>
+                                    <input type="text" id="info-form-recent-dream">
                                 </p>
                             </div>
                         </div><!--userProfile!-->
-
+                        <button class="btn btn-block" id="info-form-access-btn">提交</button>
                     </form>
                 </div><!--col-xs-12!-->
             </div><!--row!-->
@@ -97,4 +105,79 @@
     </div>
 
 </div><!--main-content!-->
+<script type="text/javascript">
+    (function(){
+        var dom = {
+            infoForm : $('#info-form'),
+        };
+
+        var infoReg = {
+
+            init : function(){
+                this.loadInfo();
+                //this.infoEventFn();
+            },
+
+            loadInfo: function(){
+                $.ajax({
+                    type: 'GET',
+                    url: '{{php}}echo base_url(){{/php}}account/loadUserAlumniInfo',
+                    success: function(data){
+                        console.log(data);
+                        if (data['status'] == 0){
+                            console.log(data);
+                            infoFormData = dom.infoForm;
+                            infoFormData.find('#info-form-name').val(data['data']['userinfo']['user_name']);
+                            infoFormData.find('#info-form-birthday').val(data['data']['userinfo']['user_birthday']);
+                            infoFormData.find('#info-form-sex').val(data['data']['userinfo']['user_sex']);
+                            infoFormData.find('#info-form-mobile').val(data['data']['userinfo']['user_mobile']);
+                            infoFormData.find('#info-form-email').val(data['data']['userinfo']['user_email']);
+                            infoFormData.find('#info-form-sign').val(data['data']['userinfo']['user_sign']);
+                        } else {
+                            alert(data['description']);
+                        }
+                    },
+                    error: function(data){
+                            console.log(data);
+                            alert('操作失败');
+                        }
+                });
+            },
+
+            infoEventFn: function(){
+                dom.loginForm.on('click', '#info-form-access-btn', function(){
+                    var loginFormData = $(this).parent();
+                    console.log(loginFormData);
+                    var loginPostData = {
+                        'login_name' : infoFormData.find('#login-form-name').val(),
+                    };
+
+
+                    $.ajax({
+                        type: 'POST',
+                        url: '{{php}}echo base_url(){{/php}}account/loadUserAlumniInfo',
+                        data: loginPostData,
+                        dataType: 'json',
+                        success: function(data){
+                            console.log(data);
+                            if (data['status'] == 0){
+                                window.location.href='{{php}}echo base_url();{{/php}}index/completeinfo';
+                            } else {
+                                alert(data['description']);
+                            }
+                        },
+                        error: function(data){
+                            console.log(data);
+                            alert('操作失败');
+                        }
+                    });
+                })
+            },
+
+
+        };
+
+        infoReg.init();
+    })();
+</script>
 {{include file='footer.html'}}

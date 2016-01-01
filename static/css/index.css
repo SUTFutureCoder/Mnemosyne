@@ -25,7 +25,7 @@ body{
 form p label{
     color: #ffffff;
 }
-form p input {
+form p input{
     background: none;
     border: none;
     border-bottom: 1px #616363 solid;
@@ -33,6 +33,7 @@ form p input {
     outline: none;
     color: #ffffff;
 }
+
 form button{
     margin-top: 10px;
 }

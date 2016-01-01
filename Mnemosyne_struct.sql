@@ -132,6 +132,28 @@ CREATE TABLE IF NOT EXISTS `user` (
 -- --------------------------------------------------------
 
 --
+-- 表的结构 `user`
+--
+
+-- DROP TABLE IF EXISTS `user_alumni`;
+CREATE TABLE IF NOT EXISTS `user_alumni` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `user_id` bigint(20) NOT NULL COMMENT '用户唯一id',
+  `user_realname` varchar(32) NOT NULL DEFAULT '' COMMENT '真实姓名',
+  `user_shape` VARCHAR(32) NOT NULL DEFAULT '' COMMENT '用户体型',
+  `user_bloodgroup` char(2) DEFAULT 'A' NOT NULL COMMENT '血型',
+  `user_specialty` varchar(32) NOT NULL DEFAULT '' COMMENT '用户特长',
+  `user_birty_place` varchar(128) NOT NULL DEFAULT '' COMMENT '用户出生地',
+  `user_recent_dream` varchar(128)  NOT NULL DEFAULT '' COMMENT '近期梦想',
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`),
+  KEY `user_realname` (`user_realname`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='用户同学录信息表';
+
+
+-- --------------------------------------------------------
+
+--
 -- 表的结构 `group`
 --
 

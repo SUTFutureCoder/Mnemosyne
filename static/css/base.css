@@ -38,7 +38,7 @@
 }
 
 
-.a4page p input {
+.a4page p input, select{
     background: none;
     border: none;
     border-bottom: 1px #616363 solid;

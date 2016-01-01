@@ -121,4 +121,28 @@ class Account extends CI_Controller{
 
 
     }
+
+    public function loadUserAlumniInfo(){
+        $this->load->library("session");
+        $this->load->model('UserModels');
+        $this->load->model('AlumniModels');
+
+        $userId = $this->session->user_id;
+        //$userId = '24'; //mac session 未修复之前只能这么挫的写了
+        if (!(Validator::isNotEmpty($userId,      '您已经下线请重新登录')
+        )){
+            $this->response->jsonFail(Response::CODE_PARAMS_WRONG, Validator::getMessage());
+        }
+        $userInfo  = $this->UserModels->getUserBasicInfo($userId);
+        $usrAlumni = $this->AlumniModels->getUserInfoByUserId($userId);
+        $this->response->jsonSuccess(array(
+            'userinfo' => $userInfo,
+        ));
+    }
+
+    public function completeInfo(){
+        $this->load->library("session");
+        $user_id = $this->session->user_id;
+
+    }
 }
