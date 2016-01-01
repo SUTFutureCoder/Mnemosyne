@@ -1,0 +1,69 @@
+body{
+    background-color: black;
+    min-width: 1024px;
+}
+.header{
+    color: #ffffff;
+}
+.header h1{
+    margin-left: 20px;
+}
+.content{
+    width:100%;
+}
+#bg-video{
+    position: absolute;
+    top: 0px;
+    width: 100%;
+    z-index: -100;
+}
+#bg-video video{
+    z-index: -90;
+    height: 100%;
+    width: 100%;
+    /*min-width: 1330px;*/
+    opacity:0.3;
+}
+.big_center_title{
+    position: relative;
+}
+.big_center_title .login{
+    margin: 0 auto 0 auto;
+    text-align: center;
+    font-size:25px;
+}
+#div_geetest_lib{
+    margin: 0 auto 0 auto;
+    text-align: center;
+}
+form p label{
+    color: #ffffff;
+}
+form p input{
+    background: none;
+    border: none;
+    border-bottom: 1px #616363 solid;
+    font-size: 1.3em;
+    outline: none;
+    color: #ffffff;
+}
+
+form button{
+    margin-top: 10px;
+}
+label {
+    cursor: pointer;
+}
+.big_center_title h1{
+    margin:150px auto 50px auto;
+    text-align:center;
+    font-size: 67px;
+    color: #ffffff;
+    font-family: Consolas;
+}
+
+.box{
+    width:300px;
+    margin: 30px auto;
+}
+
