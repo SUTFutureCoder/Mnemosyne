@@ -36,4 +36,12 @@ class ClassModels extends CI_Model{
         return false;
     }
 
+    public function geClassListBySchoolId($schoolId){
+
+        $this->db->select('class_id', 'class_name');
+        $this->db->where('school_id', $schoolId);
+        $row = $this->db->get('class')->row_array();
+        return $row;
+    }
+
 }
