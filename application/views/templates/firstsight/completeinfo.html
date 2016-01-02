@@ -1,0 +1,107 @@
+<!--
+仅在未初始化完毕时加载此页，三步完成设置
+注意需要在loadscript后面加入
+-->
+<div id="complete-info-modal" class="modal modal-dialog modal-lg hide fade span9" tabindex="-1" role="dialog" aria-labelledby="init-modallabel" >
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="init-modallabel">只需三步，找到组织</h3>
+    </div>
+    <div class="modal-body">
+        <div id="complete-info-modal-process" class="progress progress-striped active">
+            <div class="bar" style="width: 30%;"></div>
+        </div>
+        <div id="complete-info-modal-basic-info">
+            <h1>testteststetsets</h1>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+    </div>
+</div>
+<script type="text/javascript">
+    (function(){
+        var dom = {
+            initInfoModal  : $('#complete-info-modal')
+        };
+
+        var initReg = {
+
+            init : function(){
+                this.displayInitModal();
+//                this.userInit();
+            },
+
+            displayInitModal: function(){
+                dom.initInfoModal.modal('toggle');
+            },
+
+            userInit: function(){
+                //分布记录，最后一起提交
+
+
+
+                $.ajax({
+                    type: 'GET',
+                    url: '{{php}}echo base_url(){{/php}}api/account/account/loadUserAlumniInfo',
+                    success: function(data){
+                        console.log(data);
+                        if (data['status'] == 0){
+                            console.log(data);
+                            infoFormData = dom.infoForm;
+                            infoFormData.find('#info-form-name').val(data['data']['userinfo']['user_name']);
+                            infoFormData.find('#info-form-birthday').val(data['data']['userinfo']['user_birthday']);
+                            infoFormData.find('#info-form-sex').val(data['data']['userinfo']['user_sex']);
+                            infoFormData.find('#info-form-mobile').val(data['data']['userinfo']['user_mobile']);
+                            infoFormData.find('#info-form-email').val(data['data']['userinfo']['user_email']);
+                            infoFormData.find('#info-form-sign').val(data['data']['userinfo']['user_sign']);
+                        } else if(data['status'] == 401){
+                            alert(data['description']);
+                            window.location.href='{{php}}echo base_url();{{/php}}index/login';
+                        }else{
+                            alert(data['description']);
+                        }
+                    },
+                    error: function(data){
+                        console.log(data);
+                        alert('操作失败');
+                    }
+                });
+            },
+
+            infoEventFn: function(){
+                dom.loginForm.on('click', '#info-form-access-btn', function(){
+                    var loginFormData = $(this).parent();
+                    console.log(loginFormData);
+                    var loginPostData = {
+                        'login_name' : infoFormData.find('#login-form-name').val(),
+                    };
+
+
+                    $.ajax({
+                        type: 'POST',
+                        url: '{{php}}echo base_url(){{/php}}api/account/account/loadUserAlumniInfo',
+                        data: loginPostData,
+                        dataType: 'json',
+                        success: function(data){
+                            console.log(data);
+                            if (data['status'] == 0){
+                                window.location.href='{{php}}echo base_url();{{/php}}user/completeinfo';
+                            } else {
+                                alert(data['description']);
+                            }
+                        },
+                        error: function(data){
+                            console.log(data);
+                            alert('操作失败');
+                        }
+                    });
+                })
+            },
+
+
+        };
+
+        initReg.init();
+    })();
+</script>
