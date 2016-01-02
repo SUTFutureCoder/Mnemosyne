@@ -212,3 +212,23 @@ CREATE TABLE IF NOT EXISTS `user_log` (
   KEY `user_id` (`user_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='日志表';
 
+
+
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `user_relation`
+--
+
+CREATE TABLE IF NOT EXISTS `user_relation` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '唯一id',
+  `user_id` bigint(20) unsigned NOT NULL COMMENT '用户id',
+  `user_relate` bigint(20) NOT NULL COMMENT '用户好友id 也可以是其他关系的id',
+  `type` tinyint(4) NOT NULL DEFAULT '0' COMMENT '用户关系 -1 黑名单 0 好友 1 暧昧 2 情侣',
+  `intimacy` tinyint(4) NOT NULL DEFAULT 0 COMMENT '亲密度 default 0',
+  `create_time` int(10) unsigned NOT NULL COMMENT '创建时间',
+  `update_time` int(10) NOT NULL COMMENT '修改时间',
+  PRIMARY KEY (`id`),
+  KEY Iur_userid_relate(user_id, user_relate)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='用户关系表';
