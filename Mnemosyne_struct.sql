@@ -230,5 +230,5 @@ CREATE TABLE IF NOT EXISTS `user_relation` (
   `create_time` int(10) unsigned NOT NULL COMMENT '创建时间',
   `update_time` int(10) NOT NULL COMMENT '修改时间',
   PRIMARY KEY (`id`),
-  index Iur_userid_userrelate on Iur(user_id, user_relate)
+  KEY Iur_userid_relate(user_id, user_relate)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='用户关系表';
