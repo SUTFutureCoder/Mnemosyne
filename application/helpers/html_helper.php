@@ -2,10 +2,10 @@
 function getHorizontalNavbar($nav_num)
 {
     $nav_list = array(
-        array("name" => "我的首页", "url" => "index/login"),
-        array("name" => "完善信息", "url" => "index/completeinfo"),
-        array("name" => "分发同学录", "url" => "index/send"),
-        array("name" => "填写同学录", "url" => "index/edit"),
+        array("name" => "我的首页", "url" => "user/userinfo"),
+        array("name" => "修改信息", "url" => "index/completeinfo"),
+        //array("name" => "分发同学录", "url" => "index/send"),
+        array("name" => "填写同学录", "url" => "#"),
         array("name" => "表白", "url" => "index/showlove"),
     );
     $ret = "<div class='navbar navbar-inverse' role='navigation'>

@@ -1,0 +1,259 @@
+<!doctype html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="http://cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+    <style type="text/css">
+
+        #headline {
+            padding: 0.8em;
+            background-color: black;
+            color: white;
+            font-family: Roboto, sans-serif;
+            background-image: url(http://wf.uisdc.com/cn/resources/samples/getting-started/your-first-multi-screen-site/background-blur.jpg);
+            background-size: cover;
+        }
+        #headline h1 {
+            font-weight: 200;
+            font-size: 60px;
+            line-height: 1em;
+            margin-bottom: 0;
+        }
+        #headline h2{
+            font-weight: 200;
+            font-size: 30px;
+            margin-top: 5px;
+        }
+        #headline #blurb {
+            font-weight: 200;
+            font-size: 18px;
+        }
+        #headline #userinfo {
+            background-color: #39b1a4;
+            background-color: rgba(57,177, 164, 0.7);
+            padding: 1em;
+        }
+        #headline #userinfo h2 {
+            font-weight: 100;
+            padding: 0;
+            margin: 0;
+        }
+        table {
+            margin-top: 26px;
+            width: 100%;
+        }
+        #headline #userinfo .userinfo-table-item{
+            font-size: 1.4em;
+            font-weight: 200;
+            padding-top: 12px;
+            display: block;
+        }
+
+        #headline #userinfo .userinfo-table-value {
+            font-size: 1.2em;
+            font-weight: 200;
+            padding-top: 12px;
+            padding-left: 20px;
+        }
+
+        #alumni {
+            box-sizing: border-box;
+            padding: 20px;
+        }
+        #alumni h2, #memory_space h2{
+            margin-top: 0;
+            font-size: 24px
+        }
+
+        #alumni{
+            background-color: white;
+            font-family: Roboto, sans-serif;
+            font-weight: 100;
+            font-size: 18px;
+        }
+        #alumni h2{
+            font-weight: 300;
+            text-align: center;
+            margin-bottom: 0px;
+            margin-top: 20px;
+        }
+        #alumni h2 + p {
+            text-align: center;
+        }
+
+        #footer{
+            font-family: Roboto, sans-serif;
+            font-weight: 300;
+            text-align: center;
+            background-color: hsl(8, 70%, 54%);
+            color: white;
+            padding-bottom: 20px;
+            padding-top: 20px;
+        }
+
+        @media screen and (min-width: 600px){
+            #headline {
+                padding: 20px 5%;
+            }
+            .container {
+                margin: auto;
+                max-width: 800px;
+            }
+            #headline #blurb {
+                float: left;
+                font-weight: 200;
+                width: 50%;
+                font-size: 18px;
+                box-sizing: border-box;
+                padding-right: 10px;
+            }
+
+            #headline #userinfo {
+                float:right;
+                padding: 20px;
+                width: 50%;
+                box-sizing: border-box;
+                font-weight: 300;
+            }
+            #headline br {
+                clear: both;
+            }
+            #headline #userinfo{
+                float:right;
+                padding: 20px;
+                width: 50%;
+                box-sizing: border-box;
+                font-weight: 300;
+            }
+            #alumni{
+                box-sizing: border-box;
+                padding: 10px 20% 80px 20%;
+            }
+            #alumni br{
+                clear: both;
+            }
+            #alumni h2{
+                margin-top: 0;
+                font-size: 60px
+            }
+            #alumni #alumni-content{
+                text-align: center;
+            }
+            #alumni #alumni-content .alumni-item{
+                float:left;
+            }
+            #alumni #alumni-content .alumni-item-img{
+                padding:0 15px;
+            }
+            #alumni #alumni-content .alumni-item-img img{
+                width: 225px;
+                height: 225px;
+                box-sizing: border-box;
+                border-radius: 50% 50%;
+                box-shadow: black 0px 0px 5px;
+            }
+        }
+    </style>
+    <title>Mnemosyne</title>
+</head>
+<body>
+{{$navbar}}
+<div id="headline">
+    <div class="container">
+        <h1>Hidden in your Memory</h1>
+        <h2>Mnemosyne</h2>
+        <div id="blurb">
+            <p>毕业季隐藏在记忆中的情怀</p>
+            <p>给同学的祝福,记录记忆中的瞬间,以及对她来不及说出口的....</p>
+            <ul>
+                <li>同学录</li>
+                <li>记忆空间</li>
+                <li>表白</li>
+            </ul>
+        </div>
+        <div id="userinfo">
+            <h2>个人信息</h2>
+            <table id="userinfo-table">
+                <tr>
+                    <td class="userinfo-table-item">真实姓名</td>
+                    <td class="userinfo-table-value">方旭</td>
+                </tr>
+                <tr>
+                    <td class="userinfo-table-item">生日</td>
+                    <td class="userinfo-table-value">老子忘了</td>
+                </tr>
+                <tr>
+                    <td class="userinfo-table-item">邮箱</td>
+                    <td class="userinfo-table-value">252142844@qq.com</td>
+                </tr>
+                <tr>
+                    <td class="userinfo-table-item">手机号</td>
+                    <td class="userinfo-table-value">你猜</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <br>
+</div>
+<div id="alumni">
+    <div class="container">
+        <h2>Alumni</h2>
+        <p>创建, 浏览, 修改删除同学录</p>
+        <div id="alumni-content">
+            <div class="alumni-item">
+                <div class="alumni-item-img">
+                    <img src="http://wf.uisdc.com/cn/resources/samples/getting-started/your-first-multi-screen-site/peterlubbers.png">
+                </div>
+                <div class="alumni-item-footer">
+                    <div class="alumni-item-decribe">
+                        <p>计算机1203</p>
+                    </div>
+                    <div class="alumni-item-operation">
+                        <button type="button" class="btn btn-default" aria-label="Left Align">
+                            <span class="glyphicon glyphicon-list-alt" aria-hidden="true">浏览</span>
+                        </button>
+                        <button type="button" class="btn btn-default" aria-label="Left Align">
+                            <span class="glyphicon glyphicon-edit" aria-hidden="true">编辑</span>
+                        </button>
+                        <button type="button" class="btn btn-default" aria-label="Left Align">
+                            <span class="glyphicon glyphicon-trash" aria-hidden="true">删除</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="alumni-item">
+                <div class="alumni-item-img">
+                    <img src="http://wf.uisdc.com/cn/resources/samples/getting-started/your-first-multi-screen-site/peterlubbers.png">
+                </div>
+                <div class="alumni-item-footer">
+
+                </div>
+            </div>
+
+
+            <div class="alumni-item">
+                <div class="alumni-item-img">
+                    <img src="#" alt="添加同学录">
+                </div>
+                <div class="alumni-item-footer">
+
+                </div>
+            </div>
+            <br>
+        </div>
+    </div>
+</div>
+<div id="memory_space">
+    <h2></h2>
+    <p></p>
+</div>
+<div id="footer">
+    <div class="container">
+        <p>We always need a footer.</p>
+    </div>
+</div>
+</body>
+<link type="image/x-icon" href="{{php}}echo base_url();{{/php}}static/favicon.ico" rel="icon">
+<link href="{{php}}echo base_url();{{/php}}static/css/base.css" rel="stylesheet">
+</html>
