@@ -40,10 +40,6 @@
             <form id="reg-form">
             <div class="modal-body">
                     <div class="form-group">
-                        <label for="reg-form-username">用户名</label>
-                        <input type="text" class="form-control" id="reg-form-username">
-                    </div>
-                    <div class="form-group">
                         <label for="reg-form-mobile">手机号</label>
                         <input type="tel" class="form-control" id="reg-form-mobile">
                     </div>
@@ -100,7 +96,8 @@
                         'password'   : loginFormData.find('#login-form-password').val(),
                         'geetest_challenge' : loginFormData.find('.geetest_challenge').val(),
                         'geetest_validate'  : loginFormData.find('.geetest_validate').val(),
-                        'geetest_seccode'   : loginFormData.find('.geetest_seccode').val()
+                        'geetest_seccode'   : loginFormData.find('.geetest_seccode').val(),
+                        'platform'   : 2,
                     };
 
 
@@ -110,8 +107,8 @@
                         data: loginPostData,
                         dataType: 'json',
                         success: function(data){
-                            console.log(data);
                             if (data['status'] == 0){
+                                store.set('token', data['data']['token']);
                                 window.location.href='{{php}}echo base_url();{{/php}}user/completeinfo';
                             } else {
                                 alert(data['description']);
@@ -134,6 +131,7 @@
                         'user_email'    : regFormData.find('#reg-form-email').val(),
                         'password'    : regFormData.find('#reg-form-password').val(),
                         'password_confirm'    : regFormData.find('#reg-form-password-confirm').val(),
+                        'platform'    : 2,
                     };
                     console.log(regPostData);
 

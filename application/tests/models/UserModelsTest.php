@@ -20,13 +20,11 @@ class UserModelsTest extends PHPUnit_Framework_TestCase
 
     public function testAddUser(){
         $arrInput = array(
-            'userName'      => 'test',
             'userPW'        => password_hash('passwd', PASSWORD_DEFAULT),
             'userMobile'    => '151' . substr(time(), 2),
             'userEmail'     =>  md5(time()) . '@aliyun.com',
         );
-        $ret = self::$model->addUser($arrInput['userName'],
-            $arrInput['userPW'],
+        $ret = self::$model->addUser($arrInput['userPW'],
             $arrInput['userMobile'],
             $arrInput['userEmail']);
 
@@ -136,7 +134,7 @@ class UserModelsTest extends PHPUnit_Framework_TestCase
         //传入手机和Email
         $arrInput = array(
             'user_mobile' => 15101669999,
-            'user_email'  => 'linxingchen@baidu.com',
+            'user_email'  => md5(time()) . '@baidu.com',
         );
         $ret = self::$model->checkUserExists($arrInput['user_mobile'], $arrInput['user_email']);
         $this->assertEquals(0, $ret);

@@ -20,17 +20,14 @@ class UserModels extends CI_Model{
     /**
      * 新增用户
      *
-     * @param $userName
      * @param $userPW
      * @param $userMobile
      * @param $userEmail
-     * @param $userPlatform
      * @return bool
      */
-    public function addUser($userName, $userPW, $userMobile, $userEmail){
+    public function addUser($userPW, $userMobile, $userEmail){
         $this->db->trans_start();
         $this->db->insert(self::$tableName, array(
-            'user_name'         => $userName,
             'user_password'     => $userPW,
             'user_create_time'  => time(),
             'user_status'       => 1,
@@ -42,7 +39,6 @@ class UserModels extends CI_Model{
 
         //打log
         $logContent = array(
-            'user_name'     => $userName,
             'user_mobile'   => $userMobile,
             'user_email'    => $userEmail,
         );
@@ -133,17 +129,42 @@ class UserModels extends CI_Model{
      * @param $userStatus
      * @return bool
      */
-    public function updateUser($userId, $userName, $userBirthday, $userSex,
-                               $userMobile, $userEmail, $userSign, $userStatus){
-        $arrUpdateConds = array(
-            'user_name'     => $userName,
-            'user_birthday' => $userBirthday,
-            'user_sex'      => $userSex,
-            'user_mobile'   => $userMobile,
-            'user_email'    => $userEmail,
-            'user_sign'     => $userSign,
-            'user_status'   => $userStatus,
-        );
+    public function updateUser($userId, $userName = false, $userBirthday = false, $userSex = false,
+                               $userMobile = false, $userEmail = false, $userSign = false, $userStatus = false){
+
+        $arrUpdateConds = array();
+
+        if (!empty($userName)){
+            $arrUpdateConds['user_name']     = $userName;
+        }
+
+        if (!empty($userBirthday)){
+            $arrUpdateConds['user_birthday'] = $userBirthday;
+        }
+
+        if (FALSE !== ($userSex)){
+            $arrUpdateConds['user_sex']      = $userSex;
+        }
+
+        if (!empty($userMobile)){
+            $arrUpdateConds['user_mobile']   = $userMobile;
+        }
+
+        if (!empty($userEmail)){
+            $arrUpdateConds['user_email']    = $userEmail;
+        }
+
+        if (!empty($userSign)){
+            $arrUpdateConds['user_sign']     = $userSign;
+        }
+
+        if (FALSE !== $userStatus){
+            $arrUpdateConds['user_status']   = $userStatus;
+        }
+
+        if (empty($arrUpdateConds)){
+            return 0;
+        }
 
         $this->db->trans_start();
 
