@@ -85,6 +85,7 @@ class UserInfo extends CI_Controller{
             $this->response->jsonFail(Response::CODE_SERVER_ERROR, '抱歉，绑定失败');
         }
 
+        $this->session->unset_userdata('needinit');
         $this->response->jsonSuccess();
     }
 

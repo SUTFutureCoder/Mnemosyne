@@ -11,7 +11,7 @@
             </div>
             <div class="modal-body">
                 <div class="progress progress-striped active">
-                    <div id="complete-info-modal-process" class="progress-bar progress-bar-striped active" role="progressbar" style="width: 50%">
+                    <div id="complete-info-modal-process" class="progress-bar progress-bar-info progress-bar-striped active" role="progressbar" style="width: 50%">
                     </div>
                 </div>
                 <div id="complete-info-modal-basic-info">
@@ -187,14 +187,17 @@
             },
 
             userChooseFriend: function(){
-                dom.initInfoModal.find('#complete-info-modal-process').animate(
+                dom.initInfoModal.find('#complete-info-modal-process')
+                        .removeClass('progress-bar-info')
+                        .addClass('progress-bar-success')
+                        .animate(
                         {width: '100%'},
                         {speed: 'fast', easing: 'swing'}
                 );
                 var formData = dom.initInfoModal.find('#complete-info-modal-choose-friend');
                 formData.toggle();
 
-                
+
             },
 
         };
