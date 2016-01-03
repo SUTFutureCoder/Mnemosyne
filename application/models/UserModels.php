@@ -86,6 +86,26 @@ class UserModels extends CI_Model{
     }
 
     /**
+     * 获取用户基本信息
+     *
+     * @param $userIdList
+     * @return array
+     */
+    public function getUserBasicInfoList($userIdList){
+        if(empty($userIdList))
+        {
+            return array();
+        }
+        $this->db->select('user_id, user_name');
+        $this->db->where_in('user_id', $userIdList);
+        $query  = $this->db->get(self::$tableName);
+        $result = $query->result_array();
+        return $result;
+    }
+
+
+
+    /**
      * 通过登陆的手机号或邮箱获取用户信息
      *
      * @param $userLoginName

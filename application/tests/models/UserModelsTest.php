@@ -46,6 +46,14 @@ class UserModelsTest extends PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('user_password', $ret);
     }
 
+    public function testgetUserBasicInfoList(){
+        $data = $this->getFirstUser();
+        $test_data = array($data['user_id']);
+        $ret = self::$model->getUserBasicInfoList($test_data);
+        $this->assertEquals($data['user_id'], $ret[0]['user_id']);
+        $this->assertEquals($data['user_name'], $ret[0]['user_name']);
+    }
+
     public function testUpdateUser(){
         $data = $this->getFirstUser();
 
@@ -144,4 +152,5 @@ class UserModelsTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($retMobile['user_id'], $retEmail['user_id']);
         $this->assertEquals(true, empty($retNull));
     }
+
 }

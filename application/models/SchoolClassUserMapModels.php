@@ -107,4 +107,28 @@ class SchoolClassUserMapModels extends CI_Model{
         $this->UserLogModels->addUserLog($userId, $logContent, self::$tableName, __METHOD__);
         return $logContent['run_status'];
     }
+
+    /**
+     * 解绑用户班级
+     *
+     * @param $userId      用户id
+     * @param $userKnown   用户已经认识的id 列表,默认为空
+     * @param $pageSize    一页记录数默认为 20
+     * @param $page        第几页
+     * @return array
+     */
+    public function getFriendRecordList($userId, $userKnown = array(), $pageSize = 20, $page = 0){
+        $classIdList = array_column($this->getUserBindList($userId), 'class_unique_id');
+        if(empty($classIdList)) {
+            return array();
+        }
+        $offset = $pageSize * $page;
+        array_push($userKnown, $userId);
+        $this->db->select('user_unique_id', $offset, $pageSize);
+        $this->db->where_not_in('user_unique_id', $userKnown);
+        $this->db->where_in('class_unique_id', $classIdList);
+        $res = $this->db->get(self::$tableName);
+        return $res->result_array();
+    }
+
 }
