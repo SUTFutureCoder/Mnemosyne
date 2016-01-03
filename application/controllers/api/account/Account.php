@@ -58,8 +58,16 @@ class Account extends CI_Controller{
 
         $token = $this->token->setTokenToRedis($userInfo['user_id']);
         $this->load->library('session');
-        $this->session->set_userdata('user_id', $userInfo['user_id']) ;
-        $this->session->set_userdata('user_name', $userInfo['user_name']);
+        $this->session->set_userdata('user_id', $userInfo['user_id']);
+
+        //根据user_name检测是否初始化
+        if (empty($userInfo['user_name'])){
+            //没有真实姓名未初始化
+            $this->session->set_userdata('needinit', 1);
+        } else {
+            $this->session->set_userdata('user_name', $userInfo['user_name']);
+        }
+
         $this->session->set_userdata('token', $token);
         if(isset($_SESSION['user_id']))
         {

@@ -19,9 +19,9 @@ body{
 }
 #bg-video video{
     z-index: -90;
-    height: 100%;
-    /*width: 100%;*/
-    min-width: 1330px;
+    /*height: 100%;*/
+    width: 100%;
+    /*min-width: 1330px;*/
     opacity:0.3;
     width: 100%;
 }
