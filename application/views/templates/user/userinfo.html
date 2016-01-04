@@ -176,19 +176,19 @@
             <table id="userinfo-table">
                 <tr>
                     <td class="userinfo-table-item">真实姓名</td>
-                    <td class="userinfo-table-value">方旭</td>
+                    <td class="userinfo-table-value" id="user_name">方旭</td>
                 </tr>
                 <tr>
                     <td class="userinfo-table-item">生日</td>
-                    <td class="userinfo-table-value">老子忘了</td>
+                    <td class="userinfo-table-value" id="user_birthday">老子忘了</td>
                 </tr>
                 <tr>
                     <td class="userinfo-table-item">邮箱</td>
-                    <td class="userinfo-table-value">252142844@qq.com</td>
+                    <td class="userinfo-table-value" id="user_email">252142844@qq.com</td>
                 </tr>
                 <tr>
                     <td class="userinfo-table-item">手机号</td>
-                    <td class="userinfo-table-value">你猜</td>
+                    <td class="userinfo-table-value" id="user_mobile">你猜</td>
                 </tr>
             </table>
         </div>
@@ -279,7 +279,7 @@
 <script type="text/javascript">
     (function(){
         dom = {
-
+            userInfoTable : $('#userinfo-table'),
         };
 
         var userInfoReg = {
@@ -293,10 +293,14 @@
                     url: '{{php}}echo base_url(){{/php}}api/account/account/loadUserAlumniInfo',
                     dataType: 'json',
                     success: function(data){
-                        console.log(data);
                         if (data['status'] == 0){
+                            dom.userInfoTable.find('#user_name').val(data['data']['userinfo']['user_name']);
+                            dom.userInfoTable.find('#user_birthday').val(data['data']['userinfo']['user_birthday']);
+                            dom.userInfoTable.find('#user_email').val(data['data']['userinfo']['user_email']);
+                            dom.userInfoTable.find('#user_email').val(data['data']['userinfo']['user_mobile']);
 
                         } else {
+                            dom.userInfoTable.find('#user_name').html();
                             alert(data['description']);
                         }
                     },
