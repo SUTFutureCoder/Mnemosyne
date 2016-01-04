@@ -202,7 +202,8 @@
         <div id="alumni-content">
             <div class="alumni-item">
                 <div class="alumni-item-img">
-                    <img src="http://wf.uisdc.com/cn/resources/samples/getting-started/your-first-multi-screen-site/peterlubbers.png">
+                    <!--<img src="http://wf.uisdc.com/cn/resources/samples/getting-started/your-first-multi-screen-site/peterlubbers.png">-->
+                    <img src="{{php}}echo base_url();{{/php}}static/img/public/alumni_cover1.png" title="Alumni"/>
                 </div>
                 <div class="alumni-item-footer">
                     <div class="alumni-item-decribe">
@@ -224,22 +225,43 @@
 
             <div class="alumni-item">
                 <div class="alumni-item-img">
-                    <img src="http://wf.uisdc.com/cn/resources/samples/getting-started/your-first-multi-screen-site/peterlubbers.png">
+                    <!--<img src="http://wf.uisdc.com/cn/resources/samples/getting-started/your-first-multi-screen-site/peterlubbers.png">-->
+                    <img src="{{php}}echo base_url();{{/php}}static/img/public/alumni_cover1.png"/>
                 </div>
                 <div class="alumni-item-footer">
-
+                    <div class="alumni-item-decribe">
+                        <p>计算机1203</p>
+                    </div>
+                    <div class="alumni-item-operation">
+                        <button type="button" class="btn btn-default" aria-label="Left Align">
+                            <span class="glyphicon glyphicon-list-alt" aria-hidden="true">浏览</span>
+                        </button>
+                        <button type="button" class="btn btn-default" aria-label="Left Align">
+                            <span class="glyphicon glyphicon-edit" aria-hidden="true">编辑</span>
+                        </button>
+                        <button type="button" class="btn btn-default" aria-label="Left Align">
+                            <span class="glyphicon glyphicon-trash" aria-hidden="true">删除</span>
+                        </button>
+                    </div>
                 </div>
             </div>
-
 
             <div class="alumni-item">
                 <div class="alumni-item-img">
-                    <img src="#" alt="添加同学录">
+                    <img src="{{php}}echo base_url();{{/php}}static/img/public/alumni_add02.png"/>
                 </div>
                 <div class="alumni-item-footer">
-
+                    <div class="alumni-item-decribe">
+                        <p>添加同学录</p>
+                    </div>
+                    <div class="alumni-item-operation">
+                        <button type="button" class="btn btn-default" aria-label="Left Align">
+                            <span class="glyphicon glyphicon-edit" aria-hidden="true">添加</span>
+                        </button>
+                    </div>
                 </div>
             </div>
+
             <br>
         </div>
     </div>
@@ -250,7 +272,7 @@
 </div>
 <div id="footer">
     <div class="container">
-        <p>We always need a footer.</p>
+        <p>Footer.</p>
     </div>
 </div>
 </body>
