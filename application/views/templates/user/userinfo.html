@@ -176,7 +176,7 @@
             <table id="userinfo-table">
                 <tr>
                     <td class="userinfo-table-item">真实姓名</td>
-                    <td class="userinfo-table-value" id="user_name">方旭</td>
+                    <td class="userinfo-table-value" id="user_name"></td>
                 </tr>
                 <tr>
                     <td class="userinfo-table-item">生日</td>
@@ -294,10 +294,10 @@
                     dataType: 'json',
                     success: function(data){
                         if (data['status'] == 0){
-                            dom.userInfoTable.find('#user_name').val(data['data']['userinfo']['user_name']);
-                            dom.userInfoTable.find('#user_birthday').val(data['data']['userinfo']['user_birthday']);
-                            dom.userInfoTable.find('#user_email').val(data['data']['userinfo']['user_email']);
-                            dom.userInfoTable.find('#user_email').val(data['data']['userinfo']['user_mobile']);
+                            dom.userInfoTable.find('#user_name').html(data['data']['userinfo']['user_name']);
+                            dom.userInfoTable.find('#user_birthday').html(data['data']['userinfo']['user_birthday']);
+                            dom.userInfoTable.find('#user_email').html(data['data']['userinfo']['user_email']);
+                            dom.userInfoTable.find('#user_mobile').html(data['data']['userinfo']['user_mobile']);
 
                         } else {
                             dom.userInfoTable.find('#user_name').html();
