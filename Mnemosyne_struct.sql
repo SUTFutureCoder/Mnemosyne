@@ -232,3 +232,27 @@ CREATE TABLE IF NOT EXISTS `user_relation` (
   PRIMARY KEY (`id`),
   KEY Iur_userid_relate(user_id, user_relate)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='用户关系表';
+
+
+
+
+
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `alumni`
+--
+
+CREATE TABLE IF NOT EXISTS `alumni` (
+  `id`      BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '唯一id',
+  `user_id` BIGINT(20) UNSIGNED NOT NULL COMMENT '用户id',
+  `title` varchar(32) NOT NULL COMMENT '同学录标题',
+  `cover` varchar(100) NOT NULL  COMMENT '封面图片存放路径',
+  `create_time` int(10) unsigned NOT NULL COMMENT '创建时间',
+  `update_time`int(10) NOT NULL COMMENT '修改时间',
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`),
+  KEY `IDX_title_id` (`title`)
+)ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='同学录表';
+
