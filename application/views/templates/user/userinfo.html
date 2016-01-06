@@ -157,6 +157,50 @@
     <title>Mnemosyne</title>
 </head>
 <body>
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">同学录</h4>
+            </div>
+            <div class="modal-body">
+                <form id="alumni-form">
+                    <div class="form-group">
+                        <label for="alumni-form-title">标题</label>
+                        <input type="text" class="form-control" id="alumni-form-title" placeholder="大学/高中/计算机***/好基友/就是一个标题~">
+                    </div>
+                    <div class="form-group">
+                        <label for="alumni-form-cover">封面</label>
+                        <select class="form-control" id="alumni-form-cover">
+                            <option value="">随意选,反正现在只有一个封面....</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="alumni-form-cover">发给谁</label>
+                        <select class="form-control" id="alumni-form-send_to">
+                            <option>同学</option>
+                            <option>好友</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="alumni-form-send_to_plus">还想让谁填</label>
+                        <input type="text" class="form-control" id="alumni-form-send_to_plus" placeholder="写上他/她的真实姓名">
+                    </div>
+                    <div class="alumni-form-already-chosen-user">
+                        <label>已经选了</label>
+                        <p>板砖, 林星辰</p>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary">创建</button>
+            </div>
+        </div>
+    </div>
+</div>
 {{$navbar}}
 <div id="headline">
     <div class="container">
@@ -255,7 +299,7 @@
                         <p>添加同学录</p>
                     </div>
                     <div class="alumni-item-operation">
-                        <button type="button" class="btn btn-default" aria-label="Left Align">
+                        <button type="button" class="btn btn-default" aria-label="Left Align" data-toggle="modal" data-target="#myModal">
                             <span class="glyphicon glyphicon-edit" aria-hidden="true">添加</span>
                         </button>
                     </div>
