@@ -202,6 +202,8 @@
     </div>
 </div>
 {{$navbar}}
+
+
 <div id="headline">
     <div class="container">
         <h1>Hidden in your Memory</h1>
@@ -329,6 +331,7 @@
         var userInfoReg = {
             init: function () {
                 this.loadUserInfoFn();
+                this.loadPopoverFn();
             },
 
             loadUserInfoFn: function () {
@@ -352,6 +355,9 @@
                         alert('操作失败');
                     }
                 });
+            },
+            loadPopoverFn: function(){
+                $('[data-toggle="popover"]').popover();
             }
         };
         userInfoReg.init();
