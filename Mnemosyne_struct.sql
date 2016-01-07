@@ -272,6 +272,7 @@ CREATE TABLE IF NOT EXISTS `alumni_page` (
   `background_style` tinyint(3) NOT NULL COMMENT '背景风格',
   `info` varchar(1024) NOT NULL  DEFAULT '' COMMENT '以json形式存放一些其他数据',
   `message` varchar(1024) NOT NULL DEFAULT '' COMMENT '留言 先来1024这么大,不能有再长的留言吧',
+  `status` TINYINT(1) NOT NULL DEFAULT 0 COMMENT '是否填写, 0 为未完成, 1 为已经填写',
   `create_time` int(10) unsigned NOT NULL COMMENT '创建时间',
   `update_time`int(10) NOT NULL COMMENT '修改时间',
   PRIMARY KEY (`id`),
