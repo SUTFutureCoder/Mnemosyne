@@ -9,23 +9,90 @@
 
 
 class AlumniModels extends CI_Model{
+    private static $tableName = "alumni";
     public function __construct(){
         parent::__construct();
         $this->load->database();
+        $this->load->model('UserLogModels');
     }
 
     /*
-     * 通过user id获取user alumni info
+     ** 新增同学录
      *
-     * @param int $userId 用户
-     * @return array 用户信息
+     * @param $userId
+     * @param $title
+     * @param $cover 封面模板
+     * @return bool
      */
-    public function getUserInfoByUserId($userId){
-        $this->db->where('user_id', $userId);
-        if ($row = $this->db->get('user_alumni')->row_array()){
-            return $row;
+    public function addAlumni($userId, $title = '', $cover = 0){
+        $this->db->trans_start();
+        $this->db->insert(
+            self::$tableName, array(
+            'user_id'     => $userId,
+            'title'       => $title,
+            'cover'       => $cover,
+            'create_time' => time(),
+            'update_time' => time(),
+        ));
+
+        $id = $this->db->insert_id();
+
+        //打log
+        $logContent = array(
+            'alumni_id' => $id,
+            'user_id'   => $userId,
+            'title'     => $title,
+            'des'       => "add alumni",
+        );
+
+
+        $this->db->trans_complete();
+        if (!$this->db->trans_status()){
+            $logContent['run_status'] = 0;
+        } else {
+            $logContent['run_status'] = 1;
         }
-        return false;
+        $this->UserLogModels->addUserLog($userId, $logContent, self::$tableName, __METHOD__);
+        return $logContent['run_status'];
+
+    }
+
+    /*
+     *
+     * 修改同学录
+     *
+     *@param $alumniId
+     *@param $userId
+     *@param $alumniParams
+     */
+    public function updateAlumni($alumniId, $userId, $title = false, $cover = false){
+        $alumniUpdate = array();
+        if(false != $title){
+            $alumniUpdate['title']  = $title;
+        }
+        if(false != $cover){
+            $alumniUpdate['cover'] = $cover;
+        }
+
+        $alumniUpdate['update_time'] = time();
+
+        $this->db->trans_start();
+
+        $this->db->where('id', $alumniId);
+        $this->db->update(self::$tableName, $alumniUpdate);
+
+        //打log
+        $alumniUpdate['affected_rows'] = $this->db->affected_rows();
+        $alumniUpdate['des'] = "update Alumni table";
+
+        $this->db->trans_complete();
+        if (!$this->db->trans_status()){
+            $arrUpdateConds['run_status'] = 0;
+        } else {
+            $arrUpdateConds['run_status'] = 1;
+        }
+        $this->UserLogModels->addUserLog($userId, $arrUpdateConds, self::$tableName, __METHOD__);
+        return $arrUpdateConds['run_status'];
     }
 
 }
