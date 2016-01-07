@@ -35,7 +35,6 @@ class AlumniModelsTest  extends PHPUnit_Framework_TestCase {
     }
 
     public function testupdateAlumni(){
-        sleep(10);
         $alumni = $this->getFirstAlumni();
         $alumniUpdate = array(
             'alumniId' => $alumni['id'],

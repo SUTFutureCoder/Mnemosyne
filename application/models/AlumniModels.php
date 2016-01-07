@@ -87,12 +87,12 @@ class AlumniModels extends CI_Model{
 
         $this->db->trans_complete();
         if (!$this->db->trans_status()){
-            $arrUpdateConds['run_status'] = 0;
+            $alumniUpdate['run_status'] = 0;
         } else {
-            $arrUpdateConds['run_status'] = 1;
+            $alumniUpdate['run_status'] = 1;
         }
-        $this->UserLogModels->addUserLog($userId, $arrUpdateConds, self::$tableName, __METHOD__);
-        return $arrUpdateConds['run_status'];
+        $this->UserLogModels->addUserLog($userId, $alumniUpdate, self::$tableName, __METHOD__);
+        return $alumniUpdate['run_status'];
     }
 
 }
