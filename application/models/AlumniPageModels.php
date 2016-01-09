@@ -49,9 +49,9 @@ class AlumniPageModels extends CI_Model{
 
         $this->db->trans_complete();
         if (!$this->db->trans_status()){
-            $logContent['run_status'] = 0;
+            $logContent['run_status'] = false;
         } else {
-            $logContent['run_status'] = 1;
+            $logContent['run_status'] = $id;
         }
         $this->UserLogModels->addUserLog($userId, $logContent, self::$tableName, __METHOD__);
         return $logContent['run_status'];

@@ -32,7 +32,7 @@ class AlumniPageModelsTest extends PHPUnit_Framework_TestCase {
             'alumni_id' => $alumni['id'],
             'user_id'   => $alumni['user_id'],
             'to_user'   => $secondUser['user_id'],
-            'info'      => "单测添加"
+            'info'      => "单测添加",
         );
         $ret = self::$model->addAlumniPage($alumniPage['alumni_id'], $alumniPage['user_id'], $alumniPage['to_user'],
             $backgroundStyle = 0, $info = $alumniPage['info']);

@@ -41,12 +41,14 @@ class Alumni extends CI_Controller{
             $this->response->jsonFail(Response::CODE_PARAMS_WRONG, Validator::getMessage());
         }
 
-        if($alumniId == '-1') {
+        if($alumniId === '-1') {
             $addStatus = $this->alumni->addAlumni($userId, $title, $cover);
-            if(!$addStatus)
+            if($addStatus !== false)
             {
                 $this->response->jsonFail(Response::CODE_SERVER_ERROR, '抱歉,添加同学录失败');
+                $alumniId = $addStatus;
             }
+
         }
         $this->response->jsonSuccess();
 

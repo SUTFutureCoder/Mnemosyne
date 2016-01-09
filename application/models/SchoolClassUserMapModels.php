@@ -109,7 +109,7 @@ class SchoolClassUserMapModels extends CI_Model{
     }
 
     /**
-     * 解绑用户班级
+     * 获取可能认识的用户, 默认返回20个
      *
      * @param $userId      用户id
      * @param $userKnown   用户已经认识的id 列表,默认为空
@@ -127,6 +127,25 @@ class SchoolClassUserMapModels extends CI_Model{
         $this->db->select('user_unique_id', $offset, $pageSize);
         $this->db->where_not_in('user_unique_id', $userKnown);
         $this->db->where_in('class_unique_id', $classIdList);
+        $res = $this->db->get(self::$tableName);
+        return $res->result_array();
+    }
+
+    /**
+     * 获取给定user的同班同学id, 如果没有给定班级id,返回第一个绑定班级的同班同学
+     *
+     * @param $userId    用户id
+     * @param $classId   需要获取的班级id
+     * @return array
+     */
+    public function getClassmate($userId, $classId = '')
+    {
+        if(empty($classId)){
+            $classId = array_column($this->getUserBindList($userId), 'class_unique_id')[0];
+        }
+        $this->db->select('user_unique_id user_id');
+        $this->db->where('class_unique_id', $classId);
+        $this->db->where('user_unique_id != ', $userId);
         $res = $this->db->get(self::$tableName);
         return $res->result_array();
     }

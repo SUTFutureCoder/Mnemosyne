@@ -89,4 +89,9 @@ class SchoolClassUserMapModelsTest extends PHPUnit_Framework_TestCase{
         $ret = self::$model->unBind($arrInput['map_id'], $arrInput['user_unique_id']);
         $this->assertEquals(1, $ret);
     }
+    public function testGetClassmate(){
+        $userId = self::$userId;
+        $ret = self::$model->getClassmate($userId);
+        $this->assertArrayHasKey('user_id', $ret[0]);
+    }
 }
