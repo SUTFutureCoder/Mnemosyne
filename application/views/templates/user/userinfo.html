@@ -158,15 +158,16 @@
 </head>
 <body>
 <!-- Modal -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal fade" id="update-alumni-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="myModalLabel">同学录</h4>
             </div>
+            <form id="alumni-form">
             <div class="modal-body">
-                <form id="alumni-form">
+                    <input type="text" id="alumni-form-alumni_id" value="-1" />
                     <div class="form-group">
                         <label for="alumni-form-title">标题</label>
                         <input type="text" class="form-control" id="alumni-form-title" placeholder="大学/高中/计算机***/好基友/就是一个标题~">
@@ -174,7 +175,7 @@
                     <div class="form-group">
                         <label for="alumni-form-cover">封面</label>
                         <select class="form-control" id="alumni-form-cover">
-                            <option value="">随意选,反正现在只有一个封面....</option>
+                            <option value="0">随意选,反正现在只有一个封面....</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -186,18 +187,19 @@
                     </div>
                     <div class="form-group">
                         <label for="alumni-form-send_to_plus">还想让谁填</label>
-                        <input type="text" class="form-control" id="alumni-form-send_to_plus" placeholder="写上他/她的真实姓名">
+                        <input type="text" class="form-control" id="alumni-form-send_to_plus"
+                               placeholder="写上他/她的真实姓名(此功能尚不支持)" disabled>
                     </div>
                     <div class="alumni-form-already-chosen-user">
                         <label>已经选了</label>
-                        <p>板砖, 林星辰</p>
+                        <p>板砖, 林星辰(此功能尚不支持)</p>
                     </div>
-                </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary">创建</button>
+                <button id="submit-update-alumni" type="button" class="btn btn-primary">创建</button>
             </div>
+            </form>
         </div>
     </div>
 </div>
@@ -301,7 +303,7 @@
                         <p>添加同学录</p>
                     </div>
                     <div class="alumni-item-operation">
-                        <button type="button" class="btn btn-default" aria-label="Left Align" data-toggle="modal" data-target="#myModal">
+                        <button type="button" class="btn btn-default" aria-label="Left Align" data-toggle="modal" data-target="#update-alumni-modal">
                             <span class="glyphicon glyphicon-edit" aria-hidden="true">添加</span>
                         </button>
                     </div>
@@ -326,12 +328,16 @@
     (function(){
         dom = {
             userInfoTable : $('#userinfo-table'),
+            alumniModal   : $('#update-alumnni-modal'),
+            alumniForm    : $('#alumni-form')
         };
 
-        var userInfoReg = {
+        var AlumniInfoReg = {
             init: function () {
                 this.loadUserInfoFn();
                 this.loadPopoverFn();
+                this.alumniAddRegFn();
+
             },
 
             loadUserInfoFn: function () {
@@ -358,9 +364,56 @@
             },
             loadPopoverFn: function(){
                 $('[data-toggle="popover"]').popover();
+            },
+
+            alumniAddRegFn: function(){
+                dom.alumniForm.on('click', "#submit-update-alumni", function(){
+                    var alumniFormdata = dom.alumniForm;
+                    alumniFormdata.find('#alumni-form-alumni_id').val('-1');
+                    var postData = AlumniInfoReg.alumniFormData();
+                    AlumniInfoReg.submitAlumniInfo(postData);
+                })
+
+            },
+
+            alumniUpdateRegFn: function(){
+
+            },
+
+            alumniFormData: function(){
+                var alumniFormdata = dom.alumniForm;
+                var postData       = {
+                    'alumni_id'   :   alumniFormdata.find('#alumni-form-alumni_id').val(),
+                    'title'       :       alumniFormdata.find('#alumni-form-title').val(),
+                    'cover'       :       alumniFormdata.find('#alumni-form-cover').val(),
+                    'send_to'     :     alumniFormdata.find('#alumni-form-send_to').val(),
+                    'send_to_plus':alumniFormdata.find('#alumni-form-send_to_plus').val(),
+                };
+                return postData;
+            },
+
+            submitAlumniInfo: function(postData){
+                $.ajax({
+                    type: 'POST',
+                    url: '{{php}}echo base_url(){{/php}}api/user/alumni/updateAlumni',
+                    data: postData,
+                    dataType: 'json',
+                    success: function(data){
+                        console.log(data);
+                        if (data['status'] == 0){
+
+                        } else {
+                            alert(data['description']);
+                        }
+                    },
+                    error: function(data){
+                        alert('操作失败');
+                    }
+                });
             }
+
         };
-        userInfoReg.init();
+        AlumniInfoReg.init();
 
     })();
 </script>
