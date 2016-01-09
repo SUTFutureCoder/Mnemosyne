@@ -267,6 +267,7 @@ CREATE TABLE IF NOT EXISTS `alumni` (
 
 CREATE TABLE IF NOT EXISTS `alumni_page` (
   `id`      BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '唯一id',
+  `alumni_id` BIGINT(20) UNSIGNED NOT NULL COMMENT '所属同学录 id',
   `user_id` BIGINT(20) UNSIGNED NOT NULL COMMENT '用户id',
   `to_user` BIGINT(20) UNSIGNED NOT NULL COMMENT '同学录送达用户id',
   `background_style` tinyint(3) NOT NULL DEFAULT 0 COMMENT '背景风格',

@@ -113,6 +113,17 @@ class UserModelsTest extends PHPUnit_Framework_TestCase
         return $data;
     }
 
+    public function getSecondUser(){
+        $result = self::$ci->db->get(self::$tableName, 2);
+        $data = $result->result_array();
+
+        if (isset($data[1])){
+            $this->testAddUser();
+            return $data[1];
+        }
+        return $data;
+    }
+
     //重置密码
     public function testResetPassWd(){
 
