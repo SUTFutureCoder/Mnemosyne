@@ -368,6 +368,29 @@
             },
             messageLoadFn: function(){
                 dom.messagePopover.on('show.bs.popover', function () {
+                    $.ajax({
+                        type: 'GET',
+                        url: '{{php}}echo base_url(){{/php}}api/user/UserInfo/getUserMessage',
+                        dataType: 'json',
+                        success: function(data){
+                            if (data['status'] == 0){
+                                var messageList = data['data']['message'];
+                                var messagePopover = "<div class='message_unread'>";
+                                for(var i; i < messageList.length; i++)
+                                {
+                                    messagePopover += "<p>" + messageList['message'] +"</p>";
+                                }
+                                messagePopover += "</div>";
+                                dom.messagePopover.attr('data-content', messagePopover);
+                            } else {
+                                dom.userInfoTable.find('#user_name').html();
+                                alert(data['description']);
+                            }
+                        },
+                        error: function(data){
+                            alert('操作失败');
+                        }
+                    });
                     dom.messagePopover.attr('data-content', "<div class='message_unread'>" +
                             "</div>");
                 });
