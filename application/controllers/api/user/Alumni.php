@@ -59,7 +59,7 @@ class Alumni extends CI_Controller{
                                                                         $title   = '填写同学录',
                                                                         $message = $userName . ' 邀请您填写同学录'
                                                                     );
-                    if($addAlumniStatus || $addMessageStatus){
+                    if(!$addAlumniStatus || !$addMessageStatus){
                         $this->response->jsonFail(Response::CODE_SERVER_ERROR, '抱歉，添加同学录失败');
                     }
                 }
