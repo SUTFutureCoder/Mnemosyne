@@ -328,7 +328,7 @@
     (function(){
         dom = {
             userInfoTable : $('#userinfo-table'),
-            alumniModal   : $('#update-alumnni-modal'),
+            alumniModal   : $('#update-alumni-modal'),
             alumniForm    : $('#alumni-form')
         };
 
@@ -399,9 +399,9 @@
                     data: postData,
                     dataType: 'json',
                     success: function(data){
-                        console.log(data);
                         if (data['status'] == 0){
-
+                            alert("添加成功");
+                            dom.alumniModal.modal('hide');
                         } else {
                             alert(data['description']);
                         }
