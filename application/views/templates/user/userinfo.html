@@ -375,10 +375,10 @@
                         success: function(data){
                             if (data['status'] == 0){
                                 var messageList = data['data']['message'];
-                                var messagePopover = "<div class='message_unread'>";
-                                for(var i; i < messageList.length; i++)
+                                var messagePopover = "<div class='message_unread container'>";
+                                for(var i = 0; i < messageList.length; i++)
                                 {
-                                    messagePopover += "<p>" + messageList[0]['message'] +"</p>";
+                                    messagePopover += "<p>" + messageList[i]['message'] +"</p>";
                                 }
                                 messagePopover += "</div>";
                                 dom.messagePopover.attr('data-content', messagePopover);
@@ -391,8 +391,6 @@
                             alert('操作失败');
                         }
                     });
-                    dom.messagePopover.attr('data-content', "<div class='message_unread'>" +
-                            "</div>");
                 });
             },
 
