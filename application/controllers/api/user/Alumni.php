@@ -13,14 +13,17 @@ class Alumni extends CI_Controller{
         $this->load->library('Validator');
         $this->load->library("session");
         $this->load->library('Response');
+        $this->load->library('CoreConst');
     }
 
     public function updateAlumni(){
         $this->load->model("AlumniModels", 'alumni');
         $this->load->model("SchoolClassUserMapModels", 'scu');
         $this->load->model("AlumniPageModels", "alumniPage");
+        $this->load->model("MessageModels", 'message');
 
         $userId = $this->session->user_id;
+        $userName = $this->session->user_name;
         if (!(Validator::isNotEmpty($userId,      '您已经下线请重新登录')
         )){
             $this->response->jsonFail(Response::CODE_UNAUTHENTICATED, Validator::getMessage());
@@ -51,7 +54,15 @@ class Alumni extends CI_Controller{
                 $alumniId = $addStatus;
                 $userIdList = $this->scu->getClassmate($userId);
                 foreach($userIdList as $userIdtmp){
-                    $this->alumniPage->addAlumniPage($alumniId, $userId, $userIdtmp);
+                    $addAlumniStatus   =  $this->alumniPage->addAlumniPage($alumniId, $userId, $userIdtmp);
+                    $addMessageStatus  = $this->message->addMessage(    $userId, $userIdList,
+                                                                        $type    = CoreConst::AlUMNI_FILL_IN_MES,
+                                                                        $title   = '填写同学录',
+                                                                        $message = $userName . ' 邀请您填写同学录'
+                                                                    );
+                    if($addAlumniStatus || $addMessageStatus){
+                        $this->response->jsonFail(Response::CODE_SERVER_ERROR, '抱歉，注册用户失败');
+                    }
                 }
 
             }
