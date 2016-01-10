@@ -40,6 +40,7 @@ class User extends CI_Controller{
 
     public function userInfo(){
         $navbar     = getHorizontalNavbar(0);
+//	$this->load->lirbary('session');
         $this->template->assign("navbar", $navbar);
         $this->template->display("user/userinfo.html");
     }

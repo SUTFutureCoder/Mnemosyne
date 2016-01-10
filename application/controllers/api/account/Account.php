@@ -144,6 +144,7 @@ class Account extends CI_Controller{
             $this->response->jsonFail(Response::CODE_UNAUTHENTICATED, Validator::getMessage());
         }
         $userInfo  = $this->UserModels->getUserBasicInfo($userId);
+        //$usrAlumni = $this->AlumniModels->getUserInfoByUserId($userId);
         $this->response->jsonSuccess(array(
             'userinfo' => $userInfo,
         ));
