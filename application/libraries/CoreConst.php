@@ -42,4 +42,9 @@ class CoreConst{
         self::USER_STATUS_DISABLE,
         self::USER_STATUS_ENABLE,
     );
+
+    const AlUMNI_FILL_IN_MES = 0;
+    public static $messageTyep = array(
+        self::AlUMNI_FILL_IN_MES,
+    );
 }

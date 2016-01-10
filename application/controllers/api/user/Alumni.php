@@ -16,7 +16,9 @@ class Alumni extends CI_Controller{
     }
 
     public function updateAlumni(){
-        $this->load->modela("AlumniModels", 'alumni');
+        $this->load->model("AlumniModels", 'alumni');
+        $this->load->model("SchoolClassUserMapModels", 'scu');
+        $this->load->model("AlumniPageModels", "alumniPage");
 
         $userId = $this->session->user_id;
         if (!(Validator::isNotEmpty($userId,      '您已经下线请重新登录')
@@ -47,6 +49,11 @@ class Alumni extends CI_Controller{
             {
                 $this->response->jsonFail(Response::CODE_SERVER_ERROR, '抱歉,添加同学录失败');
                 $alumniId = $addStatus;
+                $userIdList = $this->scu->getClassmate($userId);
+                foreach($userIdList as $userIdtmp){
+                    $this->alumniPage->addAlumniPage($alumniId, $userId, $userIdtmp);
+                }
+
             }
 
         }
