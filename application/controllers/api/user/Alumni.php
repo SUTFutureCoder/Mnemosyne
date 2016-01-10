@@ -22,7 +22,7 @@ class Alumni extends CI_Controller{
         $this->load->model("AlumniPageModels", "alumniPage");
         $this->load->model("MessageModels", 'message');
 
-        $userId = $this->session->user_id;
+        $userId   = $this->session->user_id;
         $userName = $this->session->user_name;
         if (!(Validator::isNotEmpty($userId,      '您已经下线请重新登录')
         )){
@@ -36,12 +36,12 @@ class Alumni extends CI_Controller{
         $send_to_plus = trim($this->input->post('send_to_plus', true));
 
 
-        if(!(Validator::isNotEmpty($title, "您的标题不能为空")
-            && Validator::isNotEmpty($alumniId, "你的alumniId为空,目测也是hack行为")
-            && Validator::mbStringRange($title, 0, 32, "您的标题不能超过32位")
-            && Validator::isNotEmpty($cover, "您的封面不能为空")
+        if(!(Validator::isNotEmpty($title,                            "您的标题不能为空")
+            && Validator::isNotEmpty($alumniId,       "你的alumniId为空,目测也是hack行为")
+            && Validator::mbStringRange($title, 0, 32,             "您的标题不能超过32位")
+            && Validator::isNotEmpty($cover,                           "您的封面不能为空")
             && Validator::Range($cover, 0, 999, "骚年这是hack行为, 一个选框出现莫名其妙的值")
-            && Validator::isNotEmpty($send_to, "请选择您要发送的人的范围")
+            && Validator::isNotEmpty($send_to,                  "请选择您要发送的人的范围")
         )){
             $this->response->jsonFail(Response::CODE_PARAMS_WRONG, Validator::getMessage());
         }
@@ -50,18 +50,17 @@ class Alumni extends CI_Controller{
             $addStatus = $this->alumni->addAlumni($userId, $title, $cover);
             if($addStatus !== false)
             {
-                $this->response->jsonFail(Response::CODE_SERVER_ERROR, '抱歉,添加同学录失败');
-                $alumniId = $addStatus;
+                $alumniId   = $addStatus;
                 $userIdList = $this->scu->getClassmate($userId);
                 foreach($userIdList as $userIdtmp){
-                    $addAlumniStatus   =  $this->alumniPage->addAlumniPage($alumniId, $userId, $userIdtmp);
-                    $addMessageStatus  = $this->message->addMessage(    $userId, $userIdList,
+                    $addAlumniStatus   =  $this->alumniPage->addAlumniPage($alumniId, $userId, $userIdtmp['user_id']);
+                    $addMessageStatus  = $this->message->addMessage(    $userId, $userIdtmp['user_id'],
                                                                         $type    = CoreConst::AlUMNI_FILL_IN_MES,
                                                                         $title   = '填写同学录',
                                                                         $message = $userName . ' 邀请您填写同学录'
                                                                     );
-                    if($addAlumniStatus || $addMessageStatus){
-                        $this->response->jsonFail(Response::CODE_SERVER_ERROR, '抱歉，注册用户失败');
+                    if(!$addAlumniStatus || !$addMessageStatus){
+                        $this->response->jsonFail(Response::CODE_SERVER_ERROR, '抱歉，添加同学录失败');
                     }
                 }
 
