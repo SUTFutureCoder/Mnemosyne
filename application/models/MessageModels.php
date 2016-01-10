@@ -59,7 +59,7 @@ class MessageModels extends CI_Model{
     }
 
     public function getMessageByUserId($userId){
-        $this->db->where('user_id', $userId);
+        $this->db->where('to_user', $userId);
         $row = $this->db->get(self::$tableName)->result_array();
         return $row;
     }
