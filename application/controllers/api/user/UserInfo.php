@@ -93,7 +93,9 @@ class UserInfo extends CI_Controller{
         $userId = $this->session->user_id;
         $this->load->model('MessageModels', 'message');
         $message = $this->message->getMessageByUserId($userId);
-        var_dump($message);
+        $this->response->jsonSuccess(array(
+            'message' => $message,
+        ));
     }
 
 }
