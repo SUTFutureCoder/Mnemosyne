@@ -29,7 +29,7 @@ function getHorizontalNavbar($nav_num)
             $ret .= "</ul>\n";
             $ret .= "<ul class='nav navbar-nav navbar-right'>";
             $ret .= "<li class='' ><button type='button' class='btn btn-default navbar-btn'";
-            $ret .=  "data-container='body' data-toggle='popover' data-placement='bottom' title='新消息提示' data-content='黄鹤带着小姨子跑了.'";
+            $ret .=  "data-container='body' data-toggle='popover' data-placement='bottom' title='新消息提示' data-content='<a>test</a>' data-html='true' ";
             $ret .= ">";
             $ret .= "<span class='glyphicon glyphicon-modal-window' aria-hidden='true'></span>";
             $ret .= "</button></li>";
