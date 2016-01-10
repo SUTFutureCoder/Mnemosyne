@@ -58,4 +58,10 @@ class MessageModels extends CI_Model{
         return $logContent['run_status'];
     }
 
+    public function getMessageByUserId($userId){
+        $this->db->where('user_id', $userId);
+        $row = $this->db->get(self::$tableName)->result_array();
+        return $row;
+    }
+
 }

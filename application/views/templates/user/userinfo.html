@@ -330,7 +330,7 @@
             userInfoTable : $('#userinfo-table'),
             alumniModal   : $('#update-alumni-modal'),
             alumniForm    : $('#alumni-form'),
-            messagePopover: $('.popover')
+            messagePopover: $('.message_popover')
         };
 
         var AlumniInfoReg = {
@@ -364,14 +364,13 @@
                 });
             },
             loadPopoverFn: function(){
-                $('[data-toggle="popover"]').popover(function(){
-                    alert("test");
-                    console.log(dom.messagePopover.html());
-                });
+                dom.messagePopover.popover();
             },
             messageLoadFn: function(){
-                console.log(dom.messagePopover.html());
-
+                dom.messagePopover.on('show.bs.popover', function () {
+                    dom.messagePopover.attr('data-content', "<div class='message_unread'>" +
+                            "</div>");
+                });
             },
 
             alumniAddRegFn: function(){

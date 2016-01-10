@@ -14,6 +14,7 @@ class UserInfo extends CI_Controller{
         parent::__construct();
         $this->load->helper('login_helper');
         $this->load->library('Response');
+        $this->load->library('session');
     }
 
     /**
@@ -25,7 +26,6 @@ class UserInfo extends CI_Controller{
         //完善用户信息
         $this->load->library('CoreConst');
         $this->load->library('Validator');
-        $this->load->library('session');
 
         //转为utf8
         $userName       = trim($this->input->post('userName', true));
@@ -87,6 +87,13 @@ class UserInfo extends CI_Controller{
 
         $this->session->unset_userdata('needinit');
         $this->response->jsonSuccess();
+    }
+
+    public function getUserMessage(){
+        $userId = $this->session->user_id;
+        $this->load->model('MessageModels', 'message');
+        $message = $this->message->getMessageByUserId($message);
+        var_dump($message);
     }
 
 }
