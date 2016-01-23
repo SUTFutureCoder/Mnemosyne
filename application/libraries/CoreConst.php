@@ -47,4 +47,26 @@ class CoreConst{
     public static $messageTyep = array(
         self::AlUMNI_FILL_IN_MES,
     );
+
+    //Mnemosyne核心参数
+    //UUID
+    const LOG_UUID    = 'log_uuid';
+    const USER_UUID   = 'user_uuid';
+    const ALUMNI_UUID = 'alumni_uuid';
+    public static $uuid = array(
+        self::LOG_UUID,
+        self::USER_UUID,
+        self::ALUMNI_UUID,
+    );
+
+    //模块列表，用于打LOG等
+    const MODULE_ACCOUNT = 'account';
+    const MODULE_ALUMNI  = 'alumni';
+    public static $moduleList = array(
+        self::MODULE_ACCOUNT,
+        self::MODULE_ALUMNI,
+    );
+
+    //log是否打开
+    const MNEMOSYNE_LOG = 1;
 }

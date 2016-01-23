@@ -52,6 +52,7 @@ class Alumni extends CI_Controller{
             {
                 $alumniId   = $addStatus;
                 $userIdList = $this->scu->getClassmate($userId);
+//                $this->response->jsonFail(Response::CODE_SERVER_ERROR, print_r($userIdList, true));
                 foreach($userIdList as $userIdtmp){
                     $addAlumniStatus   =  $this->alumniPage->addAlumniPage($alumniId, $userId, $userIdtmp['user_id']);
                     $addMessageStatus  = $this->message->addMessage(    $userId, $userIdtmp['user_id'],

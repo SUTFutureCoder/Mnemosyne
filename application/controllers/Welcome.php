@@ -63,8 +63,12 @@ class Welcome extends CI_Controller {
 	public function testPasswd(){
 		$testPwd = '12345678910abcdefghijk';
 		echo password_hash($testPwd, PASSWORD_DEFAULT);
+	}
 
-
+	public function testLogPath(){
+		$this->load->library('MLog');
+		$this->load->library('CoreConst');
+		MLog::trace('TEST');
 	}
 
 	public function testPlatform(){
