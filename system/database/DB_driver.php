@@ -582,6 +582,8 @@ abstract class CI_DB_driver {
 	/**
 	 * Execute the query
 	 *
+	 * 这里可以精准获取
+	 *
 	 * Accepts an SQL string as input and returns a result object upon
 	 * successful execution of a "read" type query. Returns boolean TRUE
 	 * upon successful execution of a "write" type query. Returns boolean

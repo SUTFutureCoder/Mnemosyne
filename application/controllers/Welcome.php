@@ -66,13 +66,49 @@ class Welcome extends CI_Controller {
 	}
 
 	public function testLogPath(){
+        $this->load->model('UserModels');
 		$this->load->library('MLog');
 		$this->load->library('CoreConst');
-		MLog::trace('TEST');
+		$ret = $this->UserModels->checkUserExists('13940022196', '506200331@qq.com');
+		$ret = $this->UserModels->checkUserExists('13940022196', '506200331@qq.com');
+		MLog::trace(CoreConst::MODULE_ACCOUNT, 'TEST');
+		MLog::warning(CoreConst::MODULE_ACCOUNT, 'TEST');
 	}
 
 	public function testPlatform(){
 		$this->load->library('CoreConst');
 		print_r(CoreConst::PLATFORM_MOBILE);
 	}
+
+	public function testDebugBacktrace(){
+		$this->load->model('UserModels');
+		$ret = $this->UserModels->checkUserExists('13940022196', '506200331@qq.com');
+		$ret = $this->UserModels->checkUserExists('13940022196', '506200331@qq.com');
+		echo '<pre>';
+		print_r(debug_backtrace());
+		echo '</pre>';
+	}
+
+    public function testTimer(){
+        $this->load->library('Timer');
+        Timer::start();
+        sleep(2);
+        Timer::start('testTimer');
+        Timer::start();
+        sleep(1);
+        Timer::stop();
+        Timer::stop('testTimer');
+        Timer::stop();
+
+        echo Timer::get('testTimer', 'Ms');
+        echo '<br/>';
+        echo '<br/>';
+        echo '<br/>';
+        echo Timer::get(null, 'Ms');
+        echo '<br/>';
+        echo '<br/>';
+        echo '<br/>';
+        echo Timer::get(null, 'Ms');
+
+    }
 }

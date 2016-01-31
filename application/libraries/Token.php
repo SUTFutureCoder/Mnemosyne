@@ -8,7 +8,7 @@
 class Token{
     private $_ci;
 
-    private $_prefix = 'token_';
+    private $_prefix = 'token:';
 
     public function __construct(){
         $this->_ci =& get_instance();
@@ -17,10 +17,10 @@ class Token{
     public function getToken($userId){
         //确认敏感操作时必须验证密码并重新赋予token
         exec('ifconfig', $serverMac);
-        return md5($userId . '-' . $serverMac[0] . '-' . time());
+        return md5($userId . '-' . $serverMac[0] . '-' . microtime(true));
     }
 
-    public function setTokenToRedis($userId, $token = '', $tokenType = 'access', $expire = 86400){
+    public function setTokenToRedis($userId, $token = '', $tokenType = '', $expire = 86400){
         $this->_ci->load->library('RedisLib');
         if (empty($token)){
             $token = $this->getToken($userId);
@@ -35,7 +35,7 @@ class Token{
 
     }
 
-    public function checkToken($userId, $userToken, $tokenType = 'access'){
+    public function checkToken($userId, $userToken, $tokenType = ''){
         if (empty($userId) || empty($userToken)){
             return false;
         }

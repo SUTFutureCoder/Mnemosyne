@@ -13,7 +13,6 @@ class Alumni extends CI_Controller{
         $this->load->library('Validator');
         $this->load->library("session");
         $this->load->library('Response');
-        $this->load->library('CoreConst');
     }
 
     public function updateAlumni(){

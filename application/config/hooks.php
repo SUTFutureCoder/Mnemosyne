@@ -11,3 +11,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |	http://codeigniter.com/user_guide/general/hooks.html
 |
 */
+
+$hook['post_controller'][] = array(
+    'class'    => 'MLog',
+    'function' => 'testBackTrace',
+    'filename' => 'MLog.php',
+    'filepath' => 'libraries',
+    'params'   => array(debug_backtrace()),
+);

@@ -111,7 +111,8 @@ CREATE TABLE IF NOT EXISTS `student` (
 
 -- DROP TABLE IF EXISTS `user`;
 CREATE TABLE IF NOT EXISTS `user` (
-  `user_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '用户唯一id',
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '用户自增id',
+  `user_id` bigint(20) NOT NULL COMMENT '用户唯一id',
   `user_name` varchar(32) NOT NULL COMMENT '用户姓名',
   `user_birthday` date NOT NULL COMMENT '用户生日',
   `user_sex` tinyint(4) NOT NULL COMMENT '用户性别',
@@ -122,9 +123,10 @@ CREATE TABLE IF NOT EXISTS `user` (
   `user_status` tinyint(4) NOT NULL COMMENT '用户状态',
   `user_create_time` int(11) unsigned NOT NULL COMMENT '加入时间',
   `user_last_login_time` int(11) unsigned NOT NULL COMMENT '最后登录时间',
-  PRIMARY KEY (`user_id`),
+  PRIMARY KEY (`id`),
   UNIQUE KEY `user_email_2` (`user_email`),
   UNIQUE KEY `user_mobile_2` (`user_mobile`),
+  UNIQUE KEY `user_id` (`user_id`),
   KEY `user_name` (`user_name`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='用户表';
 

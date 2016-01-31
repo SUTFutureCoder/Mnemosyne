@@ -30,7 +30,6 @@ class Account extends CI_Controller{
         //验证是否通过;
         $this->load->library('validcode');
         $this->load->library('Token');
-        $this->load->library('CoreConst');
 
         if (!$this->validcode->checkValidCodeAccess()){
             $this->response->jsonFail(Response::CODE_UNAUTHORIZED, '请输入正确的验证码');
@@ -80,7 +79,6 @@ class Account extends CI_Controller{
     public function regist(){
 
         $this->load->library('Token');
-        $this->load->library('CoreConst');
         /*开发期间验证码先注释掉
         //验证是否通过验证码验证
         $this->load->library('validcode');

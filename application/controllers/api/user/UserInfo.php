@@ -24,7 +24,6 @@ class UserInfo extends CI_Controller{
         //检查是否合法用户
         checkLogin('api');
         //完善用户信息
-        $this->load->library('CoreConst');
         $this->load->library('Validator');
 
         //转为utf8

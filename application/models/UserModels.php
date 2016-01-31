@@ -14,6 +14,7 @@ class UserModels extends CI_Model{
         parent::__construct();
         $this->load->database();
         $this->load->model('UserLogModels');
+        $this->load->library('Uuid');
     }
 
 
@@ -27,15 +28,15 @@ class UserModels extends CI_Model{
      */
     public function addUser($userPW, $userMobile, $userEmail){
         $this->db->trans_start();
+        $userId = Uuid::genUUID(CoreConst::USER_UUID);
         $this->db->insert(self::$tableName, array(
+            'user_id'           => $userId,
             'user_password'     => $userPW,
             'user_create_time'  => time(),
             'user_status'       => 1,
             'user_mobile'       => $userMobile,
             'user_email'        => $userEmail,
         ));
-
-        $userId = $this->db->insert_id();
 
         //打log
         $logContent = array(

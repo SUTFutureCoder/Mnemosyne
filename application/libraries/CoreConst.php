@@ -60,11 +60,19 @@ class CoreConst{
     );
 
     //模块列表，用于打LOG等
+    const MODULE_KERNEL  = 'kernel';
     const MODULE_ACCOUNT = 'account';
     const MODULE_ALUMNI  = 'alumni';
+    const MODULE_DATABASE  = 'database';
+    const MODULE_WEBSOCKET = 'websocket';
+    const MODULE_SAL     = 'SAL';
     public static $moduleList = array(
         self::MODULE_ACCOUNT,
         self::MODULE_ALUMNI,
+        self::MODULE_KERNEL,
+        self::MODULE_DATABASE,
+        self::MODULE_WEBSOCKET,
+        self::MODULE_SAL,
     );
 
     //log是否打开
