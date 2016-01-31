@@ -37,7 +37,7 @@ class Timer{
             //使用匿名存放栈
             self::$anonymousRuntimeStack[] = microtime(true);
         } else {
-            self::$runtimeCollector[$key]['start'] = microtime(true);
+            self::$runtimeCollector[$key][0] = microtime(true);
         }
     }
 
@@ -63,11 +63,11 @@ class Timer{
         }
 
         if (empty(self::$runtimeCollector[$key])
-                || empty(self::$runtimeCollector[$key]['start'])){
+                || empty(self::$runtimeCollector[$key][0])){
             return false;
         }
 
-        self::$runtimeCollector[$key]['stop']  = microtime(true);
+        self::$runtimeCollector[$key][1]  = microtime(true);
     }
 
     /**
@@ -96,13 +96,13 @@ class Timer{
 
         } else {
             if (empty(self::$runtimeCollector[$key])
-                || empty(self::$runtimeCollector[$key]['start'])
-                || empty(self::$runtimeCollector[$key]['stop'])
+                || empty(self::$runtimeCollector[$key][0])
+                || empty(self::$runtimeCollector[$key][1])
                 || !in_array($type, self::$timeType)){
                 return false;
             }
 
-            $floatUseTime  = self::$runtimeCollector[$key]['stop'] - self::$runtimeCollector[$key]['start'];
+            $floatUseTime  = self::$runtimeCollector[$key][1] - self::$runtimeCollector[$key][0];
         }
 
 

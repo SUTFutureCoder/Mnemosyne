@@ -104,6 +104,10 @@ class Welcome extends CI_Controller {
         echo '<br/>';
         echo '<br/>';
         echo '<br/>';
+        echo Timer::get('testTimer', 'us');
+        echo '<br/>';
+        echo '<br/>';
+        echo '<br/>';
         echo Timer::get(null, 'Ms');
         echo '<br/>';
         echo '<br/>';
