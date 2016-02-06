@@ -11,16 +11,12 @@
  * Date: 16-1-23
  * Time: 下午3:19
  */
-require_once 'CoreConst.php';
 require_once 'Uuid.php';
 class MLog{
 
     private static $objCoreConst;
 
     private static $intLogUuid;
-
-    //栈式运行时间记录器
-    private static $stackRunTimeCollector;
 
     //获取MLOG是否打开，以及存储位置。
     //调用本类所有函数请务必首先
@@ -161,13 +157,4 @@ class MLog{
 
         self::putLogIntoFile($strLogPath, __FUNCTION__, $strFatalMsg);
     }
-
-    public static function runtimePusher($intRuntime){
-
-    }
-
-    public static function testBackTrace($debug){
-        self::warning(CoreConst::MODULE_KERNEL, print_r($debug, true));
-    }
-
 }

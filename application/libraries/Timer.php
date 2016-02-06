@@ -18,9 +18,9 @@ class Timer{
     private static $runtimeCollector = array();
 
     //匿名时间存放栈,用于存放没有名字key的情况
-    private static $anonymousRuntimeStack = array();
+    private static $anonymousRuntimeStack = null;
     //匿名时间存放队列
-    private static $anonymousRuntimeResultStack = array();
+    private static $anonymousRuntimeResultQueue = null;
 
     /**
      * 开始针对key计时，如果不指定key则会自动使用匿名存放栈.
@@ -35,7 +35,10 @@ class Timer{
         //请用key来区分计时器作用
         if (null === $key){
             //使用匿名存放栈
-            self::$anonymousRuntimeStack[] = microtime(true);
+            if (null === self::$anonymousRuntimeStack){
+                self::$anonymousRuntimeStack = new SplStack();
+            }
+            self::$anonymousRuntimeStack->push(microtime(true));
         } else {
             self::$runtimeCollector[$key][0] = microtime(true);
         }
@@ -49,16 +52,17 @@ class Timer{
      */
     public static function stop($key = null){
         if (null === $key){
-            $tempKeys = array_keys(self::$anonymousRuntimeStack);
-            $endKey = end($tempKeys);
-            if (empty(self::$anonymousRuntimeStack)
-                || false === $endKey
-                || empty(self::$anonymousRuntimeStack[$endKey])){
+            if (null === self::$anonymousRuntimeStack
+                || true === self::$anonymousRuntimeStack->isEmpty()){
                 return false;
             }
+
             //塞入匿名结果栈
-            self::$anonymousRuntimeResultStack[$endKey] = microtime(true) - self::$anonymousRuntimeStack[$endKey];
-            unset(self::$anonymousRuntimeStack[$endKey]);
+            if (null === self::$anonymousRuntimeResultQueue){
+                self::$anonymousRuntimeResultQueue = new SplQueue();
+            }
+
+            self::$anonymousRuntimeResultQueue->enqueue(microtime(true) - self::$anonymousRuntimeStack->pop());
             return true;
         }
 
@@ -81,18 +85,12 @@ class Timer{
         $type = strtolower($type);
 
         if (null === $key){
-            $tempKeys = array_keys(self::$anonymousRuntimeResultStack);
-            $endKey = current($tempKeys);
-            if (empty(self::$anonymousRuntimeResultStack)
-                || false === $endKey
-                || empty(self::$anonymousRuntimeResultStack[$endKey])
-                || !in_array($type, self::$timeType)){
+            if (null === self::$anonymousRuntimeResultQueue
+                || true === self::$anonymousRuntimeResultQueue->isEmpty()){
                 return false;
             }
-            $floatUseTime = self::$anonymousRuntimeResultStack[$endKey];
 
-            //出栈
-            unset(self::$anonymousRuntimeResultStack[$endKey]);
+            $floatUseTime  = self::$anonymousRuntimeResultQueue->dequeue();
 
         } else {
             if (empty(self::$runtimeCollector[$key])
@@ -113,21 +111,17 @@ class Timer{
             break;
 
             case 'ms':
-                return intval($floatUseTime * 1000);
+                return $floatUseTime * 1000;
             break;
 
             case 'us':
-                return intval($floatUseTime * 1000 * 1000);
+                return $floatUseTime * 1000 * 1000;
             break;
 
             default:
                 return false;
             break;
         }
-    }
-
-    public static function getTotal(){
-        return self::$runtimeCollector + self::$anonymousRuntimeStack;
     }
 
 }

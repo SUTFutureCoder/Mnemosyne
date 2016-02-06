@@ -84,9 +84,9 @@ class Welcome extends CI_Controller {
 		$this->load->model('UserModels');
 		$ret = $this->UserModels->checkUserExists('13940022196', '506200331@qq.com');
 		$ret = $this->UserModels->checkUserExists('13940022196', '506200331@qq.com');
-		echo '<pre>';
-		print_r(debug_backtrace());
-		echo '</pre>';
+//		echo '<pre>';
+//		print_r(debug_backtrace());
+//		echo '</pre>';
 	}
 
     public function testTimer(){
@@ -115,4 +115,5 @@ class Welcome extends CI_Controller {
         echo Timer::get(null, 'Ms');
 
     }
+
 }
