@@ -81,7 +81,7 @@ class Timer{
      * @param string $type
      * @return bool|int
      */
-    public static function get($key = null, $type = 's'){
+    public static function get($key = null, $type = 'ms'){
         $type = strtolower($type);
 
         if (null === $key){

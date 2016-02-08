@@ -14,6 +14,7 @@
  * Date: 16-1-31
  * Time: 下午5:20
  */
+require_once 'Timer.php';
 class SAL {
 
     private $_ci;
@@ -22,7 +23,42 @@ class SAL {
         $this->_ci =& get_instance();
     }
 
-    public function doHttp(){
+    public function doHttp($method, $url, $data, $header = array()){
+        if (!in_array($method, array('get', 'post',))){
+            MLog::warning(CoreConst::MODULE_SAL, sprintf('curl method error method[%s]', $method));
+        }
 
+        Timer::start('curl');
+        $objCurl    = curl_init();
+        $arrOptions = array(
+            CURLOPT_URL => $url,
+            CURLOPT_HEADER => 0,
+            CURLOPT_RETURNTRANSFER => 1,
+        );
+
+        if (is_array($header)){
+            if (!empty($header)){
+                $arrOptions[CURLOPT_HTTPHEADER] = $header;
+            }
+        } else {
+            MLog::warning(CoreConst::MODULE_SAL, sprintf('You must pass either an object or an array with the CURLOPT_HTTPHEADER argument header[%s]', $header));
+        }
+
+        if ($method == 'post'){
+            $arrOptions += array(CURLOPT_POST => 1,
+                CURLOPT_POSTFIELDS => http_build_query($data),);
+        } else {
+            //get
+            $arrOptions[CURLOPT_URL] = $url . '?' . http_build_query($data);
+        }
+
+        curl_setopt_array($objCurl, $arrOptions);
+        $strResult = curl_exec($objCurl);
+        curl_close($objCurl);
+        Timer::stop('curl');
+
+        MLog::trace(CoreConst::MODULE_SAL, sprintf('doHttp cost[%sms]', Timer::get('curl')));
+
+        return $strResult;
     }
 }

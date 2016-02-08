@@ -116,4 +116,16 @@ class Welcome extends CI_Controller {
 
     }
 
+    public function testWebsocket(){
+        $this->load->library('SAL');
+        $arrUrl  = '127.0.0.1:2121';
+        $arrData = array(
+            'type' => 'publish',
+            'to'   => 1454844839000,
+            'content' => '消息内容',
+        );
+        $ret = $this->sal->doHttp('get', $arrUrl, $arrData);
+        print_r($ret);
+    }
+
 }
