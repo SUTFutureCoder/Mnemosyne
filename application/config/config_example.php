@@ -94,7 +94,7 @@ $config['charset'] = 'UTF-8';
 | setting this variable to TRUE (boolean).  See the user guide for details.
 |
 */
-$config['enable_hooks'] = FALSE;
+$config['enable_hooks'] = TRUE;
 
 /*
 |--------------------------------------------------------------------------
@@ -207,7 +207,7 @@ $config['directory_trigger'] = 'd';
 | your log files will fill up very fast.
 |
 */
-$config['log_threshold'] = 0;
+$config['log_threshold'] = 1;
 
 /*
 |--------------------------------------------------------------------------
@@ -218,7 +218,7 @@ $config['log_threshold'] = 0;
 | application/logs/ directory. Use a full server path with trailing slash.
 |
 */
-$config['log_path'] = '';
+$config['log_path'] = 'application/logs/core/';
 
 /*
 |--------------------------------------------------------------------------
@@ -308,7 +308,7 @@ $config['cache_query_string'] = FALSE;
 | http://codeigniter.com/user_guide/libraries/encryption.html
 |
 */
-$config['encryption_key'] = 'example';
+$config['encryption_key'] = '';
 
 /*
 |--------------------------------------------------------------------------
@@ -364,7 +364,7 @@ $config['encryption_key'] = 'example';
 $config['sess_driver'] = 'redis';
 $config['sess_cookie_name'] = 'ci_session';
 $config['sess_expiration'] = 7200;
-$config['sess_save_path'] = NULL;
+$config['sess_save_path'] = '127.0.0.1:6379?prefix=ci_sess:&database=2&timeout=60';
 $config['sess_match_ip'] = TRUE;
 $config['sess_time_to_update'] = 300;
 $config['sess_regenerate_destroy'] = FALSE;
@@ -433,8 +433,8 @@ $config['global_xss_filtering'] = FALSE;
 | 'csrf_exclude_uris' = Array of URIs which ignore CSRF checks
 */
 $config['csrf_protection'] = FALSE;
-$config['csrf_token_name'] = 'example';
-$config['csrf_cookie_name'] = 'example';
+$config['csrf_token_name'] = 'mnemosyne_t';
+$config['csrf_cookie_name'] = 'mnemo_t';
 $config['csrf_expire'] = 7200;
 $config['csrf_regenerate'] = TRUE;
 $config['csrf_exclude_uris'] = array();
@@ -506,12 +506,8 @@ $config['rewrite_short_tags'] = FALSE;
 */
 $config['proxy_ips'] = '';
 
-
-
 /* 全局配置 */
 date_default_timezone_set('Asia/Shanghai');//定义时区
 defined('TempLates') || define("TempLates",APPPATH."libraries/smarty/Smarty.class.php"); //smarty 配置类库
 defined('TempLates_Dir') || define("TempLates_Dir",APPPATH."views/templates"); //模板文件
 defined('TempLates_C') || define("TempLates_C",APPPATH."views/templates_c"); //编译文件
-/* End of file config.php */
-/* Location: ./application/config/config.php */

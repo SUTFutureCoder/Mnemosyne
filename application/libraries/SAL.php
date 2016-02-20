@@ -57,7 +57,7 @@ class SAL {
         curl_close($objCurl);
         Timer::stop('curl');
 
-        MLog::trace(CoreConst::MODULE_SAL, sprintf('doHttp cost[%sms]', Timer::get('curl')));
+        MLog::trace(CoreConst::MODULE_SAL, sprintf('doHttp cost[%s]', Timer::get('curl')));
 
         return $strResult;
     }

@@ -82,6 +82,7 @@ class Welcome extends CI_Controller {
 
 	public function testDebugBacktrace(){
 		$this->load->model('UserModels');
+        CoreConst::$userId = 3;
 		$ret = $this->UserModels->checkUserExists('13940022196', '506200331@qq.com');
 		$ret = $this->UserModels->checkUserExists('13940022196', '506200331@qq.com');
 //		echo '<pre>';
@@ -121,7 +122,7 @@ class Welcome extends CI_Controller {
         $arrUrl  = '127.0.0.1:2121';
         $arrData = array(
             'type' => 'publish',
-            'to'   => 1454844839000,
+            'to'   => 1455954162000,
             'content' => '消息内容',
         );
         $ret = $this->sal->doHttp('get', $arrUrl, $arrData);

@@ -699,9 +699,9 @@ abstract class CI_DB_driver {
 
         //写入日志
         $this->_mlog->notice(CoreConst::MODULE_DATABASE, sprintf(
-            'sql[%s] cost[%sms]',
+            'sql[%s] cost[%s]',
             json_encode($sql),
-            Timer::get(null, 'ms')
+            Timer::get()
         ));
 
 		$this->benchmark += $time_end - $time_start;
