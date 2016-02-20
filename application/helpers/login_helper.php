@@ -21,7 +21,7 @@ function checkLogin($type = 'view'){
     if ($type == 'view'){
         $token = $CI->session->token;
     } else if ($type == 'api'){
-        $token = $CI->input->post('token');
+        $token = !empty($CI->input->post('token')) ? $CI->input->post('token') : $CI->input->get('token');
     } else {
         $token = '';
     }
@@ -35,4 +35,6 @@ function checkLogin($type = 'view'){
         }
 
     }
+
+    CoreConst::$userId = $user_id;
 }

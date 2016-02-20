@@ -102,7 +102,7 @@ class MLog{
         //获取函数调用顺序
         $strBackTrace  = debug_backtrace();
 
-        $strLog = sprintf("%s: %s [%s:%s] args%s logId[%s] uri[%s] %s" . PHP_EOL ,
+        $strLog = sprintf("%s: %s [%s:%s] args%s logId[%s] uri[%s] userId[%s] %s" . PHP_EOL ,
             $strLogType,
             date('y-m-d H:i:s'),
             $strBackTrace[1]['file'],
@@ -110,6 +110,7 @@ class MLog{
             json_encode($strBackTrace[1]['args']),
             self::$intLogUuid,
             $_SERVER['PATH_INFO'],
+            CoreConst::$userId,
             $strLogMsg);
 
         file_put_contents($strLogPath, $strLog, FILE_APPEND);

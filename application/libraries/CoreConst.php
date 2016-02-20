@@ -5,7 +5,7 @@
  * Date: 15-12-5
  * Time: 下午3:40
  */
-//常量存储库
+//常量、全局变量存储库
 class CoreConst{
     //平台常量
     const PLATFORM_TEST     = -1;
@@ -77,4 +77,7 @@ class CoreConst{
 
     //log是否打开
     const MNEMOSYNE_LOG = 1;
+
+    //全局静态变量
+    public static $userId = 0;
 }
