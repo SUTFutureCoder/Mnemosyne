@@ -23,7 +23,7 @@ class SAL {
         $this->_ci =& get_instance();
     }
 
-    public function doHttp($method, $url, $data, $header = array()){
+    public static function doHttp($method, $url, $data, $header = array()){
         if (!in_array($method, array('get', 'post',))){
             MLog::warning(CoreConst::MODULE_SAL, sprintf('curl method error method[%s]', $method));
         }
