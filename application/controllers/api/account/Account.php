@@ -77,6 +77,7 @@ class Account extends CI_Controller{
     }
 
     public function logout(){
+        $this->load->library('session');
         $this->session->sess_destroy();
     }
 
