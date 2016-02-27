@@ -69,11 +69,20 @@ class Account extends CI_Controller{
             $this->session->set_userdata('user_name', $userInfo['user_name']);
         }
 
+        //添加一行便于测试
+        $this->session->set_userdata('needinit', 1);
+
         $this->session->set_userdata('token', $token);
 
         $this->response->jsonSuccess(array(
             'token' => $token,
         ));
+    }
+
+    public function logout(){
+        $this->load->library('session');
+        $this->session->sess_destroy();
+
     }
 
     public function regist(){
