@@ -28,6 +28,12 @@ function getHorizontalNavbar($nav_num)
                     }
             $ret .= "</ul>\n";
             $ret .= "<ul class='nav navbar-nav navbar-right'>";
+            $ret .= "<li class='dropdown'>";
+            $ret .= "<a href='#' class='dropdown-toggle' data-toggle='dropdown' role='button' aria-haspopup='true' aria-expanded='false'>欢迎您<span id='navbar-collapse-user_name'></span> <span class='caret'></span></a>";
+            $ret .= '<ul class="dropdown-menu">';
+            $ret .= '<li><a href="#">退出</a></li>';
+            $ret .= "</li>";
+            $ret .= "</ul>";
             $ret .= "<li class='' ><button type='button' class='message_popover btn btn-default navbar-btn'";
             $ret .=  "data-container='body' data-toggle='popover' data-placement='bottom' title='新消息提示' data-content='<a>test</a>' data-html='true' ";
             $ret .= ">";
