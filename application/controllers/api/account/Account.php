@@ -76,6 +76,10 @@ class Account extends CI_Controller{
         ));
     }
 
+    public function logout(){
+        $this->session->sess_destroy();
+    }
+
     public function regist(){
 
         $this->load->library('Token');
