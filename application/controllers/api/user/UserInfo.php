@@ -88,6 +88,10 @@ class UserInfo extends CI_Controller{
         $this->response->jsonSuccess();
     }
 
+    public function addFrientInit(){
+        checkLogin('api');
+    }
+
     public function getUserMessage(){
         $userId = $this->session->user_id;
         $this->load->model('MessageModels', 'message');

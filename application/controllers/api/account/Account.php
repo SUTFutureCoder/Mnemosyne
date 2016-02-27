@@ -69,6 +69,8 @@ class Account extends CI_Controller{
             $this->session->set_userdata('user_name', $userInfo['user_name']);
         }
 
+        $this->session->set_userdata('needinit', 0);
+
         $this->session->set_userdata('token', $token);
 
         $this->response->jsonSuccess(array(
@@ -79,6 +81,7 @@ class Account extends CI_Controller{
     public function logout(){
         $this->load->library('session');
         $this->session->sess_destroy();
+
     }
 
     public function regist(){
