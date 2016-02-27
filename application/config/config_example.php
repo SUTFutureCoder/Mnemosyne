@@ -506,6 +506,19 @@ $config['rewrite_short_tags'] = FALSE;
 */
 $config['proxy_ips'] = '';
 
+/*
+ * 邮箱部分
+ */
+$config['email_protocol']  = 'smtp';
+$config['email_smtp_host'] = 'smtp.mxhichina.com';
+$config['email_smtp_user'] = 'message@bricksfx.cn';
+$config['email_smtp_pass'] = '';
+$config['email_smtp_post'] = 25;
+$config['email_charset']   = 'utf-8';
+$config['email_mailtype']  = 'html';
+$config['email_wordwrap']  = TRUE;
+
+
 /* 全局配置 */
 date_default_timezone_set('Asia/Shanghai');//定义时区
 defined('TempLates') || define("TempLates",APPPATH."libraries/smarty/Smarty.class.php"); //smarty 配置类库

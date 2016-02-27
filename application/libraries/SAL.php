@@ -25,7 +25,8 @@ class SAL {
 
     public static function doHttp($method, $url, $data, $header = array()){
         if (!in_array($method, array('get', 'post',))){
-            MLog::warning(CoreConst::MODULE_SAL, sprintf('curl method error method[%s]', $method));
+            MLog::fatal(CoreConst::MODULE_SAL, sprintf('curl method error method[%s]', $method));
+            return false;
         }
 
         Timer::start('curl');
@@ -41,7 +42,8 @@ class SAL {
                 $arrOptions[CURLOPT_HTTPHEADER] = $header;
             }
         } else {
-            MLog::warning(CoreConst::MODULE_SAL, sprintf('You must pass either an object or an array with the CURLOPT_HTTPHEADER argument header[%s]', $header));
+            MLog::fatal(CoreConst::MODULE_SAL, sprintf('You must pass either an object or an array with the CURLOPT_HTTPHEADER argument header[%s]', $header));
+            return false;
         }
 
         if ($method == 'post'){
@@ -58,6 +60,15 @@ class SAL {
         Timer::stop('curl');
 
         MLog::trace(CoreConst::MODULE_SAL, sprintf('doHttp cost[%s]', Timer::get('curl')));
+
+        if (false === $strResult){
+            MLog::fatal(CoreConst::MODULE_SAL, sprintf('doHttp curl fail method[%s] url[%s] data[%s] header[%s]',
+                    json_encode($method),
+                    json_encode($url),
+                    json_encode($data),
+                    json_encode($header)
+                ));
+        }
 
         return $strResult;
     }

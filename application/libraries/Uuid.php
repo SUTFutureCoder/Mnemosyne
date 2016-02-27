@@ -21,6 +21,7 @@ class Uuid{
     public static function genUUID($strUuidModule){
         if (!in_array($strUuidModule, CoreConst::$uuid)){
             //此处打log
+            MLog::fatal(CoreConst::MODULE_KERNEL, sprintf('uuid module not valid uuidModule[%s]', $strUuidModule));
             return false;
         }
 
@@ -32,6 +33,8 @@ class Uuid{
 
         if (intval($intRet) >= PHP_INT_MAX){
             //此处打log，抛异常。log也可以集成于异常中
+            MLog::fatal(CoreConst::MODULE_KERNEL, 'UUID gen failed - php int max exceed uuid[%s]', $intRet);
+            return false;
         }
 
         return $intRet;

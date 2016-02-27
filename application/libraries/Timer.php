@@ -54,6 +54,7 @@ class Timer{
         if (null === $key){
             if (null === self::$anonymousRuntimeStack
                 || true === self::$anonymousRuntimeStack->isEmpty()){
+                MLog::fatal(CoreConst::MODULE_KERNEL, 'stop anonymous timer error when stack is empty');
                 return false;
             }
 
@@ -68,6 +69,7 @@ class Timer{
 
         if (empty(self::$runtimeCollector[$key])
                 || empty(self::$runtimeCollector[$key][0])){
+            MLog::fatal(CoreConst::MODULE_KERNEL, 'timer failed the run time collector is empty when stop timer');
             return false;
         }
 
@@ -87,6 +89,7 @@ class Timer{
         if (null === $key){
             if (null === self::$anonymousRuntimeResultQueue
                 || true === self::$anonymousRuntimeResultQueue->isEmpty()){
+                MLog::fatal(CoreConst::MODULE_KERNEL, 'get anonymous timer error when runtime queue is empty');
                 return false;
             }
 
@@ -97,6 +100,7 @@ class Timer{
                 || empty(self::$runtimeCollector[$key][0])
                 || empty(self::$runtimeCollector[$key][1])
                 || !in_array($type, self::$timeType)){
+                MLog::fatal(CoreConst::MODULE_KERNEL, sprintf('get timer error when runtime queue is empty key[%s]', $key));
                 return false;
             }
 
@@ -119,6 +123,7 @@ class Timer{
             break;
 
             default:
+                MLog::fatal(CoreConst::MODULE_KERNEL, 'timer type error');
                 return false;
             break;
         }

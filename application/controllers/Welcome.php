@@ -129,4 +129,26 @@ class Welcome extends CI_Controller {
         print_r($ret);
     }
 
+
+    public function sendEmailByLibrary(){
+        $this->load->library('MEmail');
+        $ret = $this->memail->send(
+            'message@bricksfx.cn',
+            'bricks科技',
+            '252142844@qq.com',
+            null,
+            '阿里里~阿里里~阿里阿里里',
+            array(
+                '/home/lin/图片/T2v6FWXzRXXXXXXXXX_!!88677701.jpg',
+                '/home/lin/图片/06caf309b3de9c823dafc8456e81800a1bd84340.jpg',
+            ),
+            null,
+            null
+        );
+
+        if (false === $ret){
+            echo MLog::$strLastErrorMsg;
+        }
+    }
+
 }

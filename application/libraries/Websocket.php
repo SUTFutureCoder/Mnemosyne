@@ -20,7 +20,16 @@ class Websocket {
             'to'   => $to,
             'content' => $content,
         );
-        return SAL::doHttp('get', self::URL, $arrData);
+        $websocketRet = SAL::doHttp('get', self::URL, $arrData);
+
+        if ($websocketRet === false){
+            MLog::fatal(CoreConst::MODULE_WEBSOCKET, 'send message through websocket error data[%s] ret[%s]',
+                json_encode($arrData),
+                json_encode($websocketRet));
+            return false;
+        }
+
+        return $websocketRet;
     }
 
 }

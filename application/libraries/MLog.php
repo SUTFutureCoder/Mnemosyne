@@ -18,6 +18,9 @@ class MLog{
 
     private static $intLogUuid;
 
+    //用于存放最后一次致命出错信息
+    public static $strLastErrorMsg;
+
     //获取MLOG是否打开，以及存储位置。
     //调用本类所有函数请务必首先
     private static function getLogStatus(){
@@ -153,6 +156,8 @@ class MLog{
         if (false === self::getLogStatus()){
             return false;
         }
+
+        self::$strLastErrorMsg = $strFatalMsg;
 
         $strLogPath = self::getPath(__FUNCTION__, $strModule);
 

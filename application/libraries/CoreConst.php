@@ -66,6 +66,8 @@ class CoreConst{
     const MODULE_DATABASE  = 'database';
     const MODULE_WEBSOCKET = 'websocket';
     const MODULE_SAL     = 'SAL';
+    const MODULE_EMAIL   = 'EMAIL';
+
     public static $moduleList = array(
         self::MODULE_ACCOUNT,
         self::MODULE_ALUMNI,
@@ -73,6 +75,7 @@ class CoreConst{
         self::MODULE_DATABASE,
         self::MODULE_WEBSOCKET,
         self::MODULE_SAL,
+        self::MODULE_EMAIL,
     );
 
     //log是否打开

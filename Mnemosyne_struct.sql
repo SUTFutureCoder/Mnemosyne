@@ -65,6 +65,8 @@ CREATE TABLE IF NOT EXISTS `school` (
   KEY `school_name` (`school_id`,`school_name`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='学校表';
 
+INSERT INTO `school` (`id`, `school_id`, `school_name`) VALUES
+(1, '1', '沈阳工业大学');
 -- --------------------------------------------------------
 
 --
