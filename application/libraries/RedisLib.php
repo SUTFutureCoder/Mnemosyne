@@ -51,7 +51,7 @@ class RedisLib{
                 $strKeys = self::$prefix . $strKeys;
             }
         } else {
-            $arrKeys = self::$prefix . $strKeys;
+            $arrKeys = self::$prefix . $arrKeys;
         }
 
         return self::$redis->delete($arrKeys);

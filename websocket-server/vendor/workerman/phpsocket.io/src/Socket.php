@@ -82,7 +82,7 @@ public function __destruct()
         return null;
     }
  
-    public function emit($ev)
+    public function emit($ev = null)
     {
         $args = func_get_args();
         if (isset(self::$events[$ev]))
@@ -222,7 +222,7 @@ public function __destruct()
     {
         $this->adapter->del($this->id, $room);
         unset($this->rooms[$room]);
-        return this;
+        return $this;
     }
     
     /**

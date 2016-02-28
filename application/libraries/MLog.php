@@ -6,6 +6,8 @@
  *
  * 唯一的LOG ID方便查询
  *
+ * library中false必须打fatal日志
+ *
  * Created by PhpStorm.
  * User: lin
  * Date: 16-1-23

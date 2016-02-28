@@ -1,15 +1,1 @@
-2016-01-24 18:09:34 Workerman[start.php] start in DEBUG mode
-2016-01-24 18:09:42 Workerman[start.php] Stopping ...
-2016-01-24 18:09:42 Workerman[start.php] has been stopped
-2016-01-24 18:09:45 Workerman[start.php] start in DAEMON mode
-2016-02-07 19:24:41 Workerman[start.php] -d 
-2016-02-07 19:24:41 Workerman[start.php] not run
-2016-02-07 19:24:46 Workerman[start.php] start in DAEMON mode
-2016-02-20 15:42:31 Workerman[start.php] start in DEBUG mode
-2016-02-20 16:14:37 Workerman[start.php] Stopping ...
-2016-02-20 16:14:37 Workerman[start.php] has been stopped
-2016-02-20 16:14:43 Workerman[start.php] stop 
-2016-02-20 16:14:43 Workerman[start.php] not run
-2016-02-20 16:14:43 Workerman[start.php] is stoping ...
-2016-02-20 16:14:43 Workerman[start.php] stop success
-2016-02-27 17:38:29 Workerman[start.php] start in DEBUG mode
+2016-02-27 22:15:35 Workerman[start.php] start in DEBUG mode

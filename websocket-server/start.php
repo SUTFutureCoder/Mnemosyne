@@ -8,6 +8,9 @@ use PHPSocketIO\SocketIO;
 include __DIR__ . '/vendor/autoload.php';
 include __DIR__ . '/vendor/workerman/phpsocket.io/src/autoload.php';
 
+//
+include __DIR__ . '/mnemosyne/';
+
 
 // 全局数组保存uid在线数据
 $uidConnectionMap = array();
