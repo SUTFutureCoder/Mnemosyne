@@ -5,3 +5,36 @@
 #complete-info-modal-choose-friend {
     display: none;
 }
+
+.friend-info-list{
+    clear:both; 
+    padding-top:20px;
+}
+
+.friend-info-list-content{
+    margin:10px 10px;
+}
+
+.friend-info-list-content-single{
+    margin:0;
+    width:108px;
+    float:left;
+}
+
+.friend-info-list-content-single-head{
+    margin:0 14px; 
+}
+.friend-info-list-content-single-head img{
+    width:80px;
+}
+.friend-info-list-content-single-head img:hover{
+    border: 1px solid #0000ff;
+}
+
+.friend-info-list-content-single-desc {
+    text-align:center;
+}
+
+.friend-info-list-content-footer {
+    clear:both;
+}

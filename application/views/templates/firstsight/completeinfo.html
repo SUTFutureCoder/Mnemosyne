@@ -42,7 +42,36 @@
                     <button class="btn btn-success btn-block" id="basic-info-form-bind-class-confirm" type="button">绑定班级</button>
                 </div>
                 <div id="complete-info-modal-choose-friend">
-                    <p></p>
+	                <div class="friend-recommend-list">
+                        <div class="option-header" >
+                            <h4 style="float:left">推荐好友</h4> 
+                            <div class="option" style="float:right">
+                                <button type="button" class="btn btn-default">
+                                    <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> 换一批
+                                </button>
+                                <button type="button" class="btn btn-default">
+                                    <span class="glyphicon glyphicon-option-horizontal" aria-hidden="true"></span> 更多推荐
+                                </button>
+                            </div>
+                        </div>
+                        <div class="friend-info-list">
+                       	    {{section name=foo start=10 loop=20 step=1}} 
+                            <div class="friend-info-list-content">
+                                <div class="friend-info-list-content-single">
+                                    <div class="friend-info-list-content-single-head">
+                                        <img src='http://hdn.xnimg.cn/photos/hdn521/20160114/1640/h_main_McbN_51d70003a5dc1986.jpg'/> 
+                                    </div>
+                                    <div class="friend-info-list-content-single-desc">
+                                        <p>方旭</p>
+                                    </div>
+                                </div>
+                            </div>
+			                {{/section}}
+                            <div class="friend-info-list-content-footer">
+                            </div>
+
+                        </div>
+                    </div>
                 </div>
             </div>
         </div><!-- /.modal-content -->
@@ -73,9 +102,11 @@
         var initReg = {
 
             init : function(){
+                
                 this.displayInitModal();
-                this.initDateTimePicker();
-                this.userInfoInit();
+                //this.initDateTimePicker();
+                //this.userInfoInit();
+                this.testInitModal();
             },
 
             displayInitModal: function(){
@@ -95,6 +126,13 @@
                     initialDate : (objNowTime.getFullYear() - 23)+'-01-01',
 
                 });
+            },
+
+            testInitModal: function(){
+                var formData = dom.initInfoModal.find('#complete-info-modal-basic-info');
+                formData.toggle();
+                var userRecommend = dom.initInfoModal.find('#complete-info-modal-choose-friend');
+                userRecommend.toggle();
             },
 
             userInfoInit: function(){
