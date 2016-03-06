@@ -45,7 +45,7 @@ class Welcome extends CI_Controller {
      * @access public
      */
 	public function testUnitTest(){
-		$test = $this->input->post('test');
+		$test = $this->input->post('test', true);
 
 		echo 'hello world' . '-' . $test;
 	}
@@ -147,7 +147,7 @@ class Welcome extends CI_Controller {
         );
 
         if (false === $ret){
-            echo MLog::$strLastErrorMsg;
+            echo MLog::getLastError();
         }
     }
 

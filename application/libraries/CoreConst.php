@@ -83,4 +83,10 @@ class CoreConst{
 
     //全局静态变量
     public static $userId = 0;
+    public static $userPlatform = '';
+
+    //TOKEN
+    const TOKEN_EXPIRE  = 86400;
+    const TOKEN_COOKIES = 'm_token';
+    const TOKEN_SIGNATURE_COOKIES = 'm_sign';
 }

@@ -21,7 +21,7 @@ class MLog{
     private static $intLogUuid;
 
     //用于存放最后一次致命出错信息
-    public static $strLastErrorMsg;
+    private static $strLastErrorMsg = null;
 
     //获取MLOG是否打开，以及存储位置。
     //调用本类所有函数请务必首先
@@ -106,13 +106,12 @@ class MLog{
 
         //获取函数调用顺序
         $strBackTrace  = debug_backtrace();
-
         $strLog = sprintf("%s: %s [%s:%s] args%s logId[%s] uri[%s] userId[%s] %s" . PHP_EOL ,
             $strLogType,
             date('y-m-d H:i:s'),
             $strBackTrace[1]['file'],
             $strBackTrace[1]['line'],
-            json_encode($strBackTrace[1]['args']),
+            json_encode($strBackTrace[2]['args']),
             self::$intLogUuid,
             $_SERVER['PATH_INFO'],
             CoreConst::$userId,
@@ -164,5 +163,13 @@ class MLog{
         $strLogPath = self::getPath(__FUNCTION__, $strModule);
 
         self::putLogIntoFile($strLogPath, __FUNCTION__, $strFatalMsg);
+    }
+
+    public static function getLastError(){
+        if (is_null(self::$strLastErrorMsg)){
+            self::fatal(CoreConst::MODULE_KERNEL, 'get last error - error not exist');
+            return false;
+        }
+        return self::$strLastErrorMsg;
     }
 }

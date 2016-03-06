@@ -19,7 +19,7 @@ class RedisLib{
     public static function getInstance(){
         if (!self::$redis){
             self::$redis = new Redis();
-            self::$redis->connect("127.0.0.1",6379);
+            self::$redis->connect("127.0.0.1", 6379);
         }
         return self::$redis;
     }
@@ -44,6 +44,16 @@ class RedisLib{
         return self::$redis->setnx(self::$prefix . $strKey, $strValue);
     }
 
+    public static function hgetall($strKey){
+        self::getInstance();
+        return self::$redis->hgetall(self::$prefix . $strKey);
+    }
+
+    public static function hmset($strKey, $arrValue){
+        self::getInstance();
+        return self::$redis->hmset(self::$prefix . $strKey);
+    }
+
     public static function delete($arrKeys){
         self::getInstance();
         if (is_array($arrKeys)){
@@ -57,9 +67,9 @@ class RedisLib{
         return self::$redis->delete($arrKeys);
     }
 
-    public static function exists($arrKeys){
+    public static function exists($strKey){
         self::getInstance();
-        return self::$redis->exists(self::$prefix . $arrKeys);
+        return self::$redis->exists(self::$prefix . $strKey);
     }
 
     public static function incr($strKey){

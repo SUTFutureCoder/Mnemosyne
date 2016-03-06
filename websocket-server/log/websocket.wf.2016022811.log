@@ -1,0 +1,4 @@
+websocket: 16-02-28 11:29:09 [/var/www/html/Mnemosyne/websocket-server/mnemosyne/Login.php:12] args[1456627548000] 1456627548000
+websocket: 16-02-28 11:29:12 [/var/www/html/Mnemosyne/websocket-server/mnemosyne/Login.php:12] args[1456630152000] 1456630152000
+websocket: 16-02-28 11:36:40 [/var/www/html/Mnemosyne/websocket-server/mnemosyne/Login.php:12] args["{\"uid\":\"1456630600000\",\"token\":\"hello world\"}"] {"uid":"1456630600000","token":"hello world"}
+websocket: 16-02-28 11:36:45 [/var/www/html/Mnemosyne/websocket-server/mnemosyne/Login.php:12] args["{\"uid\":\"1456630605000\",\"token\":\"hello world\"}"] {"uid":"1456630605000","token":"hello world"}

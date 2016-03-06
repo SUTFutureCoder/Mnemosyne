@@ -56,10 +56,8 @@ class Account extends CI_Controller{
             $this->response->jsonFail(Response::CODE_PARAMS_WRONG, Validator::getMessage());
         }
 
-        $token = $this->token->setTokenToRedis($userInfo['user_id']);
-        $this->load->library('session');
-        $this->session->set_userdata('user_id',     $userInfo['user_id']);
-        $this->session->set_userdata('platform',    $platform);
+        $token     = $this->token->setTokenToRedis($userInfo['user_id'], $platform);
+        $signature = $this->token->getTokenSignature($token, $userInfo['user_id']);
 
         //根据user_name检测是否初始化
         if (empty($userInfo['user_name'])){
@@ -69,20 +67,29 @@ class Account extends CI_Controller{
             $this->session->set_userdata('user_name', $userInfo['user_name']);
         }
 
-
         $this->session->set_userdata('token', $token);
 
+        //设置用户信息
+        $this->recordUserInfo($userInfo, $platform, $token, $signature);
+
         $this->response->jsonSuccess(array(
-            'token' => $token,
+            'token'     => $token,
+            'signature' => $signature,
         ));
     }
 
+    /**
+     * 登出
+     */
     public function logout(){
         $this->load->library('session');
         $this->session->sess_destroy();
-
+        unset($_COOKIE);
     }
 
+    /**
+     * 注册
+     */
     public function regist(){
 
         $this->load->library('Token');
@@ -123,28 +130,24 @@ class Account extends CI_Controller{
             $this->response->jsonFail(Response::CODE_PARAMS_WRONG, '抱歉, 您的邮箱或手机号已经被注册');
         }
 
-        $this->load->library('session');
-        $this->session->set_userdata('platform', $platform);
-
         //录入数据库
         if (!$this->UserModels->addUser(password_hash($passWd, PASSWORD_DEFAULT), $userMobile, $userEmail)){
             $this->response->jsonFail(Response::CODE_SERVER_ERROR, '抱歉，注册用户失败');
         }
 
-
-        //返回token
         $this->response->jsonSuccess();
-
-
     }
 
+    /**
+     * 获取用户校友录信息
+     */
     public function loadUserAlumniInfo(){
         $this->load->library("session");
         $this->load->model('UserModels');
         $this->load->model('AlumniModels');
 
         $userId = $this->session->user_id;
-        if (!(Validator::isNotEmpty($userId,      '您已经下线请重新登录')
+        if (!(Validator::isNotEmpty($userId, '您已经下线请重新登录')
         )){
             $this->response->jsonFail(Response::CODE_UNAUTHENTICATED, Validator::getMessage());
         }
@@ -153,5 +156,45 @@ class Account extends CI_Controller{
         $this->response->jsonSuccess(array(
             'userinfo' => $userInfo,
         ));
+    }
+
+    /**
+     * 记录用户信息到session或常量中
+     *
+     * @param $userInfo
+     * @param $strPlatform
+     * @param $token
+     * @param $signature
+     */
+    private function recordUserInfo($userInfo, $strPlatform, $token, $signature){
+        $this->load->library('session');
+        $this->load->library('Token');
+        $this->session->set_userdata('user_id',     $userInfo['user_id']);
+        $this->session->set_userdata('platform',    $strPlatform);
+
+        //根据user_name检测是否初始化
+        if (empty($userInfo['user_name'])){
+            //没有真实姓名未初始化
+            $this->session->set_userdata('needinit', 1);
+        } else {
+            $this->session->set_userdata('user_name', $userInfo['user_name']);
+        }
+
+        //添加一行便于测试
+        $this->session->set_userdata('needinit', 1);
+
+        $this->session->set_userdata('token', $token);
+
+        //token数据配置
+        $arrDataToRedis = array(
+            'user_name' => $userInfo['user_name'],
+            'platform'  => $strPlatform,
+        );
+        $this->token->setUserDataToToken($token, $signature, $userInfo['user_id'], $arrDataToRedis);
+
+        //设置到cookies中
+
+        $this->input->set_cookie(CoreConst::TOKEN_COOKIES, $token, time() + CoreConst::TOKEN_EXPIRE);
+        $this->input->set_cookie(CoreConst::TOKEN_SIGNATURE_COOKIES, $signature, time() + CoreConst::TOKEN_EXPIRE);
     }
 }

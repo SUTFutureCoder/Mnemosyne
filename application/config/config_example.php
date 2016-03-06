@@ -518,6 +518,10 @@ $config['email_charset']   = 'utf-8';
 $config['email_mailtype']  = 'html';
 $config['email_wordwrap']  = TRUE;
 
+/**
+ * token部分
+ */
+$config['token_salt']      = 'token_salt';
 
 /* 全局配置 */
 date_default_timezone_set('Asia/Shanghai');//定义时区

@@ -15,7 +15,6 @@ class UserLogModels extends CI_Model{
         parent::__construct();
         $this->load->database();
         $this->load->library('session');
-        $this->load->library('CoreConst');
     }
 
 
@@ -32,9 +31,9 @@ class UserLogModels extends CI_Model{
      */
     public function addUserLog($userId, $content, $module, $method){
         //获取用户platform
-        if ((!$platform = $this->session->userdata('platform'))
-                || (!in_array($platform, CoreConst::$platform))){
-            $platform = 0;
+        if ((!$userPlatform = $this->session->userdata('platform'))
+                || !in_array($userPlatform, CoreConst::$platform)){
+            $userPlatform = 0;
         }
 
         $content = json_encode($content);
@@ -43,7 +42,7 @@ class UserLogModels extends CI_Model{
         $this->db->insert(self::$tableName, array(
             'user_id'     => $userId,
             'content'     => $content,
-            'platform'    => $platform,
+            'platform'    => $userPlatform,
             'module'      => $module,
             'method'      => $method,
             'create_time' => time(),
