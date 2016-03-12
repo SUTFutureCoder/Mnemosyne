@@ -21,18 +21,15 @@ $last_online_page_count = 0;
 // PHPSocketIO服务
 $sender_io          = new SocketIO(2120);
 
-// 使用Login类
-$mnemosyne_login    = new Login();
-
-// 使用OnMessage类
-$mnemosyne_onmessage = new OnMessage();
-
 // 客户端发起连接事件时，设置连接socket的各种事件回调
 $sender_io->on('connection', function($socket){
     // 当客户端发来登录事件时触发
     $socket->on('login', function ($uid)use($socket){
-        global $mnemosyne_login;
-        $mnemosyne_login->checkToken($uid);
+        if (!MLogin::checkToken($uid)){
+
+        }
+
+        return;
 
 
         global $uidConnectionMap, $last_online_count, $last_online_page_count;

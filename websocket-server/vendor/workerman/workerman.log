@@ -9,3 +9,68 @@
 2016-02-28 11:24:33 Workerman[start.php] Stopping ...
 2016-02-28 11:24:33 Workerman[start.php] has been stopped
 2016-02-28 11:29:05 Workerman[start.php] start in DEBUG mode
+2016-03-12 16:47:26 Workerman[start.php] start in DEBUG mode
+2016-03-12 16:47:48 Workerman[start.php] Stopping ...
+2016-03-12 16:47:48 Workerman[start.php] has been stopped
+2016-03-12 16:48:05 Workerman[start.php] start in DEBUG mode
+2016-03-12 17:34:12 Workerman[start.php] Stopping ...
+2016-03-12 17:34:12 Workerman[start.php] has been stopped
+2016-03-12 17:34:13 Workerman[start.php] start in DEBUG mode
+2016-03-12 17:34:21 WORKER EXIT UNEXPECTED E_ERROR Class 'Login' not found in /var/www/html/Mnemosyne/websocket-server/start.php on line 28
+2016-03-12 17:34:21 worker[PHPSocketIO:18603] exit with status 65280
+2016-03-12 17:34:22 WORKER EXIT UNEXPECTED E_ERROR Class 'Login' not found in /var/www/html/Mnemosyne/websocket-server/start.php on line 28
+2016-03-12 17:34:22 worker[PHPSocketIO:18684] exit with status 65280
+2016-03-12 17:34:23 WORKER EXIT UNEXPECTED E_ERROR Class 'Login' not found in /var/www/html/Mnemosyne/websocket-server/start.php on line 28
+2016-03-12 17:34:23 worker[PHPSocketIO:18685] exit with status 65280
+2016-03-12 17:34:25 WORKER EXIT UNEXPECTED E_ERROR Class 'Login' not found in /var/www/html/Mnemosyne/websocket-server/start.php on line 28
+2016-03-12 17:34:25 worker[PHPSocketIO:18686] exit with status 65280
+2016-03-12 17:34:26 WORKER EXIT UNEXPECTED E_ERROR Class 'Login' not found in /var/www/html/Mnemosyne/websocket-server/start.php on line 28
+2016-03-12 17:34:26 worker[PHPSocketIO:18696] exit with status 65280
+2016-03-12 17:34:27 WORKER EXIT UNEXPECTED E_ERROR Class 'Login' not found in /var/www/html/Mnemosyne/websocket-server/start.php on line 28
+2016-03-12 17:34:27 worker[PHPSocketIO:18707] exit with status 65280
+2016-03-12 17:34:28 WORKER EXIT UNEXPECTED E_ERROR Class 'Login' not found in /var/www/html/Mnemosyne/websocket-server/start.php on line 28
+2016-03-12 17:34:28 worker[PHPSocketIO:18708] exit with status 65280
+2016-03-12 17:34:29 WORKER EXIT UNEXPECTED E_ERROR Class 'Login' not found in /var/www/html/Mnemosyne/websocket-server/start.php on line 28
+2016-03-12 17:34:29 worker[PHPSocketIO:18718] exit with status 65280
+2016-03-12 17:34:30 WORKER EXIT UNEXPECTED E_ERROR Class 'Login' not found in /var/www/html/Mnemosyne/websocket-server/start.php on line 28
+2016-03-12 17:34:30 worker[PHPSocketIO:18719] exit with status 65280
+2016-03-12 17:34:31 WORKER EXIT UNEXPECTED E_ERROR Class 'Login' not found in /var/www/html/Mnemosyne/websocket-server/start.php on line 28
+2016-03-12 17:34:31 worker[PHPSocketIO:18729] exit with status 65280
+2016-03-12 17:34:32 WORKER EXIT UNEXPECTED E_ERROR Class 'Login' not found in /var/www/html/Mnemosyne/websocket-server/start.php on line 28
+2016-03-12 17:34:32 worker[PHPSocketIO:18739] exit with status 65280
+2016-03-12 17:34:33 WORKER EXIT UNEXPECTED E_ERROR Class 'Login' not found in /var/www/html/Mnemosyne/websocket-server/start.php on line 28
+2016-03-12 17:34:33 worker[PHPSocketIO:18740] exit with status 65280
+2016-03-12 17:34:34 WORKER EXIT UNEXPECTED E_ERROR Class 'Login' not found in /var/www/html/Mnemosyne/websocket-server/start.php on line 28
+2016-03-12 17:34:34 worker[PHPSocketIO:18741] exit with status 65280
+2016-03-12 17:34:35 WORKER EXIT UNEXPECTED E_ERROR Class 'Login' not found in /var/www/html/Mnemosyne/websocket-server/start.php on line 28
+2016-03-12 17:34:35 worker[PHPSocketIO:18751] exit with status 65280
+2016-03-12 17:34:35 Workerman[start.php] Stopping ...
+2016-03-12 17:34:36 Workerman[start.php] has been stopped
+2016-03-12 17:34:57 Workerman[start.php] start in DEBUG mode
+2016-03-12 17:35:00 WORKER EXIT UNEXPECTED 
+2016-03-12 17:35:01 WORKER EXIT UNEXPECTED 
+2016-03-12 17:35:02 WORKER EXIT UNEXPECTED 
+2016-03-12 17:35:03 WORKER EXIT UNEXPECTED 
+2016-03-12 17:35:04 WORKER EXIT UNEXPECTED 
+2016-03-12 17:35:05 WORKER EXIT UNEXPECTED 
+2016-03-12 17:35:06 WORKER EXIT UNEXPECTED 
+2016-03-12 17:35:07 WORKER EXIT UNEXPECTED 
+2016-03-12 17:35:08 WORKER EXIT UNEXPECTED 
+2016-03-12 17:35:08 Workerman[start.php] Stopping ...
+2016-03-12 17:35:08 Workerman[start.php] has been stopped
+2016-03-12 17:35:34 Workerman[start.php] start in DEBUG mode
+2016-03-12 17:36:40 Workerman[start.php] Stopping ...
+2016-03-12 17:36:40 Workerman[start.php] has been stopped
+2016-03-12 17:36:40 Workerman[start.php] start in DEBUG mode
+2016-03-12 17:38:02 Workerman[start.php] Stopping ...
+2016-03-12 17:38:02 Workerman[start.php] has been stopped
+2016-03-12 17:38:02 Workerman[start.php] start in DEBUG mode
+2016-03-12 17:51:40 Workerman[start.php] Stopping ...
+2016-03-12 17:51:40 Workerman[start.php] has been stopped
+2016-03-12 17:51:40 Workerman[start.php] start in DEBUG mode
+2016-03-12 17:51:49 Workerman[start.php] Stopping ...
+2016-03-12 17:51:49 Workerman[start.php] has been stopped
+2016-03-12 17:51:51 Workerman[start.php] start in DEBUG mode
+2016-03-12 17:52:02 Workerman[start.php] Stopping ...
+2016-03-12 17:52:02 Workerman[start.php] has been stopped
+2016-03-12 17:52:28 Workerman[start.php] start in DEBUG mode

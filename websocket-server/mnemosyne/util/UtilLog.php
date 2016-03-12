@@ -43,7 +43,7 @@ class UtilLog{
             date('y-m-d H:i:s'),
             $strBackTrace[1]['file'],
             $strBackTrace[1]['line'],
-            json_encode($strBackTrace[1]['args']),
+            json_encode($strBackTrace[2]['args']),
             $strLogMsg);
 
         file_put_contents(self::getPath(), $strLog, FILE_APPEND);

@@ -117,8 +117,47 @@ class Token{
         $redis = RedisLib::getInstance();
         if ($userToken != $redis->get(RedisLib::$prefix . $this->_prefix . $tokenType . $userId)){
             MLog::fatal(CoreConst::MODULE_ACCOUNT, sprintf('token check failed  userId[%s]', $userId));
-            //token验证失败罚时三秒
-            sleep(3);
+            //token验证失败罚时一秒 三秒怕504
+            sleep(1);
+            return false;
+        }
+        return true;
+    }
+
+
+    /**
+     *
+     * 检查用户操作平台token，比上方的checkToken高级
+     *
+     * @param $userId
+     * @param $token
+     * @param $signature
+     * @param $platform
+     * @return bool
+     */
+    public function checkTokenPlatform($userId, $token, $signature, $platform){
+        if (!in_array($platform, CoreConst::$platform)){
+            MLog::fatal(CoreConst::MODULE_ACCOUNT, 'platform is not in valid list');
+            return false;
+        }
+
+        //必须验证签名
+        if ($signature != $this->checkTokenSignature($token, $signature, $userId)){
+            MLog::fatal(CoreConst::MODULE_ACCOUNT, sprintf('user signature token check failed token[%s] signature[%s] userId[%s]',
+                $token,
+                $signature,
+                $userId));
+            return false;
+        }
+
+        $redis = RedisLib::getInstance();
+        if ($token != $redis->get(RedisLib::$prefix . $this->_userPrefix . $userId . ':' . $platform)){
+            MLog::fatal(CoreConst::MODULE_ACCOUNT, sprintf('check token failed userId[%s] token[%s] signature[%s] platform[%s]',
+                $userId,
+                $token,
+                $signature,
+                $platform));
+            sleep(1);
             return false;
         }
         return true;
@@ -184,7 +223,7 @@ class Token{
         }
 
         $redis = RedisLib::getInstance();
-        if ($redis->setex(RedisLib::$prefix . $this->_userPrefix . $userId . ':' . CoreConst::$platform[$platform], $expire, $token)){
+        if ($redis->setex(RedisLib::$prefix . $this->_userPrefix . $userId . ':' . $platform, $expire, $token)){
             return true;
         } else {
             MLog::fatal(CoreConst::MODULE_ACCOUNT, sprintf('set token to user table in redis error userId[%s] platform[%s] token[%s] expire[%s]',

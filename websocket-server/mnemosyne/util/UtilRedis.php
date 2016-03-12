@@ -11,7 +11,7 @@ class UtilRedis{
 
     public static $redis = null;
 
-    public function getInstance(){
+    private static function getInstance(){
         if (is_null(self::$redis)){
             self::$redis = new Redis();
         }
@@ -26,6 +26,11 @@ class UtilRedis{
     public static function exists($arrKeys){
         self::getInstance();
         return self::$redis->exists($arrKeys);
+    }
+
+    public static function incr($strKey){
+        self::getInstance();
+        return self::$redis->incr($strKey);
     }
 
 }
