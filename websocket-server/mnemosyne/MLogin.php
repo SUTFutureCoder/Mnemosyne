@@ -20,7 +20,7 @@ class MLogin{
             return false;
         }
 
-        if (UtilToken::checkTokenPlatform($arrData['user_id'], $arrData['token'], $arrData['signature'], $arrData['platform'])){
+        if (!UtilToken::checkTokenPlatform($arrData['user_id'], $arrData['token'], $arrData['signature'], $arrData['platform'])){
             UtilLog::fatal(sprintf('check token platform failed userId[%s] platform[%s]',
                 $arrData['user_id'],
                 $arrData['platform']));

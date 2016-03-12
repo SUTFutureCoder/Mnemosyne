@@ -7,7 +7,6 @@
  * Date: 16-2-28
  * Time: 上午10:21
  */
-define('APPNAME', 'MWebsocket');
 define('APPPATH', __DIR__);
 define('BASEPATH', __DIR__);
 
@@ -39,7 +38,7 @@ class MBase{
 
     public static function genUUID(){
         $intTimeStamp = time();
-        $intAllocUUID = UtilRedis::incr(APPNAME);
+        $intAllocUUID = UtilRedis::incr('Mne:uuid:websocket');
 
         $intRet = $intTimeStamp . $intAllocUUID;
 

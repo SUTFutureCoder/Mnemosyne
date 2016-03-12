@@ -11,11 +11,11 @@
 class UtilToken{
     //公有redis部分，只能读取，严禁修改
     //redis中token存储
-    const TOKEN_PREFIX     = 'token:user:';
+    const TOKEN_PREFIX     = 'Mne:token:user:';
     //redis中user platform table
-    const USER_PLATFORM_TOKEN_PREFIX = 'token:usertable:';
+    const USER_PLATFORM_TOKEN_PREFIX = 'Mne:token:usertable:';
     //redis中包含用户数据的token
-    const USER_DATA_PREFIX = 'token:userdata:';
+    const USER_DATA_PREFIX = 'Mne:token:userdata:';
 
 
 
@@ -63,7 +63,6 @@ class UtilToken{
             sleep(1);
             return false;
         }
-
         return $token == UtilRedis::get($strRedisKey);
     }
 
@@ -105,10 +104,10 @@ class UtilToken{
             return false;
         }
 
-        if ($signature == self::getTokenSignature($token, $userId)){
-            return true;
+        if ($signature != self::getTokenSignature($token, $userId)){
+            return false;
         }
-        return false;
+        return true;
     }
 
 

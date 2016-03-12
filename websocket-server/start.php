@@ -26,12 +26,22 @@ $sender_io->on('connection', function($socket){
     // 当客户端发来登录事件时触发
     $socket->on('login', function ($uid)use($socket){
         if (!MLogin::checkToken($uid)){
-
+            global $sender_io;
+            //获取uuid
+            $uid = MBase::genUUID();
+            $socket->join($uid);
+            $arrMsg = array(
+                'error_no'  => -1,
+                'error_msg' => '身份验证失败，请重新登录',
+            );
+            $sender_io->to($uid)->emit('new_msg', json_encode($arrMsg));
+            $socket->leave($uid);
+            return;
         }
 
-        return;
-
-
+        //获取uuid
+        $uid = MBase::genUUID();
+        UtilLog::fatal('uuid' . $uid);
         global $uidConnectionMap, $last_online_count, $last_online_page_count;
         // 已经登录过了
         if(isset($socket->uid)){

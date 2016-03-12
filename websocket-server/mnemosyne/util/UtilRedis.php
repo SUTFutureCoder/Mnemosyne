@@ -9,11 +9,12 @@
  */
 class UtilRedis{
 
-    public static $redis = null;
+    private static $redis = null;
 
     private static function getInstance(){
         if (is_null(self::$redis)){
             self::$redis = new Redis();
+            self::$redis->connect("127.0.0.1", 6379);
         }
         return self::$redis;
     }
@@ -23,9 +24,9 @@ class UtilRedis{
         return self::$redis->get($strKey);
     }
 
-    public static function exists($arrKeys){
+    public static function exists($strKey){
         self::getInstance();
-        return self::$redis->exists($arrKeys);
+        return self::$redis->exists($strKey);
     }
 
     public static function incr($strKey){

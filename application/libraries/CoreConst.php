@@ -50,9 +50,9 @@ class CoreConst{
 
     //Mnemosyne核心参数
     //UUID
-    const LOG_UUID    = 'log_uuid';
-    const USER_UUID   = 'user_uuid';
-    const ALUMNI_UUID = 'alumni_uuid';
+    const LOG_UUID    = 'uuid:log';
+    const USER_UUID   = 'uuid:user';
+    const ALUMNI_UUID = 'uuid:alumni';
     public static $uuid = array(
         self::LOG_UUID,
         self::USER_UUID,
