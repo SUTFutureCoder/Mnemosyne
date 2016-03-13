@@ -11,7 +11,7 @@
 class UtilToken{
     //公有redis部分，只能读取，严禁修改
     //redis中token存储
-    const TOKEN_PREFIX     = 'Mne:token:user:';
+//    const TOKEN_PREFIX     = 'Mne:token:user:';
     //redis中user platform table
     const USER_PLATFORM_TOKEN_PREFIX = 'Mne:token:usertable:';
     //redis中包含用户数据的token

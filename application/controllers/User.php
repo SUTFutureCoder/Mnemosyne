@@ -13,16 +13,27 @@ class User extends CI_Controller{
         $this->load->library('template');
     }
 
-    public function completeInfo()
+    /**
+     * 可以通过此处显示某用户的个人动态
+     *
+     * eg：http://localhost:10090/Mnemosyne/user/index/123
+     *
+     * 注意权限控制
+     *
+     * 置空则显示自己动态
+     *
+     * @param string $userId
+     */
+    public function index($userId = '')
     {
         $this->load->library('session');
-        $navbar     = getHorizontalNavbar(1);
-//        $userinfo   = checkLogin();
+        $this->load->helper('login_helper');
 
-
-
-
+        $navbar     = getHorizontalNavbar(-1);
         $this->template->assign("navbar", $navbar);
+
+        //检查是否登录，未登录则强制跳到登录页
+        checkLogin();
 
         //显示通用第一眼
         $this->template->display("firstsight/index.html");

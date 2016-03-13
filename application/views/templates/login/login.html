@@ -109,7 +109,7 @@
                         success: function(data){
                             if (data['status'] == 0){
                                 store.set('token', data['data']['token']);
-                                window.location.href='{{php}}echo base_url();{{/php}}user/completeinfo';
+                                window.location.href='{{php}}echo base_url();{{/php}}user/index/';
                             } else {
                                 alert(data['description']);
                             }
