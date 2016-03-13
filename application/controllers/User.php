@@ -35,6 +35,10 @@ class User extends CI_Controller{
         //检查是否登录，未登录则强制跳到登录页
         checkLogin();
 
+        //检查userId访问权限
+        //获取userId显示信息
+//        $this->template->assign("indexData", $arrIndexData);
+
         //显示通用第一眼
         $this->template->display("firstsight/index.html");
 
