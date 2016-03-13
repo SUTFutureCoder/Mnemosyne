@@ -16,7 +16,8 @@ class RedisLib{
         //禁止new
     }
 
-    public static function getInstance(){
+    //严禁外部调用
+    private static function getInstance(){
         if (!self::$redis){
             self::$redis = new Redis();
             self::$redis->connect("127.0.0.1", 6379);
@@ -90,5 +91,31 @@ class RedisLib{
     public static function decrBy($strKey, $intDecr){
         self::getInstance();
         return self::$redis->decrBy(self::$prefix . $strKey, $intDecr);
+    }
+
+    //SET系列
+    public static function sAdd($strKey, $strValue){
+        self::getInstance();
+        return self::$redis->sAdd($strKey, $strValue);
+    }
+
+    public static function sRemove($strKey, $strValue){
+        self::getInstance();
+        return self::$redis->sRemove($strKey, $strValue);
+    }
+
+    public static function sIsMember($strKey, $strValue){
+        self::getInstance();
+        return self::$redis->sContains($strKey, $strValue);
+    }
+
+    public static function sSize($strKey){
+        self::getInstance();
+        return self::$redis->sSize($strKey);
+    }
+
+    public static function sMembers($strKey){
+        self::getInstance();
+        return self::$redis->sMembers($strKey);
     }
 }

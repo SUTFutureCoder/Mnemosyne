@@ -41,7 +41,9 @@ $sender_io->on('connection', function($socket){
 
         //获取uuid
         $uid = MBase::genUUID();
+        //临时打LOG，用于捞uuid
         UtilLog::fatal('uuid' . $uid);
+
         global $uidConnectionMap, $last_online_count, $last_online_page_count;
         // 已经登录过了
         if(isset($socket->uid)){
@@ -56,10 +58,12 @@ $sender_io->on('connection', function($socket){
         // 这个uid有++$uidConnectionMap[$uid]个socket连接
         ++$uidConnectionMap[$uid];
         // 将这个连接加入到uid分组，方便针对uid推送数据
+        //这里理解为自己一个组
+        //如有进组需求需要在ongroup中进行添加
         $socket->join($uid);
         $socket->uid = $uid;
         // 更新这个socket对应页面的在线数据
-        $socket->emit('update_online_count', "当前<b>{$last_online_count}</b>人在线，共打开<b>{$last_online_page_count}</b>个页面");
+//        $socket->emit('update_online_count', "当前<b>{$last_online_count}</b>人在线，共打开<b>{$last_online_page_count}</b>个页面");
     });
     
     // 当客户端断开连接是触发（一般是关闭网页或者跳转刷新导致）
@@ -74,6 +78,7 @@ $sender_io->on('connection', function($socket){
         {
             unset($uidConnectionMap[$socket->uid]);
         }
+        $socket->leave($socket->uid);
     });
 });
 

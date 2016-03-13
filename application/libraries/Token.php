@@ -3,7 +3,7 @@
  *
  * Token类
  *
- * 验证token时必须附带签名
+ * 验证token时必须附带签名，尤其是public属性必须验证签名
  *
  * token在登录时赋予一次
  *
@@ -22,7 +22,7 @@
 class Token{
     private $_ci;
 
-    //redis中token存储
+    //redis中token存储，因一个userId可能对应多个token，这里使用set进行存储
     private $_prefix     = 'token:user:';
     //redis中user platform table
     private $_userPrefix = 'token:usertable:';
@@ -73,8 +73,10 @@ class Token{
             return false;
         }
 
-        $redis = RedisLib::getInstance();
-        if ($redis->setex(RedisLib::$prefix . $this->_prefix . $tokenType . $userId, $expire, $token)){
+        //变更记录：
+        //此处使用集合来存储某个用户的token，用于长期登录使用
+        //因此检查token时优先需要和$_userDataPrefix一起使用，如不存在则清除
+        if (RedisLib::sAdd(RedisLib::$prefix . $this->_prefix . $tokenType . $userId, $token)){
             return $token;
         } else {
             MLog::fatal(CoreConst::MODULE_ACCOUNT, sprintf('set token to redis error tokenType[%s] userId[%s] expire[%s] token[%s]',
@@ -86,6 +88,28 @@ class Token{
             return false;
         }
 
+    }
+
+    /**
+     *
+     * 从用户token集合中移除token。
+     *
+     * 当token为空时清除整个key
+     *
+     * 用于被其他方法验证失败后清除冗余数据
+     *
+     * @param $userId
+     * @param string $tokenValue
+     * @param string $tokenType
+     * @return mixed
+     */
+    private function deleteUserTokenSet($userId, $tokenValue = '', $tokenType = ''){
+        $redisKey = RedisLib::$prefix . $this->_prefix . $tokenType . $userId;
+        if (empty($tokenValue)){
+            return RedisLib::delete($redisKey);
+        } else {
+            return RedisLib::sRemove($redisKey, $tokenValue);
+        }
     }
 
     /**
@@ -114,8 +138,7 @@ class Token{
             return false;
         }
 
-        $redis = RedisLib::getInstance();
-        if ($userToken != $redis->get(RedisLib::$prefix . $this->_prefix . $tokenType . $userId)){
+        if (!RedisLib::sIsMember(RedisLib::$prefix . $this->_prefix . $tokenType . $userId, $userToken)){
             MLog::fatal(CoreConst::MODULE_ACCOUNT, sprintf('token check failed  userId[%s]', $userId));
             //token验证失败罚时一秒 三秒怕504
             sleep(1);
@@ -127,7 +150,7 @@ class Token{
 
     /**
      *
-     * 检查用户操作平台token，比上方的checkToken高级
+     * 检查用户操作平台token，比上方的checkToken高级。用在较高级场景。
      *
      * @param $userId
      * @param $token
@@ -150,13 +173,14 @@ class Token{
             return false;
         }
 
-        $redis = RedisLib::getInstance();
-        if ($token != $redis->get(RedisLib::$prefix . $this->_userPrefix . $userId . ':' . $platform)){
+        if ($token != RedisLib::get(RedisLib::$prefix . $this->_userPrefix . $userId . ':' . $platform)){
             MLog::fatal(CoreConst::MODULE_ACCOUNT, sprintf('check token failed userId[%s] token[%s] signature[%s] platform[%s]',
                 $userId,
                 $token,
                 $signature,
                 $platform));
+            //清除冗余token集合数据
+            $this->deleteUserTokenSet($userId, $token);
             sleep(1);
             return false;
         }
@@ -222,8 +246,7 @@ class Token{
             return false;
         }
 
-        $redis = RedisLib::getInstance();
-        if ($redis->setex(RedisLib::$prefix . $this->_userPrefix . $userId . ':' . $platform, $expire, $token)){
+        if (RedisLib::setex(RedisLib::$prefix . $this->_userPrefix . $userId . ':' . $platform, $expire, $token)){
             return true;
         } else {
             MLog::fatal(CoreConst::MODULE_ACCOUNT, sprintf('set token to user table in redis error userId[%s] platform[%s] token[%s] expire[%s]',
@@ -257,8 +280,7 @@ class Token{
             return false;
         }
 
-        $redis = RedisLib::getInstance();
-        $redis->setex(RedisLib::$prefix . $this->_userDataPrefix . $token, $expire, json_encode($userData));
+        RedisLib::setex(RedisLib::$prefix . $this->_userDataPrefix . $token, $expire, json_encode($userData));
     }
 
     /**
@@ -279,7 +301,43 @@ class Token{
             return false;
         }
 
-        $redis = RedisLib::getInstance();
-        return json_decode($redis->get(RedisLib::$prefix . $this->_userDataPrefix . $token), true);
+        $userData = json_decode(RedisLib::get(RedisLib::$prefix . $this->_userDataPrefix . $token), true);
+        if (empty($userData)){
+            //清除用户下冗余token数据
+            $this->deleteUserTokenSet($userId, $token);
+            return false;
+        }
+        return $userData;
+    }
+
+    /**
+     *
+     * 用于登出时清除token痕迹
+     *
+     * @param $token
+     * @param $signature
+     * @param $userId
+     * @return bool
+     */
+    public function flushToken($token, $signature, $userId, $tokenType = ''){
+        //先检查token，然后通过token获取用户平台信息，最后销毁
+        if (false === $this->checkToken($userId, $token, $signature)){
+            MLog::fatal(CoreConst::MODULE_ACCOUNT, sprintf('logout token check failed userId[%s] token[%s] signature[%s]',
+                $token,
+                $signature,
+                $userId));
+            return false;
+        }
+
+        $this->deleteUserTokenSet($userId, $token);
+
+        $arrTokenData = $this->getUserDataByToken($token, $signature, $userId);
+
+        $arrKeysToDelete = array(
+            RedisLib::$prefix . $this->_userPrefix . $userId . ':' . $arrTokenData['platform'],
+            RedisLib::$prefix . $this->_userDataPrefix . $token,
+        );
+        return RedisLib::delete($arrKeysToDelete);
+
     }
 }

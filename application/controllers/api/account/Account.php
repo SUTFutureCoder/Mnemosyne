@@ -83,8 +83,26 @@ class Account extends CI_Controller{
      */
     public function logout(){
         $this->load->library('session');
+        $this->load->library('Token');
+        $this->load->helper('url');
+        //清除redistoken等
+        $userId    = $this->session->userdata('user_id');
+        $token     = $_COOKIE[CoreConst::TOKEN_COOKIES];
+        $signature = $_COOKIE[CoreConst::TOKEN_SIGNATURE_COOKIES];
+
+        if (false === $this->token->flushToken($token, $signature, $userId)){
+            MLog::fatal(CoreConst::MODULE_ACCOUNT, sprintf('logout failed userId[%s] token[%s] signature[%s]',
+                $userId,
+                $token,
+                $signature));
+            return false;
+        }
+        //最后清除session
         $this->session->sess_destroy();
         unset($_COOKIE);
+
+        //重定向到首页
+        header('Location: ' . base_url('index/login'));
     }
 
     /**
@@ -181,9 +199,10 @@ class Account extends CI_Controller{
         }
 
         //添加一行便于测试
-        $this->session->set_userdata('needinit', 1);
+//        $this->session->set_userdata('needinit', 1);
 
-        $this->session->set_userdata('token', $token);
+        //token不会通过session进行读取，统一使用redis
+//        $this->session->set_userdata('token', $token);
 
         //token数据配置
         $arrDataToRedis = array(
