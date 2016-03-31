@@ -13,7 +13,7 @@ class UserInfo extends CI_Controller{
     public function __construct(){
         parent::__construct();
         $this->load->helper('login_helper');
-        $this->load->library('Response');
+        $this->load->library('util/Response');
         $this->load->library('session');
     }
 
@@ -24,7 +24,7 @@ class UserInfo extends CI_Controller{
         //检查是否合法用户
         checkLogin('api');
         //完善用户信息
-        $this->load->library('Validator');
+        $this->load->library('util/Validator');
 
         //转为utf8
         $userName       = trim($this->input->post('userName', true));

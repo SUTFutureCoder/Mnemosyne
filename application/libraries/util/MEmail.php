@@ -18,7 +18,7 @@ class MEmail{
 
         //检查email配置文件
         $this->checkEmailConfig();
-        $this->_ci->load->library('Validator');
+        $this->_ci->load->library('util/Validator');
 
         //加载配置文件
         $this->_ci->load->library('email', self::$_config);

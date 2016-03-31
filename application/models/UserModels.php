@@ -14,7 +14,7 @@ class UserModels extends CI_Model{
         parent::__construct();
         $this->load->database();
         $this->load->model('UserLogModels');
-        $this->load->library('Uuid');
+        $this->load->library('util/Uuid');
     }
 
 

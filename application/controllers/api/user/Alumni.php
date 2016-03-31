@@ -10,9 +10,9 @@ class Alumni extends CI_Controller{
 
     public function __construct(){
         parent::__construct();
-        $this->load->library('Validator');
+        $this->load->library('util/Validator');
         $this->load->library("session");
-        $this->load->library('Response');
+        $this->load->library('util/Response');
     }
 
     public function updateAlumni(){

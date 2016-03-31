@@ -22,8 +22,10 @@ $last_online_page_count = 0;
 $sender_io          = new SocketIO(2120);
 
 // 客户端发起连接事件时，设置连接socket的各种事件回调
+//闭包中，socket作为参数
 $sender_io->on('connection', function($socket){
     // 当客户端发来登录事件时触发
+    //闭包使用上面传来的socket变量，并使用传来的$uid
     $socket->on('login', function ($uid)use($socket){
         if (!MLogin::checkToken($uid)){
             global $sender_io;

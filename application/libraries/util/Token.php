@@ -32,7 +32,7 @@ class Token{
 
     public function __construct(){
         $this->_ci =& get_instance();
-        $this->_ci->load->library('RedisLib');
+        $this->_ci->load->library('uril/RedisLib');
     }
 
     /**

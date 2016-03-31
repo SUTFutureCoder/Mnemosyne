@@ -95,23 +95,39 @@ class MLog{
     /**
      * 向文件中输出日志文件
      *
-     * @param $strLogPath
-     * @param $strLogType
-     * @param $strLogMsg
+     * @param string $strLogPath
+     * @param string $strLogType
+     * @param string $strLogMsg
+     * @param array $arrBackTrace 允许用户自定义错误回朔信息，常用于library类库中调用
      */
-    private static function putLogIntoFile($strLogPath, $strLogType, $strLogMsg){
+    private static function putLogIntoFile($strLogPath, $strLogType, $strLogMsg, $arrBackTrace = array()){
         if (!is_string($strLogMsg)){
             $strLogMsg = json_encode($strLogMsg);
         }
 
-        //获取函数调用顺序
-        $strBackTrace  = debug_backtrace();
+        //当debug调用顺序传入为空时
+        if (empty($arrBackTrace)){
+            //获取函数调用顺序
+            $arrBackTrace  = debug_backtrace();
+            $logBackTrace  = array(
+                'file'     => $arrBackTrace[1]['file'],
+                'line'     => $arrBackTrace[1]['line'],
+                'args'     => json_encode($arrBackTrace[2]['args']),
+            );
+        } else {
+            $logBackTrace  = array(
+                'file'     => $arrBackTrace['file'],
+                'line'     => $arrBackTrace['line'],
+                'args'     => json_encode($arrBackTrace['args']),
+            );
+        }
+
         $strLog = sprintf("%s: %s [%s:%s] args%s logId[%s] uri[%s] userId[%s] %s" . PHP_EOL ,
             $strLogType,
             date('y-m-d H:i:s'),
-            $strBackTrace[1]['file'],
-            $strBackTrace[1]['line'],
-            json_encode($strBackTrace[2]['args']),
+            $logBackTrace['file'],
+            $logBackTrace['line'],
+            $logBackTrace['args'],
             self::$intLogUuid,
             $_SERVER['PATH_INFO'],
             CoreConst::$userId,
@@ -163,6 +179,34 @@ class MLog{
         $strLogPath = self::getPath(__FUNCTION__, $strModule);
 
         self::putLogIntoFile($strLogPath, __FUNCTION__, $strFatalMsg);
+    }
+
+    /**
+     * 专用于throw错误调用，一律使用fatal
+     *
+     * @param $strModule
+     * @param $intErrno
+     * @param $strFatalMsg
+     * @param $arrBackTrace
+     * @return bool
+     */
+    public static function throwError($strModule, $intErrno, $strFatalMsg, $arrBackTrace){
+        if (false === self::getLogStatus()){
+            return false;
+        }
+
+        $type = 'fatal';
+
+        self::$strLastErrorMsg = $strFatalMsg;
+
+        $strLogPath = self::getPath($type, $strModule);
+
+        self::putLogIntoFile($strLogPath, $type, $strFatalMsg, $arrBackTrace);
+
+        //输出错误
+        $ci =& get_instance();
+        $ci->load->library('util/Response');
+        $ci->response->jsonFail($intErrno, $strFatalMsg);
     }
 
     public static function getLastError(){

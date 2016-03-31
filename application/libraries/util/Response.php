@@ -75,16 +75,16 @@ class Response{
      * @var array
      */
     protected static $failDescList = array(
-        self::CODE_BAD_REQUEST => '抱歉，您请求的方式错误',
-        self::CODE_UNAUTHENTICATED => '您还未登录，请先登录',
-        self::CODE_UNAUTHORIZED => '很抱歉，您没有这个权限',
-        self::CODE_PARAMS_MISSING => '请求缺少相关参数',
-        self::CODE_PARAMS_WRONG => '请求参数有误',
-        self::CODE_UNEXPECTED => '请求失败',
-        self::CODE_SERVER_ERROR => '很抱歉，我们的程序可能出了点问题，您可以通过邮件组bug@bricksfx.cn向我们反馈问题！',
-        self::CODE_REACHED_LIMIT => '请求达到最大限制',
-        self::CODE_PARAMS_CONFLICT => '不允许同名',
-        self::CODE_FILE_PERMISSION => '文件权限异常'
+        self::CODE_BAD_REQUEST      => '抱歉，您请求的方式错误',
+        self::CODE_UNAUTHENTICATED  => '您还未登录，请先登录',
+        self::CODE_UNAUTHORIZED     => '很抱歉，您没有这个权限',
+        self::CODE_PARAMS_MISSING   => '请求缺少相关参数',
+        self::CODE_PARAMS_WRONG     => '请求参数有误',
+        self::CODE_UNEXPECTED       => '请求失败',
+        self::CODE_SERVER_ERROR     => '很抱歉，我们的程序可能出了点问题，您可以通过邮件组bug@bricksfx.cn向我们反馈问题！',
+        self::CODE_REACHED_LIMIT    => '请求达到最大限制',
+        self::CODE_PARAMS_CONFLICT  => '不允许同名',
+        self::CODE_FILE_PERMISSION  => '文件权限异常'
     );
 
     /*

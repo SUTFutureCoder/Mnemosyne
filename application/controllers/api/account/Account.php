@@ -8,8 +8,8 @@
 class Account extends CI_Controller{
     public function __construct(){
         parent::__construct();
-        $this->load->library('Validator');
-        $this->load->library('Response');
+        $this->load->library('util/Validator');
+        $this->load->library('util/Response');
     }
 
     /**
@@ -29,7 +29,7 @@ class Account extends CI_Controller{
     public function login(){
         //验证是否通过;
         $this->load->library('validcode');
-        $this->load->library('Token');
+        $this->load->library('util/Token');
 
         if (!$this->validcode->checkValidCodeAccess()){
             $this->response->jsonFail(Response::CODE_UNAUTHORIZED, '请输入正确的验证码');
@@ -83,7 +83,7 @@ class Account extends CI_Controller{
      */
     public function logout(){
         $this->load->library('session');
-        $this->load->library('Token');
+        $this->load->library('util/Token');
         $this->load->helper('url');
         //清除redistoken等
         $userId    = $this->session->userdata('user_id');
@@ -110,7 +110,7 @@ class Account extends CI_Controller{
      */
     public function regist(){
 
-        $this->load->library('Token');
+        $this->load->library('util/Token');
         /*开发期间验证码先注释掉
         //验证是否通过验证码验证
         $this->load->library('validcode');
@@ -186,7 +186,7 @@ class Account extends CI_Controller{
      */
     private function recordUserInfo($userInfo, $strPlatform, $token, $signature){
         $this->load->library('session');
-        $this->load->library('Token');
+        $this->load->library('util/Token');
         $this->session->set_userdata('user_id',     $userInfo['user_id']);
         $this->session->set_userdata('platform',    $strPlatform);
 

@@ -58,7 +58,7 @@ $autoload['packages'] = array();
 |
 |	$autoload['libraries'] = array('user_agent' => 'ua');
 */
-$autoload['libraries'] = array('MLog', 'CoreConst', );
+$autoload['libraries'] = array('util/MLog', 'CoreConst', 'ErrorCodes', 'util/MException');
 
 /*
 | -------------------------------------------------------------------

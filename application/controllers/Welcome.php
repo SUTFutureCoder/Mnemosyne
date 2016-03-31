@@ -67,7 +67,7 @@ class Welcome extends CI_Controller {
 
 	public function testLogPath(){
         $this->load->model('UserModels');
-		$this->load->library('MLog');
+		$this->load->library('util/MLog');
 		$this->load->library('CoreConst');
 		$ret = $this->UserModels->checkUserExists('13940022196', '506200331@qq.com');
 		$ret = $this->UserModels->checkUserExists('13940022196', '506200331@qq.com');
@@ -91,7 +91,7 @@ class Welcome extends CI_Controller {
 	}
 
     public function testTimer(){
-        $this->load->library('Timer');
+        $this->load->library('util/Timer');
         Timer::start();
         sleep(2);
         Timer::start('testTimer');
@@ -118,7 +118,7 @@ class Welcome extends CI_Controller {
     }
 
     public function testWebsocket(){
-        $this->load->library('SAL');
+        $this->load->library('util/SAL');
         $arrUrl  = '127.0.0.1:2121';
         $arrData = array(
             'type' => 'publish',
@@ -131,7 +131,7 @@ class Welcome extends CI_Controller {
 
 
     public function sendEmailByLibrary(){
-        $this->load->library('MEmail');
+        $this->load->library('util/MEmail');
         $ret = $this->memail->send(
             'message@bricksfx.cn',
             'bricks科技',
@@ -149,6 +149,15 @@ class Welcome extends CI_Controller {
         if (false === $ret){
             echo MLog::getLastError();
         }
+    }
+
+    public function testBosClient(){
+        $this->load->library('util/BosClient');
+        $this->bosclient->test();
+    }
+
+    public function testThrow(){
+        throw new MException(CoreConst::MODULE_KERNEL, ErrorCodes::ERROR_PARAM_ERROR);
     }
 
 }

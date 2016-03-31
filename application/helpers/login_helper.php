@@ -14,8 +14,8 @@
 function checkLogin($type = 'view'){
     $CI       =& get_instance();
     $CI->load->library("session");
-    $CI->load->library("Token");
-    $CI->load->library('Response');
+    $CI->load->library("util/Token");
+    $CI->load->library('util/Response');
 
     if ($type == 'view' || $type == 'api'){
         $user_id = $CI->session->user_id;

@@ -8,8 +8,6 @@
  * Time: 下午3:58
  */
 require_once 'RedisLib.php';
-require_once 'CoreConst.php';
-require_once 'MLog.php';
 class Uuid{
 
     /**
