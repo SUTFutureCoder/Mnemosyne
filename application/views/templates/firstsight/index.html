@@ -1,7 +1,51 @@
-{{include file='./public/header.html'}}
+{{include file='./firstsight/index_header.html'}}
 {{$navbar}}
-<div class="main-content">
+<div class="main-content"> 
+    <div id="userinfo">
+        <div class="container">
 
+            <div class="tabs-header">
+                <ul class="nav nav-tabs">
+                    <li class="active"> 
+                        <a href="#tabs-content-base-info" data-toggle="tab">
+                            基本信息
+                        </a>
+                    </li>
+
+                    <li><a href="#tabs-content-self-profile" data-toggle="tab">个人资料</a></li>
+                </ul>
+            </div><!--tabs-header!-->
+
+            <div id="tabs-content" class="tabs-content">
+                <div class="tab-pane fade in active" id="tabs-content-base-info">
+                    <div class="container">
+                        <table border="1" cellspacing="10">
+                            <tr>
+                                <td>手机号</td>
+                                <td>13555791383</td>
+                                <td><button type="button" class="btn btn-info">更换</button></td>
+                            </tr>
+
+                        </table>
+                    </div><!--container base-info!-->
+                </div><!--home!-->
+
+                <div class="tab-pane fade" id="tabs-content-self-profile">
+                    <div class="container">
+                        <p>个人资料</p> 
+                        <table cellpadding="10">
+                            <tr>
+                                <td>test<td>
+                            </tr>
+                        </table>
+                        
+                    </div><!--container self-profile!-->
+
+                </div><!--tabs-content-self-profile!-->
+            </div><!--tabs-content!-->
+
+        </div><!--container!-->
+    </div><!--userinfo!-->
 </div><!--main-content!-->
 {{ include file='./public/load_script.html' }}
 

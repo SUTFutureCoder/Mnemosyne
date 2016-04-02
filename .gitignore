@@ -1,6 +1,8 @@
 .DS_Store
 .htaccess
 
+*.swp
+
 application/cache/*
 !application/cache/index.html
 !application/cache/.htaccess

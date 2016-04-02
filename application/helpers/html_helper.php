@@ -3,7 +3,7 @@ function getHorizontalNavbar($nav_num)
 {
     $nav_list = array(
         array("name" => "我的首页", "url" => "user/userinfo"),
-        array("name" => "修改信息", "url" => "index/completeinfo"),
+        array("name" => "修改信息", "url" => "user/index"),
         //array("name" => "分发同学录", "url" => "index/send"),
         array("name" => "填写同学录", "url" => "#"),
         array("name" => "表白", "url" => "index/showlove"),
