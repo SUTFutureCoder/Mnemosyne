@@ -2,5 +2,56 @@
     margin:20px 0;
 }
 #tabs-content-base-info{
-    margin:10px 0;
+    margin:30px 0;
 }
+#tabs-content-base-info-table th,td{
+    padding:10px 10px;
+}
+
+
+#tabs-content-self-profile-content {
+    
+    margin: 30px 0;
+    padding:0;
+    height:500px;
+    width:1080px;
+    border-style:solid;
+    border-width:1px;
+    border-color:rgb(238, 238, 238);
+}
+
+.avatar-container{
+    margin: 0 0;
+    padding:0;
+    height:498px;
+    #width:300px;
+    border-right-style:solid;
+    border-width:1px;
+    border-color:rgb(238, 238, 238);
+}
+
+.avatar-container .username h3{
+    text-align:center;
+}
+
+.avatar-container .avatar-mid{
+    height:auto;
+    width:100%;
+}
+
+.avatar-upload button{
+    display:block;
+    margin:0 auto;
+}
+
+.avatar-container .avatar-upload-des{
+    margin:30px 0;
+}
+
+.avatar-container .avatar-upload-des p{
+    text-align:center;
+}
+
+
+
+

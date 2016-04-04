@@ -13,36 +13,76 @@
                     </li>
 
                     <li><a href="#tabs-content-self-profile" data-toggle="tab">个人资料</a></li>
+                    <li><a href="#tabs-content-school-info" data-toggle="tab">学校信息</a></li>
                 </ul>
             </div><!--tabs-header!-->
 
-            <div id="tabs-content" class="tabs-content">
-                <div class="tab-pane fade in active" id="tabs-content-base-info">
+            <div id="tabs-content" class="tab-content">
+                <div class="tab-pane fade" id="tabs-content-base-info">
                     <div class="container">
-                        <table border="1" cellspacing="10">
+                        <table id="tabs-content-base-info-table" class="table">
                             <tr>
                                 <td>手机号</td>
                                 <td>13555791383</td>
-                                <td><button type="button" class="btn btn-info">更换</button></td>
+                                <td><button type="button" class="btn btn-info btn-xs">更换</button></td>
                             </tr>
+
+                            <tr>
+                                <td>邮箱</td>
+                                <td>test@test.com</td>
+                                <td><button type="button" class="btn btn-info btn-xs">更换</button></td>
+                            </tr>
+                            
+                            <tr>
+                                <td>用户名</td>
+                                <td>13555791383</td>
+                                <td><button type="button" class="btn btn-info btn-xs">更换</button></td>
+                            </tr>
+
+                            <tr>
+                                <td>密码</td>
+                                <td>••••••</td>
+                                <td><button type="button" class="btn btn-info btn-xs">更换</button></td>
+                            </tr>
+
 
                         </table>
                     </div><!--container base-info!-->
-                </div><!--home!-->
+                </div><!--tabs-content-base-info!-->
 
-                <div class="tab-pane fade" id="tabs-content-self-profile">
+                <div class="tab-pane fade in active" id="tabs-content-self-profile">
                     <div class="container">
-                        <p>个人资料</p> 
-                        <table cellpadding="10">
-                            <tr>
-                                <td>test<td>
-                            </tr>
-                        </table>
+                        <div id="tabs-content-self-profile-content" class="col-md-11">
+
+                            <div class="avatar-container col-md-3">
+                                <div class="container col-md-12">
+                                    <div class="username">
+                                        <h3>bricks</h3>
+                                    </div>
+                                    <div class="avatar-content">
+                                        <img class="avatar-mid" src="{{php}}echo base_url();{{/php}}static/img/public/default-avatar.jpg"/> 
+                                    </div>
+
+                                    <div class="avatar-upload">
+                                        <button type="button" class="btn btn-info">更改头像</button> 
+                                    </div>
+                                    <div class="avatar-upload-des">
+                                        <p> 支持JPG，JPEG，GIF，PNG，BMP，且小于5M<p>
+                                    </div>
+                                </div>
+                            </div><!--avatar-container!-->
+                        </div><!--tabs-content-self-profile-content!-->
                         
                     </div><!--container self-profile!-->
 
                 </div><!--tabs-content-self-profile!-->
+
+                <div class="tab-pane fade" id="tabs-content-school-info">
+                    <p>test</p> 
+                </div><!--tabs-content-school-info!-->
+
             </div><!--tabs-content!-->
+
 
         </div><!--container!-->
     </div><!--userinfo!-->
