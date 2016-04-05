@@ -34,8 +34,20 @@
                             </tr>
                             
                             <tr>
-                                <td>用户名</td>
-                                <td>13555791383</td>
+                                <td>真实姓名</td>
+                                <td>林二狗</td>
+                                <td><button type="button" class="btn btn-info btn-xs">更换</button></td>
+                            </tr>
+
+                            <tr>
+                                <td>昵称</td>
+                                <td>林二狗</td>
+                                <td><button type="button" class="btn btn-info btn-xs">更换</button></td>
+                            </tr>
+
+                            <tr>
+                                <td>生日</td>
+                                <td>1993-9-10</td>
                                 <td><button type="button" class="btn btn-info btn-xs">更换</button></td>
                             </tr>
 
@@ -52,9 +64,10 @@
 
                 <div class="tab-pane fade in active" id="tabs-content-self-profile">
                     <div class="container">
+                        <div class="row">
                         <div id="tabs-content-self-profile-content" class="col-md-11">
-
-                            <div class="avatar-container col-md-3">
+                            
+                            <div class="avatar-container col-md-3 col-xs-12">
                                 <div class="container col-md-12">
                                     <div class="username">
                                         <h3>bricks</h3>
@@ -64,14 +77,104 @@
                                     </div>
 
                                     <div class="avatar-upload">
-                                        <button type="button" class="btn btn-info">更改头像</button> 
+                                        <button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal">更改头像</button> 
                                     </div>
                                     <div class="avatar-upload-des">
                                         <p> 支持JPG，JPEG，GIF，PNG，BMP，且小于5M<p>
                                     </div>
                                 </div>
                             </div><!--avatar-container!-->
+
+                            <div class="self-profile">
+                                <div class="container col-md-9 col-xs-12">
+                                    <div class="self-profile-content">
+                                        <form class="self-profile-form form-horizontal">
+                                            <div class="form-group">
+                                                <label class="col-md-2 control-label" >血型</label>
+                                                <div class="col-md-10">
+                                                    <label class="radio-inline">
+                                                        <input type="radio" name="blood-group" id="blood-group-A" value="A"> A
+                                                    </label>
+
+                                                    <label class="radio-inline">
+                                                        <input type="radio" name="blood-group" id="blood-group-B" value="B"> B
+                                                    </label>
+
+                                                    <label class="radio-inline">
+                                                        <input type="radio" name="blood-group" id="blood-group-AB" value="AB"> AB
+                                                    </label>
+
+                                                    <label class="radio-inline">
+                                                        <input type="radio" name="blood-group" id="blood-group-O" value="O"> O
+                                                    </label>
+
+                                                </div>
+                                                </div><!--form-group!-->
+
+                                                <div class="form-group">
+                                                    <label for="like_eating" class="col-md-2 control-label">最喜欢吃</label>
+                                                    <div class="col-md-10">
+                                                        <input type="text" class="form-control" id="like_eating">
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="favorite-animal" class="col-md-2 control-label">最喜欢的动物</label>
+                                                    <div class="col-md-10">
+                                                        <input type="text" class="form-control" id="favorite-animal">
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="worship_people" class="col-md-2 control-label">最崇拜的人</label>
+                                                    <div class="col-md-10">
+                                                        <input type="text" class="form-control" id="worship_people">
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="want_to_go" class="col-md-2 control-label">我想去的地方</label>
+                                                    <div class="col-md-10">
+                                                        <input type="text" class="form-control" id="want_to_go">
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="disire" class="col-md-2 control-label">我的愿望</label>
+                                                    <div class="col-md-10">
+                                                        <input type="text" class="form-control" id="desire">
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="favorite-star" class="col-md-2 control-label">喜欢的明星</label>
+                                                    <div class="col-md-10">
+                                                        <input type="text" class="form-control" id="favorete-star">
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="favorite-color" class="col-md-2 control-label">喜欢的颜色</label>
+                                                    <div class="col-md-10">
+                                                        <input type="text" class="form-control" id="favorite-color">
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <div class="col-md-offset-2 col-md-10">
+                                                        <button type="button" class="btn btn-info" id="self-profile-upload-btn">保存</button>
+                                                    </div>
+                                                </div>
+
+                                            
+                                        </form>
+                                    </div>
+                                </div><!--container!-->
+                            </div><!--self-profile!-->
+
                         </div><!--tabs-content-self-profile-content!-->
+                        </div><!--row!-->
+
                         
                     </div><!--container self-profile!-->
 
@@ -87,5 +190,38 @@
         </div><!--container!-->
     </div><!--userinfo!-->
 </div><!--main-content!-->
+
+<div class="modal fade" id="myModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">上传头像</h4>
+            </div>
+            <div class="modal-body">
+                <div class="crop-avatar">
+                    <input type="file" name="file" id="post_file"/>
+                    <div id="label">
+                        <canvas id="get_image"></canvas>
+                        <p>
+                            <!--显示整张图片,及裁剪位置-->
+                            <canvas id="cover_box"></canvas>
+                            <!--显示裁剪之后图片 -->
+                            <canvas id="edit_pic"></canvas>
+                        </p>
+                    </div> 
+
+                    <button id="save_button">保存</button>
+                    <button id="upload">上传</button>
+                </div> 
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
 {{ include file='./public/load_script.html' }}
 
