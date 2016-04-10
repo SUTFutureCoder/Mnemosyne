@@ -4,7 +4,7 @@
  *
  * 说明 exception和log的使用情景
  *
- * Exception 用于出错马上终止的情况，无需return
+ * Exception 用于出错马上终止的情况，无需return。会打一条log
  *
  * Log 用于出错或debug后逻辑仍然继续往下走
  *
@@ -73,6 +73,6 @@ class MException extends Exception {
         ));
 
         //此处终结一切
-        parent::__construct($this->errstr, $errno);
+//        parent::__construct($this->errstr, $errno);
     }
 }

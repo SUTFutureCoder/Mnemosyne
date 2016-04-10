@@ -122,7 +122,7 @@ class MLog{
             );
         }
 
-        $strLog = sprintf("%s: %s [%s:%s] args%s logId[%s] uri[%s] userId[%s] %s" . PHP_EOL ,
+        $strLog = sprintf("%s: %s [%s:%s] args[%s] logId[%s] uri[%s] userId[%s] %s" . PHP_EOL ,
             $strLogType,
             date('y-m-d H:i:s'),
             $logBackTrace['file'],
@@ -203,7 +203,7 @@ class MLog{
 
         self::putLogIntoFile($strLogPath, $type, $strFatalMsg, $arrBackTrace);
 
-        //输出错误
+        //输出错误，并终结
         $ci =& get_instance();
         $ci->load->library('util/Response');
         $ci->response->jsonFail($intErrno, $strFatalMsg);

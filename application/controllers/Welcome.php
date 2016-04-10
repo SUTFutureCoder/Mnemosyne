@@ -1,6 +1,6 @@
 <?php
 /**
- * Api for Init pages
+ * Api for test pages
  *
  *
  * @author  *Chen <linxingchen@baidu.com>
@@ -46,6 +46,7 @@ class Welcome extends CI_Controller {
      */
 	public function testUnitTest(){
 		$test = $this->input->post('test', true);
+        
 
 		echo 'hello world' . '-' . $test;
 	}

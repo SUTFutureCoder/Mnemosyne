@@ -51,7 +51,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @link		http://codeigniter.com/user_guide/database/
  */
 //搭载MLog日志和计时器模块
-require_once APPPATH . 'libraries/Timer.php';
+require_once APPPATH . 'libraries/util/Timer.php';
 abstract class CI_DB_driver {
 
 	/**
