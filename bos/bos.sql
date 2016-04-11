@@ -33,6 +33,8 @@ CREATE TABLE IF NOT EXISTS `bos_bucket` (
   `access_key` varchar(1024) NOT NULL COMMENT '读取key',
   `secret_key` varchar(1024) NOT NULL COMMENT '修改key',
   `bucket_root` varchar(1024) NOT NULL COMMENT '文件root目录',
+  `enable_host_list` varchar(10240) NOT NULL COMMENT '允许的访问域名，反盗链，使用json存储，空则允许全部域',
+  `enable_null_referer` tinyint(4) NOT NULL DEFAULT '1' COMMENT '是否允许空来源',
   `is_public` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否公有',
   `key_need` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否特别key验证，如不需要则使用用户key',
   `ctime` bigint(20) NOT NULL COMMENT '创建时间',

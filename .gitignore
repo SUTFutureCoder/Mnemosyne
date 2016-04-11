@@ -6,6 +6,7 @@ application/cache/*
 !application/cache/.htaccess
 
 application/config/*
+bos/config.php
 
 
 application/logs/*
