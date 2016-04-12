@@ -2,6 +2,8 @@
 /**
  * 用于生成全局唯一UUID
  *
+ * Redis可用版
+ *
  * Created by PhpStorm.
  * User: lin
  * Date: 16-1-23

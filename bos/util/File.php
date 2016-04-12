@@ -1,6 +1,8 @@
 <?php
 defined('BOSPATH') OR exit('No direct script access allowed');
 /**
+ * 上传文件时，如目录不存在则创建
+ *
  * Created by PhpStorm.
  * User: lin
  * Date: 16-4-10

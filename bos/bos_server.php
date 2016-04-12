@@ -1,15 +1,31 @@
 <?php
 /**
+ *
+ * 一律使用POST
+ *
  * Created by PhpStorm.
  * User: lin
  * Date: 16-3-19
  * Time: 下午3:06
  */
-
-//自动加载
+require 'config.php';
+//载入目录
+Config::definePath();
 spl_autoload_register(function ($class){
-    include 'util/' . $class . '.php';
+    require BOSPATH . 'util/' . $class . '.php';
 });
 
-move_uploaded_file($_FILES["pic"]["tmp_name"], './');
+$strType         = $_GET['type'];
+$strFunctionName = $_GET['qt'];
 
+
+//验证函数白名单
+if (!isset(Config::$funcWhiteList[$strType]) || !in_array($strFunctionName, Config::$funcWhiteList[$strType])){
+    Response::responseErrorJson('NoSuchFunction', 'The specified type and function does not exist.');
+}
+
+//直接调用函数
+$ret = $strType::$strFunctionName('14604488844', '65895050358e80c543a7677c32fd6ae54abbc0e766e0c42f7457b4b10c5e0cb3');
+
+//返回调用结果
+Response::responseResultJson($ret);
