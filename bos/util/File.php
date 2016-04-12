@@ -59,10 +59,19 @@ class File{
     public static function outPut($arrFileInfo, $arrBucketInfo){
         //通过mime决定如何返回（header），仅限audio，image，text，video
         $strFileType = self::getFileTypeFromMime($arrFileInfo['mime']);
-        if (in_array($strFileType, array('audio', 'image', 'text', 'video'))){
+        $strFileUrl  = BOSPATH . $arrBucketInfo['user_id'] . '/' . $arrBucketInfo['bucket_root'] . '/' . $arrFileInfo['object_index'];
+        if (in_array($strFileType, array('audio', 'image', 'text', 'video'))) {
+            //可以在header中标记原有属性，例如原文件名
             header('content-type: ' . $arrFileInfo['mime']);
-            echo file_get_contents($arrBucketInfo['bucket_root'] . '/' . $arrFileInfo['object_index']);
+            echo file_get_contents($strFileUrl);
+            exit;
+        } else {
+            //命令浏览器下载
+            header("Content-Type: application/force-download");
+            header("Content-Disposition: attachment; filename=" . basename($strFileUrl));
+            readfile($strFileUrl);
             exit;
         }
+
     }
 }
