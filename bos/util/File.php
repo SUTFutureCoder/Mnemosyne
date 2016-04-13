@@ -72,6 +72,5 @@ class File{
             readfile($strFileUrl);
             exit;
         }
-
     }
 }

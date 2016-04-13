@@ -13,6 +13,8 @@
  */
 class BosClient {
 
-    
+    public static function putObjectFromFile($bucketId, $key, $fileName, $options = array()){
+        
+    }
 
 }
