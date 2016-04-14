@@ -5,9 +5,9 @@
  * 请在此文件填充
  *
  *
- * response文件里面是云安全部的写法
+ * response文件里面是云安全部的写法，用于面向用户的报错
  *
- * 这个是百度ODP的写法，可以逐渐迁到这来
+ * 这个是百度ODP的写法，用于面向逻辑错误
  *
  * Created by PhpStorm.
  * User: lin
@@ -38,6 +38,13 @@ class ErrorCodes {
     const ERROR_DB_DELETE  = 209;
     const ERROR_DB_SELECT  = 210;
 
+    //BOS
+    const ERROR_BOS_CONTENT_LENGTH  = 10001;
+    const ERROR_BOS_KEY_EMPTY       = 10002;
+    const ERROR_BOS_CONTENT_MD5     = 10003;
+    const ERROR_BOS_CHECK_DATA_FAIL = 10004;
+    const ERROR_BOS_MAX_USER_METADATA = 10005;
+
     public static $error_codes = array(
         self::ERROR_PARAM_ERROR     => 'param error',
         self::ERROR_NETWORK_ERROR   => 'network error',
@@ -55,6 +62,13 @@ class ErrorCodes {
         self::ERROR_REDIS           => 'redis error',
         self::ERROR_FUNC_NON_EXISTS => 'function non exists error',
         self::ERROR_IP_UNAUTHORIZED => 'unauthorized IP',
+
+        //BOS服务
+        self::ERROR_BOS_CONTENT_LENGTH  => 'content length should be int or long',
+        self::ERROR_BOS_KEY_EMPTY       => 'key should not be empty or null',
+        self::ERROR_BOS_CONTENT_MD5     => 'content md5 should not be empty or null',
+        self::ERROR_BOS_CHECK_DATA_FAIL => 'check data failed',
+        self::ERROR_BOS_MAX_USER_METADATA => 'user metadata size is too big',
     );
 
     /**

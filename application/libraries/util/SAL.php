@@ -73,4 +73,6 @@ class SAL {
         return $strResult;
     }
 
+    
+
 }

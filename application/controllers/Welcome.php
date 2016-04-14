@@ -161,4 +161,12 @@ class Welcome extends CI_Controller {
         throw new MException(CoreConst::MODULE_KERNEL, ErrorCodes::ERROR_PARAM_ERROR);
     }
 
+    public function testPutObject(){
+        $this->load->library('util/BosClient');
+        $arrBosConfig = $this->config->item('bos_bucket_list');
+        $arrBosConfig = $arrBosConfig['146044910610'];
+
+        BosClient::putObjectFromFile('146044910610', $arrBosConfig['secret_key'], APPPATH . '../static/img/public/lena.jpg');
+    }
+
 }

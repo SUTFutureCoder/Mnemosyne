@@ -5,7 +5,13 @@ Config::definePath();
 spl_autoload_register(function ($class){
     require BOSPATH . 'util/' . $class . '.php';
 });
+$arguments = file_get_contents('php://input');
+//header('content-type: image/jpeg');
+//echo $arguments;
 
+echo $arguments;
+
+exit;
 $strType         = $_GET['type'];
 $strFunctionName = $_GET['qt'];
 

@@ -1,24 +1,18 @@
 <?php
 /**
- * 用于计算文件哈希值
+ * 从数据流中进行哈希
  *
  * Created by PhpStorm.
  * User: lin
- * Date: 16-4-13
- * Time: 下午10:49
+ * Date: 16-4-14
+ * Time: 下午1:16
  */
-class Hash{
+class BosHash{
 
     /**
-     *
-     * 用于验证上传文件MD5是否正确
-     *
-     * 注意别忘了包一层base64_encode
-     *
-     *
-     * @param $fp
-     * @param int $offset
-     * @param int $length
+     * @param resource $fp THE OPEN FILE
+     * @param int $offset The offset
+     * @param int $length max number of characters to copy from $fp into the hashing content
      * @return string
      */
     public static function md5FromStream($fp, $offset = 0, $length = -1){
@@ -32,4 +26,5 @@ class Hash{
         }
         return hash_final($ctx, true);
     }
+
 }
