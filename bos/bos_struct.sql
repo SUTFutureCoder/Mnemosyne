@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2016-04-12 17:23:25
+-- 生成日期: 2016-04-15 22:37:54
 -- 服务器版本: 5.5.47-0ubuntu0.14.04.1
 -- PHP 版本: 5.5.9-1ubuntu4.14
 
@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS `bos_bucket` (
   `ctime` bigint(20) NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`,`bucket_id`),
   KEY `user_id` (`user_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='bucket' AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='bucket';
 
 -- --------------------------------------------------------
 
@@ -55,6 +55,7 @@ CREATE TABLE IF NOT EXISTS `bos_object` (
   `object_index` varchar(1024) NOT NULL COMMENT '获取存储对象的key，用于http访问',
   `name` varchar(1024) NOT NULL COMMENT '存储对象源文件名',
   `mime` varchar(1024) NOT NULL COMMENT '文件mime信息',
+  `size` bigint(20) NOT NULL COMMENT '文件大小',
   `sign` varchar(1024) NOT NULL COMMENT '文件签名',
   `user` bigint(20) NOT NULL COMMENT '用户uuid',
   `private_share_key` char(4) NOT NULL COMMENT '分享码，由BOS提供',
@@ -66,7 +67,7 @@ CREATE TABLE IF NOT EXISTS `bos_object` (
   KEY `object_index` (`object_index`(255)),
   KEY `bucket` (`bucket_id`),
   KEY `user` (`user`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='BOS服务存储对象表' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='BOS服务存储对象表';
 
 -- --------------------------------------------------------
 
@@ -81,7 +82,7 @@ CREATE TABLE IF NOT EXISTS `bos_tip_off` (
   `description` varchar(1024) NOT NULL COMMENT '原因',
   PRIMARY KEY (`id`),
   KEY `object_id` (`object_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='举报表，水表已拆，不收快递' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='举报表，水表已拆，不收快递';
 
 -- --------------------------------------------------------
 
@@ -98,7 +99,7 @@ CREATE TABLE IF NOT EXISTS `bos_user` (
   `is_delete` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否删除',
   PRIMARY KEY (`id`,`user_id`),
   KEY `key_user_id` (`user_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='用户表，存储key等' AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='用户表，存储key等';
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

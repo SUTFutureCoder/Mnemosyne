@@ -20,7 +20,14 @@ class Response{
      * @param $code
      * @param $message
      */
-    public static function responseErrorJson($code, $message){
+    public static function responseErrorJson($code, $message = null){
+        if (null === $message){
+            if (isset(ErrorCodes::$message[$code])){
+                $message = ErrorCodes::$message[$code];
+            } else {
+                $message = 'unknow error';
+            }
+        }
         echo json_encode(array('code' => $code, 'message' => $message));
         exit;
     }

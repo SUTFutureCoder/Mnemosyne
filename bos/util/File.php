@@ -59,7 +59,7 @@ class File{
     public static function outPut($arrFileInfo, $arrBucketInfo){
         //通过mime决定如何返回（header），仅限audio，image，text，video
         $strFileType = self::getFileTypeFromMime($arrFileInfo['mime']);
-        $strFileUrl  = BOSPATH . $arrBucketInfo['user_id'] . '/' . $arrBucketInfo['bucket_root'] . '/' . $arrFileInfo['object_index'];
+        $strFileUrl  = Config::getBucketRoot() . $arrBucketInfo['user_id'] . '/' . $arrBucketInfo['bucket_root'] . '/' . $arrFileInfo['object_index'];
         if (in_array($strFileType, array('audio', 'image', 'text', 'video'))) {
             //可以在header中标记原有属性，例如原文件名
             header('content-type: ' . $arrFileInfo['mime']);
@@ -78,6 +78,10 @@ class File{
         //获取bucket信息
         $arrBucketInfo = Bucket::getBucketInfo($arrData['bucket_id']);
 
+        if (empty($arrBucketInfo)){
+            Response::responseErrorJson(ErrorCodes::ERROR_NO_SUCH_BUCKET);
+        }
+
         //保存目录下
         $strDir = Config::getBucketRoot() . $arrBucketInfo['user_id'] . '/' . $arrBucketInfo['bucket_root'];
 
@@ -93,16 +97,65 @@ class File{
         fclose($objInput);
 
         //算出文件的sha1作为文件名
-        $strSha1 = sha1($strData);
+        $strSha1 = sha1($strData . Config::SALT);
         $strDir .= '/' . $strSha1;
+
+        //检查库中是否已有此文件，如有则直接跳过
+        //如果能用缓存，这里用缓存。但虚拟主机太坑爹，节约经费……
+        $arrFileInfoData = self::getFileInfo($strSha1);
+        if (!empty($arrFileInfoData)){
+            Response::responseResultJson(array(
+                'url' => Config::FILE_URL . $strSha1,
+            ));
+        }
 
         $objFp   = fopen($strDir, 'wb');
         fwrite($objFp, $strData);
+        rewind($objFp);
+
+        //验证MD5签名值，确认从上传到保存是否无误
+        $contentMd5 = base64_encode(Hash::md5FromStream($objFp, 0, $_GET['headers']['Content-Length']));
+        if ($contentMd5 != $_GET['headers']['Content-MD5']){
+            fclose($objFp);
+            unlink($strDir);
+            Response::responseErrorJson(ErrorCodes::ERROR_FILE_SIGN_ERROR);
+        }
         fclose($objFp);
 
 
+        //数据库写入
+        $objDbConn = self::getDbConn();
+        $strQuery  = 'INSERT INTO bos_object (
+          object_id, 
+          object_index, 
+          name, 
+          mime,
+          size,
+          sign, 
+          user, 
+          bucket_id, 
+          is_public, 
+          ctime
+        ) VALUES (
+          "' . Uuid::genUUID('object') . '",
+          "' . $strSha1 . '",
+          "' . DB::realEscapeString($_GET['file_name']). '",
+          "' . DB::realEscapeString($_GET['headers']['contentType']). '",
+          "' . DB::realEscapeString($_GET['headers']['Content-Length']). '",
+          "' . DB::realEscapeString($_GET['headers']['Content-MD5']). '",
+          "' . DB::realEscapeString($_GET['user']). '",
+          "' . DB::realEscapeString($_GET['bucket_id']). '",
+          "' . DB::realEscapeString($_GET['is_public']) . '",
+          "' . time() . '"
+        )';
 
-
-        //TODO数据库操作
+        $objQueryRet = $objDbConn->query($strQuery);
+        if ($objQueryRet){
+            Response::responseResultJson(array(
+                'url' => Config::FILE_URL . $strSha1,
+            ));
+        } else {
+            Response::responseErrorJson(ErrorCodes::ERROR_DB_INSERT_OBJECT);
+        }
     }
 }

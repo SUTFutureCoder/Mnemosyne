@@ -11,7 +11,7 @@ $strFunctionName = $_GET['qt'];
 
 //验证函数白名单
 if (!isset(Config::$funcWhiteList[$strType]) || !in_array($strFunctionName, Config::$funcWhiteList[$strType])){
-    Response::responseErrorJson('NoSuchFunction', 'The specified type and function does not exist.');
+    Response::responseErrorJson(ErrorCodes::ERROR_NO_SUCH_FUNCTION);
 }
 
 //直接调用函数

@@ -11,9 +11,9 @@
  * Date: 16-3-19
  * Time: 下午5:04
  */
-spl_autoload_register(function ($class){
-    require 'Bos/' . $class . '.php';
-});
+require 'Bos/BosOptions.php';
+require 'Bos/BosHash.php';
+require 'Bos/BosHttpHeaders.php';
 class BosClient {
 
     //最大用户定义meta数据大小
@@ -36,11 +36,12 @@ class BosClient {
      * @param $bucketId
      * @param $key
      * @param $fileName
+     * @param $isPublic
      * @param array $options
      * @return bool|mixed
      * @throws MException
      */
-    public static function putObjectFromFile($bucketId, $key, $fileName, $options = array()){
+    public static function putObjectFromFile($bucketId, $key, $fileName, $isPublic = 1, $options = array()){
         if (!is_file($fileName)){
             return false;
         }
@@ -68,16 +69,20 @@ class BosClient {
             unset($options[BosOptions::CONTENT_MD5]);
         }
 
-        //获取调用
-
+        //获取用户ID
+        $objCi  =& get_instance();
+        $objCi->load->library('session');
+        $userId =  $objCi->session->user_id;
         try {
             $response = self::putObject(
                 $bucketId,
                 $key,
                 $objFp,
+                basename($fileName),
                 $contentLength,
                 $contentMd5,
-                '10000001',
+                $isPublic,
+                $userId,
                 'File',
                 BosOptions::putObjectFromFile,
                 $options
@@ -100,16 +105,18 @@ class BosClient {
      * @param int $bucketId bucket UUID
      * @param int $key      操作bucket密钥
      * @param resource $data    文件指针
+     * @param string $fileName  原文件名
      * @param int $contentLength 文件大小
      * @param string $contentMd5 文件MD5信息
-     * @param null $user        上传文件用户
-     * @param null $funcType    执行BOS服务函数类型
-     * @param null $funcQt      执行BOS服务函数
+     * @param int $isPublic     是否为公开文件
+     * @param int $user        上传文件用户
+     * @param string $funcType    执行BOS服务函数类型
+     * @param string $funcQt      执行BOS服务函数
      * @param array $options    附加信息
      * @return mixed
      * @throws MException
      */
-    public static function putObject($bucketId, $key, $data, $contentLength, $contentMd5, $user = null, $funcType = null, $funcQt = null, $options = array()){
+    public static function putObject($bucketId, $key, $data, $fileName, $contentLength, $contentMd5, $isPublic, $user, $funcType, $funcQt, $options = array()){
         if (empty($key)){
             throw new MException(CoreConst::MODULE_BOS, ErrorCodes::ERROR_BOS_KEY_EMPTY);
         }
@@ -158,7 +165,9 @@ class BosClient {
                 //操作用户ID
                 'user'      => $user,
 
+                'file_name' => $fileName,
                 'bucket_id' => $bucketId,
+                'is_public' => $isPublic ? 1 : 0,
                 'key'       => $key,
                 'body'      => $data,
                 'headers'   => $headers,
@@ -199,6 +208,7 @@ class BosClient {
             'user'      => null,
 
             //BUCKET相关
+            'file_name' => null,
             'bucket_id' => null,
             'key'       => null,
             'body'      => null,

@@ -26,38 +26,37 @@ $strSecretKey = !empty($_GET['secret_key']) ? $_GET['secret_key'] : null;
 $strPrivateKey = !empty($_GET['private_key']) ? $_GET['private_key'] : null;
 
 if (null === $strFileIndex){
-    Response::responseErrorJson('InvalidHTTPAuthHeader', 'The HTTP authorization header is invalid. Consult the service documentation for details');
+    Response::responseErrorJson(ErrorCodes::ERROR_INVALID_HTTP_AUTH_HEADER);
     exit;
 }
 
 //获取文件内容并通过文件内容获取bucket信息
 $fileInfo = File::getFileInfo($strFileIndex);
 if (empty($fileInfo)){
-    Response::responseErrorJson('NoSuchKey', 'The specified key does not exist.');
+    Response::responseErrorJson(ErrorCodes::ERROR_NO_SUCH_FILE);
 }
 
-$fileInfo = $fileInfo[0];
 $bucketId = $fileInfo['bucket_id'];
 $bucketInfo = Bucket::getBucketInfo($bucketId);
 if (empty($bucketInfo)){
-    Response::responseErrorJson('NoSuchBucket', 'The specified bucket does not exist.');
+    Response::responseErrorJson(ErrorCodes::ERROR_NO_SUCH_BUCKET);
 }
 
 //反作弊
-Anti::antiStealingLink($bucketInfo['enable_host_list'], $bucketInfo['enable_null_referer']);
+if (false === Anti::antiStealingLink($bucketInfo['enable_host_list'], $bucketInfo['enable_null_referer'])){
+    Response::responseErrorJson(ErrorCodes::ERROR_ANTI_STEAL_LINK);
+}
+
 
 //获取是否是私有分享文件
 if ($fileInfo['private_share_key'] != $strPrivateKey){
-    Response::responseErrorJson('PrivateShareKeyError', 'The private share key does not correct. Access denied.');
+    Response::responseErrorJson(ErrorCodes::ERROR_PRIVATE_SHARE_KEY_ERROR);
 }
 
 //获取是否为公共文件，如不是则需要accesskey
 if ($fileInfo['is_public'] == 0 && $bucketInfo['access_key'] != $strAccessKey){
-    Response::responseErrorJson('PrivateAccessKeyError', 'The access key for private file does not correct. Access denied');
+    Response::responseErrorJson(ErrorCodes::ERROR_PRIVATE_ACCESS_KEY_ERROR);
 }
 
 //验证通过，根据输出文件
 File::outPut($fileInfo, $bucketInfo);
-
-//header('content-type: image/jpeg');
-//echo file_get_contents('1324868113_61272293.jpg');

@@ -27,14 +27,14 @@ class Anti{
             return true;
         }
 
-        $referUrl = $_SERVER['HTTP_REFERER'];
+        $referUrl = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '';
         if (empty($referUrl) && !$enableNullReferer){
             //是否允许空来源
             return false;
         }
 
         $arrEnableHostList = json_decode($enableHostList, true);
-        if ($referUrl && !in_array($arrEnableHostList, parse_url($referUrl, 'host'))){
+        if ($referUrl && !in_array(parse_url($referUrl, PHP_URL_HOST), $arrEnableHostList)){
             return false;
         }
 
