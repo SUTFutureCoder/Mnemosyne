@@ -30,6 +30,16 @@ class BosClient {
         return $objFinfo->file($strFileName);
     }
 
+    /**
+     * 通过文件上传到BOS服务
+     *
+     * @param $bucketId
+     * @param $key
+     * @param $fileName
+     * @param array $options
+     * @return bool|mixed
+     * @throws MException
+     */
     public static function putObjectFromFile($bucketId, $key, $fileName, $options = array()){
         if (!is_file($fileName)){
             return false;
@@ -58,6 +68,8 @@ class BosClient {
             unset($options[BosOptions::CONTENT_MD5]);
         }
 
+        //获取调用
+
         try {
             $response = self::putObject(
                 $bucketId,
@@ -65,6 +77,9 @@ class BosClient {
                 $objFp,
                 $contentLength,
                 $contentMd5,
+                '10000001',
+                'File',
+                BosOptions::putObjectFromFile,
                 $options
             );
             if (is_resource($objFp)){
@@ -79,7 +94,22 @@ class BosClient {
         }
     }
 
-    public static function putObject($bucketId, $key, $data, $contentLength, $contentMd5, $options = array()){
+    /**
+     * 向BOS服务器放置资源
+     *
+     * @param int $bucketId bucket UUID
+     * @param int $key      操作bucket密钥
+     * @param resource $data    文件指针
+     * @param int $contentLength 文件大小
+     * @param string $contentMd5 文件MD5信息
+     * @param null $user        上传文件用户
+     * @param null $funcType    执行BOS服务函数类型
+     * @param null $funcQt      执行BOS服务函数
+     * @param array $options    附加信息
+     * @return mixed
+     * @throws MException
+     */
+    public static function putObject($bucketId, $key, $data, $contentLength, $contentMd5, $user = null, $funcType = null, $funcQt = null, $options = array()){
         if (empty($key)){
             throw new MException(CoreConst::MODULE_BOS, ErrorCodes::ERROR_BOS_KEY_EMPTY);
         }
@@ -119,8 +149,15 @@ class BosClient {
         }
 
         return self::sendRequest(
-            BosOptions::PUT,
+//            BosOptions::PUT,
             array(
+                //指定执行的方法
+                'type'      => $funcType,
+                'qt'        => $funcQt,
+
+                //操作用户ID
+                'user'      => $user,
+
                 'bucket_id' => $bucketId,
                 'key'       => $key,
                 'body'      => $data,
@@ -151,9 +188,17 @@ class BosClient {
         }
     }
 
-    private static function sendRequest($httpMethod, array $arrArgs){
+    private static function sendRequest(array $arrArgs){
         //这个真是设置默认值的好方法！
         $defaultArgs = array(
+            //指定执行的方法
+            'type'      => null,
+            'qt'        => null,
+
+            //操作用户ID
+            'user'      => null,
+
+            //BUCKET相关
             'bucket_id' => null,
             'key'       => null,
             'body'      => null,
@@ -174,7 +219,12 @@ class BosClient {
         $strBosHost = $objCi->config->item('bos_host');
         //调试好了，迁到SAL
         $objCh = curl_init();
-        curl_setopt($objCh, CURLOPT_URL, $strBosHost);
+
+        //使用GET方式
+        //因为PUT方式中无法使用POSTFIELDS正确传输数据，另外服务器之间通信可以无需关心GET最大长度，在APACHE设置好即可。
+        $strUrlAppend = http_build_query($arrArgs);
+
+        curl_setopt($objCh, CURLOPT_URL, $strBosHost . '?' . $strUrlAppend);
         curl_setopt($objCh, CURLOPT_RETURNTRANSFER, 1);
         //上传相关
         curl_setopt($objCh, CURLOPT_PUT, 1);
@@ -183,7 +233,8 @@ class BosClient {
         curl_setopt($objCh, CURLOPT_INFILESIZE, $arrArgs['headers'][BosHttpHeaders::CONTENT_LENGTH]);
         $output = curl_exec($objCh);
         curl_close($objCh);
-        header('content-type: image/jpeg');
+//        print_r($output);
+//        header('content-type: image/jpeg');
         echo $output;
         return $output;
         

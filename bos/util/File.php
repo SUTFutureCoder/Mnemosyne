@@ -63,7 +63,7 @@ class File{
         if (in_array($strFileType, array('audio', 'image', 'text', 'video'))) {
             //可以在header中标记原有属性，例如原文件名
             header('content-type: ' . $arrFileInfo['mime']);
-            echo file_get_contents($strFileUrl);
+            readfile($strFileUrl);
             exit;
         } else {
             //命令浏览器下载
@@ -72,5 +72,37 @@ class File{
             readfile($strFileUrl);
             exit;
         }
+    }
+
+    public static function saveFileStream($arrData){
+        //获取bucket信息
+        $arrBucketInfo = Bucket::getBucketInfo($arrData['bucket_id']);
+
+        //保存目录下
+        $strDir = Config::getBucketRoot() . $arrBucketInfo['user_id'] . '/' . $arrBucketInfo['bucket_root'];
+
+        if (!is_dir($strDir)){
+            mkdir($strDir, 0777, true);
+        }
+
+        $objInput = fopen('php://input', 'rb');
+        $strData  = '';
+        while (!feof($objInput)){
+            $strData .= fgets($objInput);
+        }
+        fclose($objInput);
+
+        //算出文件的sha1作为文件名
+        $strSha1 = sha1($strData);
+        $strDir .= '/' . $strSha1;
+
+        $objFp   = fopen($strDir, 'wb');
+        fwrite($objFp, $strData);
+        fclose($objFp);
+
+
+
+
+        //TODO数据库操作
     }
 }
