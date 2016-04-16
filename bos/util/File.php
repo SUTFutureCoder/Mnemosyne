@@ -100,7 +100,7 @@ class File{
         $strSha1 = sha1($strData . Config::SALT);
         $strDir .= '/' . $strSha1;
 
-        //检查库中是否已有此文件，如有则直接跳过
+        //检查库中是否已有此文件，如有则直接跳过，节省空间及实现秒传
         //如果能用缓存，这里用缓存。但虚拟主机太坑爹，节约经费……
         $arrFileInfoData = self::getFileInfo($strSha1);
         if (!empty($arrFileInfoData)){
@@ -111,17 +111,9 @@ class File{
 
         $objFp   = fopen($strDir, 'wb');
         fwrite($objFp, $strData);
-        rewind($objFp);
-
-        //验证MD5签名值，确认从上传到保存是否无误
-        $contentMd5 = base64_encode(Hash::md5FromStream($objFp, 0, $_GET['headers']['Content-Length']));
-        if ($contentMd5 != $_GET['headers']['Content-MD5']){
-            fclose($objFp);
-            unlink($strDir);
-            Response::responseErrorJson(ErrorCodes::ERROR_FILE_SIGN_ERROR);
-        }
         fclose($objFp);
 
+        $user = isset($_GET['user']) ? $_GET['user'] : 0;
 
         //数据库写入
         $objDbConn = self::getDbConn();
@@ -143,7 +135,7 @@ class File{
           "' . DB::realEscapeString($_GET['headers']['contentType']). '",
           "' . DB::realEscapeString($_GET['headers']['Content-Length']). '",
           "' . DB::realEscapeString($_GET['headers']['Content-MD5']). '",
-          "' . DB::realEscapeString($_GET['user']). '",
+          "' . DB::realEscapeString($user). '",
           "' . DB::realEscapeString($_GET['bucket_id']). '",
           "' . DB::realEscapeString($_GET['is_public']) . '",
           "' . time() . '"
