@@ -64,12 +64,14 @@ class File{
     public static function outPut($arrFileInfo, $arrBucketInfo, $arrOption = array()){
         //通过mime决定如何返回（header），仅限audio，image，text，video
         $strFileType = self::getFileTypeFromMime($arrFileInfo['mime']);
+        //获取后缀名
+        $strFileExt  = substr(strrchr($arrFileInfo['name'], '.'), 1);
         $strFileUrl  = Config::getBucketRoot() . $arrBucketInfo['user_id'] . '/' . $arrBucketInfo['bucket_root'] . '/' . $arrFileInfo['object_index'];
         if (in_array($strFileType, array('audio', 'image', 'text', 'video'))) {
             header('content-type: ' . $arrFileInfo['mime']);
             if (!empty($arrOption) && 'image' == $strFileType){
                 //如果有附加值，且为图片执行这个操作
-                self::compressResizeImg($strFileUrl, $arrOption);
+                self::compressResizeImg($strFileUrl, $arrOption, $strFileExt);
             } else {
                 readfile($strFileUrl);
             }
@@ -161,8 +163,37 @@ class File{
      * @param $filePath
      * @param $options
      */
-    private static function compressResizeImg($filePath, $options){
-        $objImg = imagecreatefrompng($filePath);
+    private static function compressResizeImg($filePath, $options, $strFileExt){
+        switch ($strFileExt){
+            case 'jpg':
+            case 'jpeg':
+                $objImg = imagecreatefromjpeg($filePath);
+                break;
+
+            case 'bmp':
+                $objImg = imagecreatefromwbmp($filePath);
+                break;
+
+            case 'png':
+                $objImg = imagecreatefrompng($filePath);
+                break;
+
+            case 'gif':
+                $objImg = imagecreatefromgif($filePath);
+                break;
+
+            case 'xbm':
+                $objImg = imagecreatefromxbm($filePath);
+                break;
+
+            case 'xpm':
+                $objImg = imagecreatefromxpm($filePath);
+                break;
+
+            default:
+                return false;
+                break;
+        }
 
         //获取原图大小
         list($defaultOptions['w'], $defaultOptions['h']) = getimagesize($filePath);
@@ -187,13 +218,36 @@ class File{
         $image = imagecreatetruecolor($options['w'], $options['h']);
         imagecopyresampled($image, $objImg, 0, 0, 0, 0, $options['w'], $options['h'], $defaultOptions['w'], $defaultOptions['h']);
 
-        if (isset($options['q'])){
+        if (!isset($options['q'])){
             //压缩过程放到最后
-            //开始压缩
-            imagejpeg($image, null, $options['q']);
-        } else {
-            imagejpeg($image);
+            $options['q'] = 100;
         }
+
+        switch ($strFileExt){
+            case 'jpg':
+            case 'jpeg':
+            case 'bmp':
+                imagejpeg($image, null, $options['q']);
+                break;
+
+            case 'png':
+                imagepng($image, null, $options['q']);
+                break;
+
+            case 'gif':
+                imagegif($image, null);
+                break;
+
+            case 'xbm':
+            case 'xpm':
+                imagexbm($image, null);
+                break;
+
+            default:
+                return false;
+                break;
+        }
+
         imagedestroy ($image);
     }
 }
