@@ -1,6 +1,9 @@
 <?php
 defined('BOSPATH') OR exit('No direct script access allowed');
 /**
+ * 用于数据库连接及SQL语句编译
+ *
+ *
  * Created by PhpStorm.
  * User: lin
  * Date: 16-4-18
@@ -151,6 +154,106 @@ class Dao_Base {
 
     }
 
+    /**
+     * 用于生成UPDATE语句
+     *
+     * @param $row
+     * @param null $conds
+     * @param null $appends
+     * @param null $options
+     * @param null $table
+     * @return bool|mixed|mysqli_result|null
+     */
+    public function update($row, $conds = NULL, $appends = NULL, $options = NULL, $table = NULL){
+        if (empty($row)){
+            return NULL;
+        }
+
+        if (NULL === $table){
+            $table = $this->_table;
+        }
+        return $this->makeUpdateOrDelete($table, $row, $conds, $appends, $options);
+    }
+
+    /**
+     * 用于构造删除sql语句
+     *
+     * @param null $conds
+     * @param null $appends
+     * @param null $options
+     * @param null $table
+     * @return bool|mixed|mysqli_result|null
+     */
+    public function delete($conds = NULL, $appends = NULL, $options = NULL, $table = NULL){
+        if (NULL === $table){
+            $table = $this->_table;
+        }
+        return $this->makeUpdateOrDelete($table, NULL, $conds, $appends, $options);
+    }
+
+    /**
+     * 用于生成update和delete语句的编译逻辑
+     *
+     * @param $table
+     * @param $row
+     * @param $conds
+     * @param $appends
+     * @param $options
+     * @return bool|mixed|mysqli_result|null
+     */
+    private function makeUpdateOrDelete($table, $row, $conds, $appends, $options){
+        //1.options
+        if ($options !== NULL){
+            if (is_array($options)){
+                $options = $this->makeList($options, self::LIST_COM, ' ');
+            }
+            if (!strlen($options)){
+                return NULL;
+            }
+        }
+
+        //2.fields
+        //delete情景
+        if (empty($row)){
+            $sql = 'DELETE ' . $options . ' FROM ' . $table . ' ';
+        } else {
+            //table情景
+            $sql = 'UPDATE ' . $options . ' ' . $table . ' SET ';
+            $row = $this->makeList($row, self::LIST_SET);
+            if (!strlen($row)){
+                return NULL;
+            }
+            $sql .= $row . ' ';
+        }
+
+        //3.conditions  WHERE后
+        if ($conds !== NULL){
+            $conds = $this->makeList($conds, self::LIST_AND);
+            if (!strlen($conds)){
+                return NULL;
+            }
+            $sql .= ' WHERE ' . $conds . ' ';
+        }
+
+        //4. other append
+        if ($appends !== NULL){
+            $appends = $this->makeList($appends, self::LIST_COM, ' ');
+            if (!strlen($appends)){
+                return NULL;
+            }
+            $sql .= $appends;
+        }
+
+        return $this->execute($sql);
+    }
+
+    /**
+     * 运行SQL语句，当$fetchType为NULL时表示为增删改操作，无需获取结果
+     *
+     * @param $sql
+     * @param null $fetchType
+     * @return bool|mixed|mysqli_result
+     */
     private function execute($sql, $fetchType = NULL){
         $objRet = $this->objDbconn->query($sql);
         if (FALSE === $objRet){
