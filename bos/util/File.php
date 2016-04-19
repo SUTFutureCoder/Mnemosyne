@@ -8,14 +8,16 @@ defined('BOSPATH') OR exit('No direct script access allowed');
  * Date: 16-4-10
  * Time: 下午11:15
  */
-require_once BOSPATH . 'util/DB.php';
+require BOSPATH . 'util/dao/Object.php';
 class File{
 
-    private static function getDbConn(){
-        //获取配置文件
-        $arrDbConf = Config::getDbConf();
-        $objDbConn = DB::getDbConn($arrDbConf['host'], $arrDbConf['user'], $arrDbConf['password'], $arrDbConf['database']);
-        return $objDbConn;
+    private static $objObject = NULL;
+
+    private static function getDaoInstance(){
+        if (NULL == self::$objObject){
+            self::$objObject = new Dao_Object();
+        }
+        return self::$objObject;
     }
 
     /**
@@ -44,10 +46,12 @@ class File{
      * @return array
      */
     public static function getFileInfo($strFile){
-        $objDbConn = self::getDbConn();
-        $strQuery  = 'SELECT * FROM bos_object WHERE object_index="' . DB::realEscapeString($strFile) . '"';
-        $objQueryResult = $objDbConn->query($strQuery);
-        return $objQueryResult->fetch_assoc();
+        $objDaoObject = self::getDaoInstance();
+        $arrField     = Dao_Object::$FIELDS;
+        $arrConds     = array(
+            'object_index =' => $strFile,
+        );
+        return $objDaoObject->select($arrField, $arrConds);
     }
 
     /**
@@ -55,15 +59,20 @@ class File{
      *
      * @param $arrFileInfo
      * @param $arrBucketInfo
+     * @param $arrOption
      */
-    public static function outPut($arrFileInfo, $arrBucketInfo){
+    public static function outPut($arrFileInfo, $arrBucketInfo, $arrOption = array()){
         //通过mime决定如何返回（header），仅限audio，image，text，video
         $strFileType = self::getFileTypeFromMime($arrFileInfo['mime']);
         $strFileUrl  = Config::getBucketRoot() . $arrBucketInfo['user_id'] . '/' . $arrBucketInfo['bucket_root'] . '/' . $arrFileInfo['object_index'];
         if (in_array($strFileType, array('audio', 'image', 'text', 'video'))) {
-            //可以在header中标记原有属性，例如原文件名
             header('content-type: ' . $arrFileInfo['mime']);
-            readfile($strFileUrl);
+            if (!empty($arrOption) && 'image' == $strFileType){
+                //如果有附加值，且为图片执行这个操作
+                self::compressResizeImg($strFileUrl, $arrOption);
+            } else {
+                readfile($strFileUrl);
+            }
             exit;
         } else {
             //命令浏览器下载
@@ -74,6 +83,12 @@ class File{
         }
     }
 
+    /**
+     * 从文件流中保存文件
+     *
+     *
+     * @param $arrData
+     */
     public static function saveFileStream($arrData){
         //获取bucket信息
         $arrBucketInfo = Bucket::getBucketInfo($arrData['bucket_id']);
@@ -116,32 +131,21 @@ class File{
         $user = isset($_GET['user']) ? $_GET['user'] : 0;
 
         //数据库写入
-        $objDbConn = self::getDbConn();
-        $strQuery  = 'INSERT INTO bos_object (
-          object_id, 
-          object_index, 
-          name, 
-          mime,
-          size,
-          sign, 
-          user, 
-          bucket_id, 
-          is_public, 
-          ctime
-        ) VALUES (
-          "' . Uuid::genUUID('object') . '",
-          "' . $strSha1 . '",
-          "' . DB::realEscapeString($_GET['file_name']). '",
-          "' . DB::realEscapeString($_GET['headers']['contentType']). '",
-          "' . DB::realEscapeString($_GET['headers']['Content-Length']). '",
-          "' . DB::realEscapeString($_GET['headers']['Content-MD5']). '",
-          "' . DB::realEscapeString($user). '",
-          "' . DB::realEscapeString($_GET['bucket_id']). '",
-          "' . DB::realEscapeString($_GET['is_public']) . '",
-          "' . time() . '"
-        )';
+        $daoObject   = new Dao_Object();
+        $arrConds    = array(
+            'object_id'    => Uuid::genUUID('object'),
+            'object_index' => $strSha1,
+            'name'         => $_GET['file_name'],
+            'mime'         => $_GET['headers']['contentType'],
+            'size'         => $_GET['headers']['Content-Length'],
+            'sign'         => $_GET['headers']['Content-MD5'],
+            'user'         => $user,
+            'bucket_id'    => $_GET['bucket_id'],
+            'is_public'    => $_GET['is_public'],
+            'ctime'        => time(),
+        );
+        $objQueryRet = $daoObject->insert($arrConds);
 
-        $objQueryRet = $objDbConn->query($strQuery);
         if ($objQueryRet){
             Response::responseResultJson(array(
                 'url' => Config::FILE_URL . $strSha1,
@@ -149,5 +153,47 @@ class File{
         } else {
             Response::responseErrorJson(ErrorCodes::ERROR_DB_INSERT_OBJECT);
         }
+    }
+
+    /**
+     * 通过w、h、q对图片长宽、质量进行控制
+     *
+     * @param $filePath
+     * @param $options
+     */
+    private static function compressResizeImg($filePath, $options){
+        $objImg = imagecreatefrompng($filePath);
+
+        //获取原图大小
+        list($defaultOptions['w'], $defaultOptions['h']) = getimagesize($filePath);
+        $options = array_merge($defaultOptions, $options);
+        //长宽控制按照指定的短边为准，并且等比缩放
+        //比如原图750*528 即使指定750*600也不会有变化
+        if ($options['w'] > $options['h']){
+            //以h为准缩放
+            if ($defaultOptions['h'] > $options['h']){
+                //当小于原图尺寸时才有缩放价值
+                //获取另一边长度
+                $options['w'] *= ($options['h'] / $defaultOptions['h']);
+                $options['w'] = (int)$options['w'];
+            }
+        } else {
+            if ($defaultOptions['w'] > $options['w']){
+                $options['h'] *= ($options['w'] / $defaultOptions['w']);
+                $options['h'] = (int)$options['h'];
+            }
+        }
+
+        $image = imagecreatetruecolor($options['w'], $options['h']);
+        imagecopyresampled($image, $objImg, 0, 0, 0, 0, $options['w'], $options['h'], $defaultOptions['w'], $defaultOptions['h']);
+
+        if (isset($options['q'])){
+            //压缩过程放到最后
+            //开始压缩
+            imagejpeg($image, null, $options['q']);
+        } else {
+            imagejpeg($image);
+        }
+        imagedestroy ($image);
     }
 }

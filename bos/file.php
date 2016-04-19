@@ -21,6 +21,14 @@ spl_autoload_register(function ($class){
 
 //获取字段
 $strFileIndex = !empty($_GET['file']) ? $_GET['file'] : null;
+
+//额外参数
+$arrOption    = array();
+!empty($_GET['w']) ? $arrOption['w'] = $_GET['w'] : null;
+!empty($_GET['h']) ? $arrOption['h'] = $_GET['h'] : null;
+!empty($_GET['q']) ? $arrOption['q'] = $_GET['q'] : null;
+
+//密钥相关字段
 $strAccessKey = !empty($_GET['access_key']) ? $_GET['access_key'] : null;
 $strSecretKey = !empty($_GET['secret_key']) ? $_GET['secret_key'] : null;
 $strPrivateKey = !empty($_GET['private_key']) ? $_GET['private_key'] : null;
@@ -59,4 +67,4 @@ if ($fileInfo['is_public'] == 0 && $bucketInfo['access_key'] != $strAccessKey){
 }
 
 //验证通过，根据输出文件
-File::outPut($fileInfo, $bucketInfo);
+File::outPut($fileInfo, $bucketInfo, $arrOption);
