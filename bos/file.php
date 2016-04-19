@@ -18,6 +18,8 @@ Config::definePath();
 spl_autoload_register(function ($class){
     require BOSPATH . 'util/' . $class . '.php';
 });
+require BOSPATH . 'util/dao/Bucket.php';
+
 
 //获取字段
 $strFileIndex = !empty($_GET['file']) ? $_GET['file'] : null;

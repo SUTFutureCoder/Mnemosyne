@@ -14,6 +14,8 @@
 require 'Bos/BosOptions.php';
 require 'Bos/BosHash.php';
 require 'Bos/BosHttpHeaders.php';
+
+require_once 'SAL.php';
 class BosClient {
 
     //最大用户定义meta数据大小
@@ -227,27 +229,9 @@ class BosClient {
         //开始传输
         $objCi =& get_instance();
         $strBosHost = $objCi->config->item('bos_host');
-        //调试好了，迁到SAL
-        $objCh = curl_init();
 
-        //使用GET方式
-        //因为PUT方式中无法使用POSTFIELDS正确传输数据，另外服务器之间通信可以无需关心GET最大长度，在APACHE设置好即可。
-        $strUrlAppend = http_build_query($arrArgs);
+        $outPut = SAL::uploadFileStream($strBosHost, $arrArgs['body'], $arrArgs['headers'][BosHttpHeaders::CONTENT_LENGTH], $arrArgs);
 
-        curl_setopt($objCh, CURLOPT_URL, $strBosHost . '?' . $strUrlAppend);
-        curl_setopt($objCh, CURLOPT_RETURNTRANSFER, 1);
-        //上传相关
-        curl_setopt($objCh, CURLOPT_PUT, 1);
-        curl_setopt($objCh, CURLOPT_UPLOAD, 1);
-        curl_setopt($objCh, CURLOPT_INFILE, $arrArgs['body']);
-        curl_setopt($objCh, CURLOPT_INFILESIZE, $arrArgs['headers'][BosHttpHeaders::CONTENT_LENGTH]);
-        $output = curl_exec($objCh);
-        curl_close($objCh);
-//        print_r($output);
-//        header('content-type: image/jpeg');
-        echo $output;
-        return $output;
-        
+        return $outPut;
     }
-
 }

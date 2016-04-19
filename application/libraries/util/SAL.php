@@ -19,8 +19,17 @@ class SAL {
 
     private $_ci;
 
+    private static $objCurl = null;
+
     public function __construct(){
         $this->_ci =& get_instance();
+    }
+
+    private static function getCurlInstance(){
+        if (NULL === self::$objCurl){
+            self::$objCurl = curl_init();
+        }
+        return self::$objCurl;
     }
 
     public static function doHttp($method, $url, $data, $header = array()){
@@ -30,7 +39,7 @@ class SAL {
         }
 
         Timer::start('curl');
-        $objCurl    = curl_init();
+        $objCurl    = self::getCurlInstance();
         $arrOptions = array(
             CURLOPT_URL => $url,
             CURLOPT_HEADER => 0,
@@ -73,6 +82,37 @@ class SAL {
         return $strResult;
     }
 
-    
+    public static function uploadFileStream($url, $filePointer, $fileSize, $urlAppend = NULL){
+        $objCurl      = self::getCurlInstance();
+
+        //处理附加URL内容
+        if (NULL !== $urlAppend){
+            $strUrlAppend = http_build_query($urlAppend);
+            $url         .= '?' . $strUrlAppend;
+        }
+
+        Timer::start();
+        curl_setopt($objCurl, CURLOPT_URL, $url);
+        curl_setopt($objCurl, CURLOPT_RETURNTRANSFER, 1);
+
+        //上传相关
+        curl_setopt($objCurl, CURLOPT_PUT, 1);
+        curl_setopt($objCurl, CURLOPT_UPLOAD, 1);
+        curl_setopt($objCurl, CURLOPT_INFILE, $filePointer);
+        curl_setopt($objCurl, CURLOPT_INFILESIZE, $fileSize);
+
+        $outPut = curl_exec($objCurl);
+        curl_close($objCurl);
+        Timer::stop();
+        $time   = Timer::get();
+        MLog::trace(CoreConst::MODULE_SAL, sprintf('upload file stream cost[%s]', $time));
+
+        $ret    = json_decode($outPut, true);
+        if (empty($ret) || !is_array($ret) || $ret['code'] != 0){
+            MLog::warning(CoreConst::MODULE_SAL, sprintf('upload file stream error cost[%s] errMessage[%s]', $time, json_encode($ret['data'])));
+        }
+
+        return $ret;
+    }
 
 }

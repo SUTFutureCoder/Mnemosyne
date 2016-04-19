@@ -21,6 +21,8 @@ class ErrorCodes{
 
     const ERROR_DB_INSERT_OBJECT         = 'InsertObjectIntoDbError';
     const ERROR_ANTI_STEAL_LINK          = 'AntoStealLint';
+    const ERROR_UPLOAD_FILE_ERROR        = 'Update file error';
+    const ERROR_UPLOAD_STRING_ERROR      = 'Upload string error';
 
     public static $message = array(
         self::ERROR_NO_SUCH_FUNCTION           => 'The specified type and function does not exist.',
@@ -35,7 +37,8 @@ class ErrorCodes{
 
         self::ERROR_DB_INSERT_OBJECT           => 'Object insert into database error',
         self::ERROR_ANTI_STEAL_LINK            => 'Please DO NOT link this object to other site',
-
+        self::ERROR_UPLOAD_FILE_ERROR          => 'Please reupload file',
+        self::ERROR_UPLOAD_STRING_ERROR        => 'Please reupload string',
     );
 
 }
