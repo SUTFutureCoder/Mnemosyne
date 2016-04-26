@@ -12,14 +12,16 @@ defined('BOSPATH') OR exit('No direct script access allowed');
  * Date: 16-4-10
  * Time: 下午10:23
  */
-require_once BOSPATH . 'util/DB.php';
+require_once BOSPATH . 'util/dao/Bucket.php';
 class Bucket{
 
-    private static function getDbConn(){
-        //获取配置文件
-        $arrDbConf = Config::getDbConf();
-        $objDbConn = DB::getDbConn($arrDbConf['host'], $arrDbConf['user'], $arrDbConf['password'], $arrDbConf['database']);
-        return $objDbConn;
+    private static $objDaoBucket = NULL;
+
+    private static function getDaoInstance(){
+        if (NULL === self::$objDaoBucket){
+            self::$objDaoBucket = new Dao_Bucket();
+        }
+        return self::$objDaoBucket;
     }
 
     /**
@@ -29,10 +31,13 @@ class Bucket{
      * @return array
      */
     public static function getBucketInfo($bucketId){
-        $objDbConn = self::getDbConn();
-        $strQuery  = 'SELECT * FROM bos_bucket WHERE bucket_id="' . DB::realEscapeString($bucketId) . '"';
-        $objQueryResult = $objDbConn->query($strQuery);
-        return $objQueryResult->fetch_assoc();
+        $objDao   = self::getDaoInstance();
+        $arrField = Dao_Bucket::$FIELDS;
+        $arrConds = array(
+            'bucket_id =' => $bucketId,
+        );
+        $arrRet   = $objDao->select($arrField, $arrConds);
+        return $arrRet;
     }
 
 
@@ -43,10 +48,13 @@ class Bucket{
      * @return array
      */
     public static function adminGetBucketListByUserId($userId){
-        $objDbConn = self::getDbConn();
-        $strQuery  = 'SELECT * FROM bos_bucket WHERE user_id="' . DB::realEscapeString($userId) . '"';
-        $objQueryResult = $objDbConn->query($strQuery);
-        return $objQueryResult->fetch_assoc();
+        $objDao   = self::getDaoInstance();
+        $arrField = Dao_Bucket::$FIELDS;
+        $arrConds = array(
+            'user_id =' => $userId,
+        );
+        $arrRet   = $objDao->select($arrField, $arrConds);
+        return $arrRet;
     }
 
     /**
@@ -57,11 +65,13 @@ class Bucket{
      * @return array
      */
     public static function getBucketListByUserId($userId, $accessKey){
-        $objDbConn = self::getDbConn();
-        $strQuery  = 'SELECT * FROM bos_bucket WHERE user_id="' . DB::realEscapeString($userId)
-            . '" AND access_key="' . DB::realEscapeString($accessKey) . '"';
-        $objQueryResult = $objDbConn->query($strQuery);
-        $arrRet    = $objQueryResult->fetch_assoc();
+        $objDao   = self::getDaoInstance();
+        $arrField = Dao_Bucket::$FIELDS;
+        $arrConds = array(
+            'user_id    =' => $userId,
+            'access_key =' => $accessKey,
+        );
+        $arrRet   = $objDao->select($arrField, $arrConds);
         //进行脱敏操作
         if ($arrRet){
             unset($arrRet['access_key']);

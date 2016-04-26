@@ -11,9 +11,11 @@
  * Date: 16-3-19
  * Time: 下午5:04
  */
-spl_autoload_register(function ($class){
-    require 'Bos/' . $class . '.php';
-});
+require 'Bos/BosOptions.php';
+require 'Bos/BosHash.php';
+require 'Bos/BosHttpHeaders.php';
+
+require_once 'SAL.php';
 class BosClient {
 
     //最大用户定义meta数据大小
@@ -30,7 +32,18 @@ class BosClient {
         return $objFinfo->file($strFileName);
     }
 
-    public static function putObjectFromFile($bucketId, $key, $fileName, $options = array()){
+    /**
+     * 通过文件上传到BOS服务
+     *
+     * @param $bucketId
+     * @param $key
+     * @param $fileName
+     * @param $isPublic
+     * @param array $options
+     * @return bool|mixed
+     * @throws MException
+     */
+    public static function putObjectFromFile($bucketId, $key, $fileName, $isPublic = 1, $options = array()){
         if (!is_file($fileName)){
             return false;
         }
@@ -58,13 +71,22 @@ class BosClient {
             unset($options[BosOptions::CONTENT_MD5]);
         }
 
+        //获取用户ID
+        $objCi  =& get_instance();
+        $objCi->load->library('session');
+        $userId =  $objCi->session->user_id;
         try {
             $response = self::putObject(
                 $bucketId,
                 $key,
                 $objFp,
+                basename($fileName),
                 $contentLength,
                 $contentMd5,
+                $isPublic,
+                $userId,
+                'File',
+                BosOptions::putObjectFromFile,
                 $options
             );
             if (is_resource($objFp)){
@@ -79,7 +101,24 @@ class BosClient {
         }
     }
 
-    public static function putObject($bucketId, $key, $data, $contentLength, $contentMd5, $options = array()){
+    /**
+     * 向BOS服务器放置资源
+     *
+     * @param int $bucketId bucket UUID
+     * @param int $key      操作bucket密钥
+     * @param resource $data    文件指针
+     * @param string $fileName  原文件名
+     * @param int $contentLength 文件大小
+     * @param string $contentMd5 文件MD5信息
+     * @param int $isPublic     是否为公开文件
+     * @param int $user        上传文件用户
+     * @param string $funcType    执行BOS服务函数类型
+     * @param string $funcQt      执行BOS服务函数
+     * @param array $options    附加信息
+     * @return mixed
+     * @throws MException
+     */
+    public static function putObject($bucketId, $key, $data, $fileName, $contentLength, $contentMd5, $isPublic, $user, $funcType, $funcQt, $options = array()){
         if (empty($key)){
             throw new MException(CoreConst::MODULE_BOS, ErrorCodes::ERROR_BOS_KEY_EMPTY);
         }
@@ -119,9 +158,18 @@ class BosClient {
         }
 
         return self::sendRequest(
-            BosOptions::PUT,
+//            BosOptions::PUT,
             array(
+                //指定执行的方法
+                'type'      => $funcType,
+                'qt'        => $funcQt,
+
+                //操作用户ID
+                'user'      => $user,
+
+                'file_name' => $fileName,
                 'bucket_id' => $bucketId,
+                'is_public' => $isPublic ? 1 : 0,
                 'key'       => $key,
                 'body'      => $data,
                 'headers'   => $headers,
@@ -151,9 +199,18 @@ class BosClient {
         }
     }
 
-    private static function sendRequest($httpMethod, array $arrArgs){
+    private static function sendRequest(array $arrArgs){
         //这个真是设置默认值的好方法！
         $defaultArgs = array(
+            //指定执行的方法
+            'type'      => null,
+            'qt'        => null,
+
+            //操作用户ID
+            'user'      => null,
+
+            //BUCKET相关
+            'file_name' => null,
             'bucket_id' => null,
             'key'       => null,
             'body'      => null,
@@ -172,21 +229,9 @@ class BosClient {
         //开始传输
         $objCi =& get_instance();
         $strBosHost = $objCi->config->item('bos_host');
-        //调试好了，迁到SAL
-        $objCh = curl_init();
-        curl_setopt($objCh, CURLOPT_URL, $strBosHost);
-        curl_setopt($objCh, CURLOPT_RETURNTRANSFER, 1);
-        //上传相关
-        curl_setopt($objCh, CURLOPT_PUT, 1);
-        curl_setopt($objCh, CURLOPT_UPLOAD, 1);
-        curl_setopt($objCh, CURLOPT_INFILE, $arrArgs['body']);
-        curl_setopt($objCh, CURLOPT_INFILESIZE, $arrArgs['headers'][BosHttpHeaders::CONTENT_LENGTH]);
-        $output = curl_exec($objCh);
-        curl_close($objCh);
-        header('content-type: image/jpeg');
-        echo $output;
-        return $output;
-        
-    }
 
+        $outPut = SAL::uploadFileStream($strBosHost, $arrArgs['body'], $arrArgs['headers'][BosHttpHeaders::CONTENT_LENGTH], $arrArgs);
+
+        return $outPut;
+    }
 }
