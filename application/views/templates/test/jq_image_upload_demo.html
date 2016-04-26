@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>jq裁剪图片图片</title>
+    <style type="text/css">
+        body{text-align:center;}
+        #label{border:1px solid #ccc;background-color:#fff;text-align:center;height:300px; width:300px;margin:20px auto;position:relative;}
+        #get_image{position:absolute;}
+        #edit_pic{position:absolute;display:none;background:#000;}
+        #cover_box{position: absolute;z-index: 9999;display:none;top:0px;left:0px;}
+        #show_edit{margin: 0 auto;display:inline-block;}
+        #show_pic{height:100px;width:100px;border:2px solid #000;overflow:hidden;margin:0 auto;display:inline-block; }
+    </style>
+</head>
+<body>
+<h1>test</h1>
+<!--用于上传文件-->
+<input type="file" name="file" id="post_file">
+<button id="save_button">SAVE</button>
+<div id="label">
+    <canvas id="get_image"></canvas>
+    <p>
+        <!--显示整张图片,及裁剪位置-->
+        <canvas id="cover_box"></canvas>
+        <!--显示裁剪之后图片 -->
+        <canvas id="edit_pic"></canvas>
+    </p>
+</div>
+<p>
+    <span id="show_edit"></span>
+    <span id="show_pic"><img src=""></span>
+</p>
+</body>
+<script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="http://cdn.bootcss.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script>
+    (function(){
+        var dom = {
+            regional : $("#label")[0],
+            getImage : $("#get_image")[0],
+            editPic  : $("#edit_pic"),
+            editBox  : $("#cover_box")[0],
+            showEdit : $('#show_edit')[0]
+        };
+        var coordianteAndDistanceInfo = {
+            px : 0,
+            py : 0,
+            imageWidth : 0,
+            imageWidth : 0,
+            cropAreaBeginX : 15,
+            cropAreaBeginY : 15,
+            cropAreaWidth : 150,
+            cropAreaHeight : 150,
+        };
+
+        var cutImage = {
+            init : function(){
+                $('#post_file')[0].addEventListener("change", cutImage.handleFiles, false);
+            },
+
+            handleFiles : function(){
+                var fileList = this.files[0];
+                var oFReader = new FileReader();
+                oFReader.readAsDataURL(fileList);
+                oFReader.onload = function (oFREvent) {
+                    cutImage.paintImage(oFREvent.target.result);
+                };
+            },
+
+            paintImage : function(url){
+                var createCavans = dom.getImage.getContext("2d");
+                var img = new Image();
+                img.src = url;
+                var t = this;
+
+                img.onload = function(){
+                    console.log(dom.regional.offsetHeight);
+                    console.log(dom.regional.offsetWidth);
+                    if ( img.width < dom.regional.offsetWidth && img.height < dom.regional.offsetHeight) {
+                        coordianteAndDistanceInfo.imageWidth = img.width;
+                        coordianteAndDistanceInfo.imgHeight = img.height;
+
+                    } else {
+                        var pWidth = img.width / (img.height / dom.regional.offsetHeight);
+                        var pHeight = img.height / (img.width / dom.regional.offsetWidth);
+                        coordianteAndDistanceInfo.imgWidth = img.width > img.height ? dom.regional.offsetWidth : pWidth;
+                        coordianteAndDistanceInfo.imgHeight = img.height > img.width ? dom.regional.offsetHeight : pHeight;
+                    }
+
+                    coordianteAndDistanceInfo.px = (dom.regional.offsetWidth - coordianteAndDistanceInfo.imgWidth) / 2 + 'px';
+                    coordianteAndDistanceInfo.py = (dom.regional.offsetHeight - coordianteAndDistanceInfo.imgHeight) / 2 + 'px';
+
+                    dom.getImage.height = coordianteAndDistanceInfo.imgHeight;
+                    dom.getImage.width = coordianteAndDistanceInfo.imgWidth;
+                    dom.getImage.style.left = coordianteAndDistanceInfo.px;
+                    dom.getImage.style.top = coordianteAndDistanceInfo.py;
+
+                    createCavans.drawImage(img,0,0,
+                            coordianteAndDistanceInfo.imgWidth,coordianteAndDistanceInfo.imgHeight);
+                    cutImage.cutImage(dom.getImage.toDataURL());
+                };
+
+            },
+            cutImage : function(imgUrl){
+                dom.editBox.height = coordianteAndDistanceInfo.imgHeight;
+                dom.editBox.width = coordianteAndDistanceInfo.imgWidth;
+                dom.editBox.style.display = 'block';
+                dom.editBox.style.left = coordianteAndDistanceInfo.px;
+                dom.editBox.style.top = coordianteAndDistanceInfo.py;
+
+                var cover = dom.editBox.getContext("2d");
+                cover.fillStyle = "rgba(0, 0, 0, 0.5)";
+                console.log(coordianteAndDistanceInfo.imgWidth);
+                console.log(coordianteAndDistanceInfo.imgHeight);
+                cover.fillRect(0, 0,
+                        coordianteAndDistanceInfo.imgWidth, coordianteAndDistanceInfo.imgHeight);
+                cover.clearRect(coordianteAndDistanceInfo.cropAreaBeginX,coordianteAndDistanceInfo.cropAreaBeginY,
+                        coordianteAndDistanceInfo.cropAreaHeight, coordianteAndDistanceInfo.cropAreaWidth);
+
+                dom.showEdit.style.background = 'url(' + imgUrl + ')' + -coordianteAndDistanceInfo.cropAreaBeginX
+                        + 'px ' + -coordianteAndDistanceInfo.cropAreaBeginY + 'px no-repeat';
+                dom.showEdit.style.height =  coordianteAndDistanceInfo.cropAreaHeight + 'px';
+                dom.showEdit.style.width = coordianteAndDistanceInfo.cropAreaWidth + 'px';
+
+
+                /*
+                console.log(dom.editBox);
+                console.log(document.getElementById('show_edit'));
+                dom.editBox.height = coordianteAndDistanceInfo.imgHeight;
+                dom.editBox.width = coordianteAndDistanceInfo.imageWidth;
+                document.getElementById('show_edit').style.display = 'block';
+                document.getElementById('show_edit').left = coordianteAndDistanceInfo.px;
+                document.getElementById('show_edit').top = coordianteAndDistanceInfo.py;
+
+                var cover = dom.editBox.getContext("2d");
+                cover.fillStyle = "rgba(0, 0, 0, 0.5)";
+                cover.fillRect(0, 0,
+                        coordianteAndDistanceInfo.imgWidth, coordianteAndDistanceInfo.imgHeight);
+                cover.clearRect(coordianteAndDistanceInfo.cropAreaBeginX,coordianteAndDistanceInfo.cropAreaBeginY,
+                        coordianteAndDistanceInfo.cropAreaHeight, coordianteAndDistanceInfo.cropAreaWidth);
+
+
+                document.getElementById('show_edit').background = 'url(' + imgUrl + ')' + - coordianteAndDistanceInfo.cropAreaBeginX + 'px ' +
+                        -coordianteAndDistanceInfo.cropAreaBeginY + 'px no-repeat';
+                document.getElementById('show_edit').height = coordianteAndDistanceInfo.cropAreaHeight;
+                document.getElementById('show_edit').width = coordianteAndDistanceInfo.cropAreaWidth;
+                */
+            },
+
+
+        };
+        cutImage.init();
+
+    })();
+</script>
+</html>
