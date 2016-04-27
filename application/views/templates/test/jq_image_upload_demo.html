@@ -39,9 +39,11 @@
         var dom = {
             regional : $("#label")[0],
             getImage : $("#get_image")[0],
-            editPic  : $("#edit_pic"),
+            editPic  : $("#edit_pic")[0],
             editBox  : $("#cover_box")[0],
-            showEdit : $('#show_edit')[0]
+            showEdit : $('#show_edit')[0],
+            showPic  : $('#show_pic')[0],
+            saveButton : $('#save_button')[0]
         };
         var coordianteAndDistanceInfo = {
             px : 0,
@@ -57,6 +59,23 @@
         var cutImage = {
             init : function(){
                 $('#post_file')[0].addEventListener("change", cutImage.handleFiles, false);
+                dom.saveButton.onclick = function(){
+                    dom.showPic.style.height = coordianteAndDistanceInfo.cropAreaHeight + 'px';
+                    dom.showPic.style.width = coordianteAndDistanceInfo.cropAreaWidth + 'px';
+
+                    var ctx = dom.editPic.getContext("2d");
+                    var images = new Image();
+                    images.src = dom.getImage.toDataURL();
+
+                    images.onload = function(){
+                        ctx.drawImage(images, coordianteAndDistanceInfo.cropAreaBeginX,
+                                coordianteAndDistanceInfo.cropAreaBeginY, coordianteAndDistanceInfo.cropAreaHeight,
+                                coordianteAndDistanceInfo.cropAreaWidth,0, 0, coordianteAndDistanceInfo.cropAreaHeight,
+                                coordianteAndDistanceInfo.cropAreaHeight
+                        );
+                        dom.showPic.getElementsByTagName('img')[0].src = dom.editPic.toDataURL();
+                    }
+                }
             },
 
             handleFiles : function(){
@@ -109,8 +128,6 @@
 
                 var cover = dom.editBox.getContext("2d");
                 cover.fillStyle = "rgba(0, 0, 0, 0.5)";
-                console.log(coordianteAndDistanceInfo.imgWidth);
-                console.log(coordianteAndDistanceInfo.imgHeight);
                 cover.fillRect(0, 0,
                         coordianteAndDistanceInfo.imgWidth, coordianteAndDistanceInfo.imgHeight);
                 cover.clearRect(coordianteAndDistanceInfo.cropAreaBeginX,coordianteAndDistanceInfo.cropAreaBeginY,
@@ -143,6 +160,46 @@
                         pageY > coordianteAndDistanceInfo.cropAreaBeginY  &&
                         pageY < coordianteAndDistanceInfo.cropAreaBeginY + coordianteAndDistanceInfo.imgHeight){
 
+                        this.style.cursor = 'move';
+
+                        this.onmousedown = function(){
+                            draging = true;
+
+                            //记录上一次记录上一次截图的坐标, 没有上一次为初始位置
+                            this.ex = coordianteAndDistanceInfo.cropAreaBeginX;
+                            this.ey = coordianteAndDistanceInfo.cropAreaBeginY;
+
+                            //记录鼠标按下时的坐标
+                            startX = e.pageX - (dom.regional.offsetLeft + this.offsetLeft);
+                            startY = e.pageY - (dom.regional.offsetTop + this.offsetTop);
+                        };
+                        window.onmouseup = function(){
+                            draging = false;
+                        };
+                        if(draging){
+                            if(this.ex + (pageX - startX) < 0){
+                                coordianteAndDistanceInfo.cropAreaBeginX = 0;
+                            }else if(this.ex + (pageX - startX) + coordianteAndDistanceInfo.cropAreaWidth
+                                > coordianteAndDistanceInfo.imgWidth){
+                                coordianteAndDistanceInfo.cropAreaBeginX = coordianteAndDistanceInfo.imgWidth
+                                - coordianteAndDistanceInfo.cropAreaWidth;
+                            }else{
+                                coordianteAndDistanceInfo.cropAreaBeginX = this.ex + (pageX - startX);
+                            }
+
+                            if(this.ey + (pageY - startY) < 0){
+                                coordianteAndDistanceInfo.cropAreaBeginY = 0;
+                            }else if(this.ey + (pageY - startY) + coordianteAndDistanceInfo.cropAreaHeight
+                                > coordianteAndDistanceInfo.imgHeight){
+                                coordianteAndDistanceInfo.cropAreaBeginY = coordianteAndDistanceInfo.imgHeight
+                                - coordianteAndDistanceInfo.cropAreaHeight;
+                            }else{
+                                coordianteAndDistanceInfo.cropAreaBeginY = this.ey + (pageY - startY);
+                            }
+                            cutImage.cutImage(dom.getImage.toDataURL());
+                        }else{
+                            this.style.cursor = 'auto';
+                        }
                     }
 
                 }
