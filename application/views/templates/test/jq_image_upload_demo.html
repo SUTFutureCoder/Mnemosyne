@@ -72,11 +72,8 @@
                 var createCavans = dom.getImage.getContext("2d");
                 var img = new Image();
                 img.src = url;
-                var t = this;
 
                 img.onload = function(){
-                    console.log(dom.regional.offsetHeight);
-                    console.log(dom.regional.offsetWidth);
                     if ( img.width < dom.regional.offsetWidth && img.height < dom.regional.offsetHeight) {
                         coordianteAndDistanceInfo.imageWidth = img.width;
                         coordianteAndDistanceInfo.imgHeight = img.height;
@@ -99,6 +96,7 @@
                     createCavans.drawImage(img,0,0,
                             coordianteAndDistanceInfo.imgWidth,coordianteAndDistanceInfo.imgHeight);
                     cutImage.cutImage(dom.getImage.toDataURL());
+                    cutImage.drag();
                 };
 
             },
@@ -123,29 +121,31 @@
                 dom.showEdit.style.height =  coordianteAndDistanceInfo.cropAreaHeight + 'px';
                 dom.showEdit.style.width = coordianteAndDistanceInfo.cropAreaWidth + 'px';
 
+            },
 
-                /*
-                console.log(dom.editBox);
-                console.log(document.getElementById('show_edit'));
-                dom.editBox.height = coordianteAndDistanceInfo.imgHeight;
-                dom.editBox.width = coordianteAndDistanceInfo.imageWidth;
-                document.getElementById('show_edit').style.display = 'block';
-                document.getElementById('show_edit').left = coordianteAndDistanceInfo.px;
-                document.getElementById('show_edit').top = coordianteAndDistanceInfo.py;
+            drag : function(){
+                var draging = false;
+                var startX = 0;
+                var startY = 0;
 
-                var cover = dom.editBox.getContext("2d");
-                cover.fillStyle = "rgba(0, 0, 0, 0.5)";
-                cover.fillRect(0, 0,
-                        coordianteAndDistanceInfo.imgWidth, coordianteAndDistanceInfo.imgHeight);
-                cover.clearRect(coordianteAndDistanceInfo.cropAreaBeginX,coordianteAndDistanceInfo.cropAreaBeginY,
-                        coordianteAndDistanceInfo.cropAreaHeight, coordianteAndDistanceInfo.cropAreaWidth);
+                dom.editBox.onmousemove = function(e){
+                    //获取与背景图片的距离
+                    //e.pageX 鼠标到浏览器左边缘的距离
+                    //dom.regional.offsetLeft + this.offsetLeft 图片到浏览器左边缘距离
+                    var pageX = e.pageX -  (dom.regional.offsetLeft + this.offsetLeft);
+                    var pageY = e.pageY - (dom.regional.offsetTop + this.offsetTop);
+                    console.log("pageX" + pageX);
+                    console.log("imageWidth" + coordianteAndDistanceInfo.imageWidth);
 
+                    //判断鼠标是否在图片内
+                    if(pageX > coordianteAndDistanceInfo.cropAreaBeginX &&
+                        pageX < coordianteAndDistanceInfo.cropAreaBeginX + coordianteAndDistanceInfo.imgWidth &&
+                        pageY > coordianteAndDistanceInfo.cropAreaBeginY  &&
+                        pageY < coordianteAndDistanceInfo.cropAreaBeginY + coordianteAndDistanceInfo.imgHeight){
 
-                document.getElementById('show_edit').background = 'url(' + imgUrl + ')' + - coordianteAndDistanceInfo.cropAreaBeginX + 'px ' +
-                        -coordianteAndDistanceInfo.cropAreaBeginY + 'px no-repeat';
-                document.getElementById('show_edit').height = coordianteAndDistanceInfo.cropAreaHeight;
-                document.getElementById('show_edit').width = coordianteAndDistanceInfo.cropAreaWidth;
-                */
+                    }
+
+                }
             },
 
 
