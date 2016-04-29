@@ -18,6 +18,7 @@
 <!--用于上传文件-->
 <input type="file" name="file" id="post_file">
 <button id="save_button">SAVE</button>
+<button id="upload">upload</button>
 <div id="label">
     <canvas id="get_image"></canvas>
     <p>
@@ -27,6 +28,9 @@
         <canvas id="edit_pic"></canvas>
     </p>
 </div>
+<form enctype="multipart/form-data" action="">
+
+</form>
 <p>
     <span id="show_edit"></span>
     <span id="show_pic"><img src=""></span>
@@ -43,7 +47,8 @@
             editBox  : $("#cover_box")[0],
             showEdit : $('#show_edit')[0],
             showPic  : $('#show_pic')[0],
-            saveButton : $('#save_button')[0]
+            saveButton : $('#save_button')[0],
+            upload : $('#upload'),
         };
         var coordianteAndDistanceInfo = {
             px : 0,
@@ -75,7 +80,14 @@
                         );
                         dom.showPic.getElementsByTagName('img')[0].src = dom.editPic.toDataURL();
                     }
-                }
+                };
+                dom.upload.click(function(){
+                    var img = dom.editPic.toDataURL();
+                    var postData = {
+                        imgDecoded : img
+                    };
+                    cutImage.submitImage(postData);
+                });
             },
 
             handleFiles : function(){
@@ -151,8 +163,6 @@
                     //dom.regional.offsetLeft + this.offsetLeft 图片到浏览器左边缘距离
                     var pageX = e.pageX -  (dom.regional.offsetLeft + this.offsetLeft);
                     var pageY = e.pageY - (dom.regional.offsetTop + this.offsetTop);
-                    console.log("pageX" + pageX);
-                    console.log("imageWidth" + coordianteAndDistanceInfo.imageWidth);
 
                     //判断鼠标是否在图片内
                     if(pageX > coordianteAndDistanceInfo.cropAreaBeginX &&
@@ -205,6 +215,21 @@
                 }
             },
 
+            submitImage: function(postData) {
+                $.ajax({
+                    type: 'POST',
+                    url: '{{php}}echo base_url(){{/php}}imagetest/uploadImage',
+                    data: postData,
+                    dataType: 'json',
+                    success: function (data) {
+                        alert("上传成功");
+                    },
+                    error: function (data) {
+                        console.log(data);
+                        alert('操作失败');
+                    }
+                });
+            }
 
         };
         cutImage.init();

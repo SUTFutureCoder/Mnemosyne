@@ -142,10 +142,10 @@
                         startX = e.pageX - ( t.regional.offsetLeft + this.offsetLeft );
                         startY = e.pageY - ( t.regional.offsetTop + this.offsetTop );
 
-                    }
+                    };
                     window.onmouseup = function() {
                         draging = false;
-                    }
+                    };
 
                     if (draging) {
 
@@ -156,7 +156,7 @@
                             t.sx = t.imgWidth - t.sWidth;
                         } else {
                             t.sx = t.ex + (pageX - startX);
-                        };
+                        }
 
                         if (t.ey + (pageY - startY) < 0) {
                             t.sy = 0;
