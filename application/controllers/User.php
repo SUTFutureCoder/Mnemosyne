@@ -33,7 +33,7 @@ class User extends CI_Controller{
         $this->template->assign("navbar", $navbar);
 
         //检查是否登录，未登录则强制跳到登录页
-        checkLogin();
+        //checkLogin();
 
         //检查userId访问权限
         //获取userId显示信息

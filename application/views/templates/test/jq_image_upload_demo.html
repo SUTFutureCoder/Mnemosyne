@@ -5,10 +5,10 @@
     <title>jq裁剪图片图片</title>
     <style type="text/css">
         body{text-align:center;}
-        #label{border:1px solid #ccc;background-color:#fff;text-align:center;height:300px; width:300px;margin:20px auto;position:relative;}
+        #label{border:1px solid #ccc;padding:10px;background-color:#fff;text-align:center;height:302px; width:302px;margin:20px auto;position:relative;}
         #get_image{position:absolute;}
         #edit_pic{position:absolute;display:none;background:#000;}
-        #cover_box{position: absolute;z-index: 9999;display:none;top:0px;left:0px;}
+        #cover_box{position: absolute;z-index: 9999;display:none;top:0px;left:0px;right:0px; bottom: 0px;}
         #show_edit{margin: 0 auto;display:inline-block;}
         #show_pic{height:100px;width:100px;border:2px solid #000;overflow:hidden;margin:0 auto;display:inline-block; }
     </style>
@@ -105,19 +105,23 @@
                 img.src = url;
 
                 img.onload = function(){
-                    if ( img.width < dom.regional.offsetWidth && img.height < dom.regional.offsetHeight) {
+                    console.log( dom.regional.offsetHeight);
+                    //不这样做图片会压住边框
+                    var regionalWidth = dom.regional.offsetWidth - 2;
+                    var regionalHeight =  dom.regional.offsetHeight - 2;
+                    if ( img.width < regionalWidth && img.height < regionalHeight) {
                         coordianteAndDistanceInfo.imageWidth = img.width;
                         coordianteAndDistanceInfo.imgHeight = img.height;
 
                     } else {
-                        var pWidth = img.width / (img.height / dom.regional.offsetHeight);
-                        var pHeight = img.height / (img.width / dom.regional.offsetWidth);
-                        coordianteAndDistanceInfo.imgWidth = img.width > img.height ? dom.regional.offsetWidth : pWidth;
-                        coordianteAndDistanceInfo.imgHeight = img.height > img.width ? dom.regional.offsetHeight : pHeight;
+                        var pWidth = img.width / (img.height / regionalHeight);
+                        var pHeight = img.height / (img.width / regionalWidth);
+                        coordianteAndDistanceInfo.imgWidth = img.width > img.height ? regionalWidth : pWidth;
+                        coordianteAndDistanceInfo.imgHeight = img.height > img.width ? regionalHeight : pHeight;
                     }
 
-                    coordianteAndDistanceInfo.px = (dom.regional.offsetWidth - coordianteAndDistanceInfo.imgWidth) / 2 + 'px';
-                    coordianteAndDistanceInfo.py = (dom.regional.offsetHeight - coordianteAndDistanceInfo.imgHeight) / 2 + 'px';
+                    coordianteAndDistanceInfo.px = (regionalWidth - coordianteAndDistanceInfo.imgWidth) / 2 + 'px';
+                    coordianteAndDistanceInfo.py = (regionalHeight - coordianteAndDistanceInfo.imgHeight) / 2 + 'px';
 
                     dom.getImage.height = coordianteAndDistanceInfo.imgHeight;
                     dom.getImage.width = coordianteAndDistanceInfo.imgWidth;

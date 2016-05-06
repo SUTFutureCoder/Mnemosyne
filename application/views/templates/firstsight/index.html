@@ -77,7 +77,7 @@
                                     </div>
 
                                     <div class="avatar-upload">
-                                        <button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal">更改头像</button> 
+                                        <button type="button" class="btn btn-info" id="avatar-start-crop-btn">更改头像</button>
                                     </div>
                                     <div class="avatar-upload-des">
                                         <p> 支持JPG，JPEG，GIF，PNG，BMP，且小于5M<p>
@@ -140,7 +140,7 @@
                                                 </div>
 
                                                 <div class="form-group">
-                                                    <label for="disire" class="col-md-2 control-label">我的愿望</label>
+                                                    <label for="desire" class="col-md-2 control-label">我的愿望</label>
                                                     <div class="col-md-10">
                                                         <input type="text" class="form-control" id="desire">
                                                     </div>
@@ -149,7 +149,7 @@
                                                 <div class="form-group">
                                                     <label for="favorite-star" class="col-md-2 control-label">喜欢的明星</label>
                                                     <div class="col-md-10">
-                                                        <input type="text" class="form-control" id="favorete-star">
+                                                        <input type="text" class="form-control" id="favorite-star">
                                                     </div>
                                                 </div>
 
@@ -191,7 +191,7 @@
     </div><!--userinfo!-->
 </div><!--main-content!-->
 
-<div class="modal fade" id="myModal">
+<div class="modal fade" id="avatar-modal">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -200,7 +200,16 @@
             </div>
             <div class="modal-body">
                 <div class="crop-avatar">
-                    <input type="file" name="file" id="post_file"/>
+                    <button class="btn btn-info avatar-source-file-upload">选择文件
+                        <input class="center-block" type="file" name="file" id="post_file">
+                    </button>
+
+                    <button type="button" class="btn btn-default" id="enlarge-crop-area-btn" aria-label="Left Align">
+                        <span class="glyphicon glyphicon-zoom-in" aria-hidden="true"></span>
+                    </button>
+                    <button type="button" class="btn btn-default" id="narrow-crop-area-btn" aria-label="Left Align">
+                        <span class="glyphicon glyphicon-zoom-out" aria-hidden="true"></span>
+                    </button>
                     <div id="label">
                         <canvas id="get_image"></canvas>
                         <p>
@@ -211,9 +220,17 @@
                         </p>
                     </div> 
 
-                    <button id="save_button">保存</button>
-                    <button id="upload">上传</button>
-                </div> 
+                    <!--<button id="save_button">保存</button>-->
+                    <!--<button id="upload">上传</button>-->
+                    <button type="button" class="btn btn-info" id="preview-avatar-button">预览</button>
+                </div>
+
+                <div class="preview-avatar">
+                    <p>
+                        <span id="show_edit"></span>
+                        <span id="show_pic"><img src=""></span>
+                    </p>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
@@ -224,4 +241,219 @@
 
 
 {{ include file='./public/load_script.html' }}
+<script>
+    (function(){
+        var dom = {
+            avatarStartCropBtn : $("#avatar-start-crop-btn"),
+            regional : $("#label")[0],
+            getImage : $("#get_image")[0],
+            editPic  : $("#edit_pic")[0],
+            editBox  : $("#cover_box")[0],
+            showEdit : $('#show_edit')[0],
+            showPic  : $('#show_pic')[0],
+            saveButton : $('#save_button')[0],
+            upload : $('#upload'),
+            postFile: $(".crop-avatar #post_file"),
+            avatarModal : $("#avatar-modal"),
+        };
+        var coordianteAndDistanceInfo = {
+            px : 0,
+            py : 0,
+            imageWidth : 0,
+            imageWidth : 0,
+            cropAreaBeginX : 0,
+            cropAreaBeginY : 0,
+            cropAreaWidth : 150,
+            cropAreaHeight : 150,
+        };
+
+        var crop_image = {
+
+            init : function(){
+                dom.avatarModal.find("#enlarge-crop-area-btn").on('click', function(){
+                    crop_image.enlargeCropArea();
+                });
+                dom.avatarModal.find("#narrow-crop-area-btn").on('click', function(){
+                    crop_image.narrowCropArea();
+                });
+
+                dom.avatarStartCropBtn.on('click', function(){
+                    crop_image.displayAvatarModal();
+                });
+                dom.postFile.change(function () {
+                    crop_image.handleFiles();
+                })
+            },
+            previedAvatar: function(){
+
+            },
+
+            enlargeCropArea:function(){
+                var cropHeight = coordianteAndDistanceInfo.cropAreaHeight + 10;
+                var cropWidth = coordianteAndDistanceInfo.cropAreaWidth + 10;
+                var beginX = coordianteAndDistanceInfo.cropAreaBeginX;
+                var beginY = coordianteAndDistanceInfo.cropAreaBeginY;
+                var imgHeight = coordianteAndDistanceInfo.imgHeight;
+                var imgWidth = coordianteAndDistanceInfo.imgWidth;
+                var enlargeEndX = cropWidth + beginX;
+                var enlargeEndY = cropHeight + beginY;
+                if(cropWidth < imgWidth && cropHeight < imgHeight){
+                    if(enlargeEndX > imgWidth && enlargeEndY > imgHeight) {
+                        coordianteAndDistanceInfo.cropAreaBeginX = beginX - (enlargeEndX - imgHeight);
+                    }
+                    if(enlargeEndY > imgHeight){
+                        coordianteAndDistanceInfo.cropAreaBeginY = beginY - (enlargeEndY - imgWidth);
+                    }
+                    crop_image.cutImage(dom.getImage.toDataURL());
+                    coordianteAndDistanceInfo.cropAreaHeight += 10;
+                    coordianteAndDistanceInfo.cropAreaWidth += 10;
+                }
+            },
+            narrowCropArea:function(){
+                var cropHeight = coordianteAndDistanceInfo.cropAreaHeight - 10;
+                var cropWidth = coordianteAndDistanceInfo.cropAreaWidth - 10;
+                if(cropHeight >= 50 && cropWidth >= 50){
+                    coordianteAndDistanceInfo.cropAreaHeight -= 10;
+                    coordianteAndDistanceInfo.cropAreaWidth -= 10;
+                    crop_image.cutImage(dom.getImage.toDataURL());
+                }
+            },
+
+
+            displayAvatarModal:function(){
+                dom.avatarModal.modal('show');
+                //dom.avatarModal.find(".preview-avatar").toggle();
+            },
+
+            handleFiles: function () {
+                var fileList = dom.postFile[0].files[0];
+                var oFReader = new FileReader();
+                oFReader.readAsDataURL(fileList);
+                oFReader.onload = function (oFREvent) {
+                    crop_image.paintImage(oFREvent.target.result);
+                };
+            },
+
+            paintImage : function(url){
+                var createCavans = dom.getImage.getContext("2d");
+                var img = new Image();
+                img.src = url;
+
+                img.onload = function(){
+
+                    var regionalWidth = dom.regional.offsetWidth - 2;
+                    var regionalHeight =  dom.regional.offsetHeight - 2;
+                    if ( img.width < regionalWidth && img.height < regionalHeight) {
+                        coordianteAndDistanceInfo.imageWidth = img.width;
+                        coordianteAndDistanceInfo.imgHeight = img.height;
+
+                    } else {
+                        var pWidth = img.width / (img.height / regionalHeight);
+                        var pHeight = img.height / (img.width / regionalWidth);
+                        coordianteAndDistanceInfo.imgWidth = img.width > img.height ? regionalWidth : pWidth;
+                        coordianteAndDistanceInfo.imgHeight = img.height > img.width ? regionalHeight : pHeight;
+                    }
+
+                    coordianteAndDistanceInfo.px = (regionalWidth - coordianteAndDistanceInfo.imgWidth) / 2 + 'px';
+                    coordianteAndDistanceInfo.py = (regionalHeight - coordianteAndDistanceInfo.imgHeight) / 2 + 'px';
+
+                    dom.getImage.height = coordianteAndDistanceInfo.imgHeight;
+                    dom.getImage.width = coordianteAndDistanceInfo.imgWidth;
+                    dom.getImage.style.left = coordianteAndDistanceInfo.px;
+                    dom.getImage.style.top = coordianteAndDistanceInfo.py;
+
+                    createCavans.drawImage(img,0,0,
+                            coordianteAndDistanceInfo.imgWidth,coordianteAndDistanceInfo.imgHeight);
+                    crop_image.cutImage(dom.getImage.toDataURL());
+                    crop_image.drag();
+                };
+            },
+            cutImage : function(imgUrl){
+                dom.editBox.height = coordianteAndDistanceInfo.imgHeight;
+                dom.editBox.width = coordianteAndDistanceInfo.imgWidth;
+                dom.editBox.style.display = 'block';
+                dom.editBox.style.left = coordianteAndDistanceInfo.px;
+                dom.editBox.style.top = coordianteAndDistanceInfo.py;
+
+                var cover = dom.editBox.getContext("2d");
+                cover.fillStyle = "rgba(0, 0, 0, 0.5)";
+                cover.fillRect(0, 0,
+                        coordianteAndDistanceInfo.imgWidth, coordianteAndDistanceInfo.imgHeight);
+                cover.clearRect(coordianteAndDistanceInfo.cropAreaBeginX,coordianteAndDistanceInfo.cropAreaBeginY,
+                        coordianteAndDistanceInfo.cropAreaHeight, coordianteAndDistanceInfo.cropAreaWidth);
+
+                dom.showEdit.style.background = 'url(' + imgUrl + ')' + -coordianteAndDistanceInfo.cropAreaBeginX
+                        + 'px ' + -coordianteAndDistanceInfo.cropAreaBeginY + 'px no-repeat';
+                dom.showEdit.style.height =  coordianteAndDistanceInfo.cropAreaHeight + 'px';
+                dom.showEdit.style.width = coordianteAndDistanceInfo.cropAreaWidth + 'px';
+
+            },
+
+            drag : function(){
+                var draging = false;
+                var startX = 0;
+                var startY = 0;
+
+                dom.editBox.onmousemove = function(e){
+                    //获取与背景图片的距离
+                    //e.pageX 鼠标到浏览器左边缘的距离
+                    //dom.regional.offsetLeft + this.offsetLeft 图片到浏览器左边缘距离
+                    var pageX = e.pageX -  (dom.avatarModal.find(".modal-content").offset().left + dom.regional.offsetLeft + this.offsetLeft);
+                    var pageY = e.pageY - (dom.avatarModal.find(".modal-content").offset().top  + dom.regional.offsetTop + this.offsetTop);
+
+                    //判断鼠标是否在图片内
+                    if(pageX > coordianteAndDistanceInfo.cropAreaBeginX &&
+                            pageX < coordianteAndDistanceInfo.cropAreaBeginX + coordianteAndDistanceInfo.imgWidth &&
+                            pageY > coordianteAndDistanceInfo.cropAreaBeginY  &&
+                            pageY < coordianteAndDistanceInfo.cropAreaBeginY + coordianteAndDistanceInfo.imgHeight){
+
+                        this.style.cursor = 'move';
+
+                        this.onmousedown = function(){
+                            draging = true;
+
+                            //记录上一次记录上一次截图的坐标, 没有上一次为初始位置
+                            this.ex = coordianteAndDistanceInfo.cropAreaBeginX;
+                            this.ey = coordianteAndDistanceInfo.cropAreaBeginY;
+
+                            //记录鼠标按下时的坐标
+                            startX = e.pageX - (dom.avatarModal.find(".modal-content").offset().left + dom.regional.offsetLeft + this.offsetLeft);
+                            startY = e.pageY - (dom.avatarModal.find(".modal-content").offset().top  + dom.regional.offsetTop + this.offsetTop);
+                        };
+                        window.onmouseup = function(){
+                            draging = false;
+                        };
+                        if(draging){
+                            if(this.ex + (pageX - startX) < 0){
+                                coordianteAndDistanceInfo.cropAreaBeginX = 0;
+                            }else if(this.ex + (pageX - startX) + coordianteAndDistanceInfo.cropAreaWidth
+                                    > coordianteAndDistanceInfo.imgWidth){
+                                coordianteAndDistanceInfo.cropAreaBeginX = coordianteAndDistanceInfo.imgWidth
+                                        - coordianteAndDistanceInfo.cropAreaWidth;
+                            }else{
+                                coordianteAndDistanceInfo.cropAreaBeginX = this.ex + (pageX - startX);
+                            }
+
+                            if(this.ey + (pageY - startY) < 0){
+                                coordianteAndDistanceInfo.cropAreaBeginY = 0;
+                            }else if(this.ey + (pageY - startY) + coordianteAndDistanceInfo.cropAreaHeight
+                                    > coordianteAndDistanceInfo.imgHeight){
+                                coordianteAndDistanceInfo.cropAreaBeginY = coordianteAndDistanceInfo.imgHeight
+                                        - coordianteAndDistanceInfo.cropAreaHeight;
+                            }else{
+                                coordianteAndDistanceInfo.cropAreaBeginY = this.ey + (pageY - startY);
+                            }
+                            crop_image.cutImage(dom.getImage.toDataURL());
+                        }else{
+                            this.style.cursor = 'auto';
+                        }
+                    }
+
+                }
+            },
+        };
+        crop_image.init();
+
+    })();
+</script>
 
