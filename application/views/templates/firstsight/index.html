@@ -73,7 +73,8 @@
                                         <h3>bricks</h3>
                                     </div>
                                     <div class="avatar-content">
-                                        <img class="avatar-mid" src="{{php}}echo base_url();{{/php}}static/img/public/default-avatar.jpg"/> 
+                                        <!--<img class="avatar-mid" src="{{php}}echo base_url();{{/php}}static/img/public/default-avatar.jpg"/>-->
+                                        <img class="avatar-mid" src="{{php}}echo base_url();{{/php}}static/img/public/test.png"/>
                                     </div>
 
                                     <div class="avatar-upload">
@@ -216,7 +217,7 @@
                             <!--显示整张图片,及裁剪位置-->
                             <canvas id="cover_box"></canvas>
                             <!--显示裁剪之后图片 -->
-                            <canvas id="edit_pic"></canvas>
+                            <canvas id="edit_pic" width="300" height="300"></canvas>
                         </p>
                     </div> 
 
@@ -226,10 +227,12 @@
                 </div>
 
                 <div class="preview-avatar">
+                    <button type="button" class="btn btn-info" id="return-to-crop-avatar-btn">返回上一步</button>
                     <p>
                         <span id="show_edit"></span>
-                        <span id="show_pic"><img src=""></span>
+                        <span id="show_pic"><img height="300px" src=""></span>
                     </p>
+                    <button type="button" class="btn btn-info" id="upload-avatar-btn">保存</button>
                 </div>
             </div>
             <div class="modal-footer">
@@ -265,6 +268,8 @@
             cropAreaBeginY : 0,
             cropAreaWidth : 150,
             cropAreaHeight : 150,
+            showCropAreaWidth: 300,
+            showCropAreaHeight: 300,
         };
 
         var crop_image = {
@@ -276,6 +281,22 @@
                 dom.avatarModal.find("#narrow-crop-area-btn").on('click', function(){
                     crop_image.narrowCropArea();
                 });
+                dom.avatarModal.find("#preview-avatar-button").on('click', function(){
+                    crop_image.previedAvatar();
+                });
+
+                dom.avatarModal.find("#upload-avatar-btn").on('click', function(){
+                    var img = dom.editPic.toDataURL();
+                    var postData = {
+                        imgDecoded : img
+                    };
+                    crop_image.submitImage(postData);
+                });
+
+                dom.avatarModal.find("#return-to-crop-avatar-btn").on('click', function(){
+                    dom.avatarModal.find(".preview-avatar").toggle();
+                    dom.avatarModal.find(".crop-avatar").toggle();
+                });
 
                 dom.avatarStartCropBtn.on('click', function(){
                     crop_image.displayAvatarModal();
@@ -285,7 +306,23 @@
                 })
             },
             previedAvatar: function(){
+//                dom.showPic.style.height = coordianteAndDistanceInfo.cropAreaHeight + 'px';
+//                dom.showPic.style.width = coordianteAndDistanceInfo.cropAreaWidth + 'px';
+                dom.avatarModal.find(".preview-avatar").toggle();
+                dom.avatarModal.find(".crop-avatar").toggle();
 
+                var ctx = dom.editPic.getContext("2d");
+                var images = new Image();
+                images.src = dom.getImage.toDataURL();
+
+                images.onload = function(){
+                    ctx.drawImage(images, coordianteAndDistanceInfo.cropAreaBeginX,
+                            coordianteAndDistanceInfo.cropAreaBeginY, coordianteAndDistanceInfo.cropAreaWidth,
+                            coordianteAndDistanceInfo.cropAreaHeight,0, 0, coordianteAndDistanceInfo.showCropAreaWidth,
+                            coordianteAndDistanceInfo.showCropAreaHeight
+                    );
+                    dom.showPic.getElementsByTagName('img')[0].src = dom.editPic.toDataURL();
+                }
             },
 
             enlargeCropArea:function(){
@@ -322,7 +359,8 @@
 
             displayAvatarModal:function(){
                 dom.avatarModal.modal('show');
-                //dom.avatarModal.find(".preview-avatar").toggle();
+                dom.avatarModal.find(".preview-avatar").toggle();
+
             },
 
             handleFiles: function () {
@@ -382,10 +420,10 @@
                 cover.clearRect(coordianteAndDistanceInfo.cropAreaBeginX,coordianteAndDistanceInfo.cropAreaBeginY,
                         coordianteAndDistanceInfo.cropAreaHeight, coordianteAndDistanceInfo.cropAreaWidth);
 
-                dom.showEdit.style.background = 'url(' + imgUrl + ')' + -coordianteAndDistanceInfo.cropAreaBeginX
-                        + 'px ' + -coordianteAndDistanceInfo.cropAreaBeginY + 'px no-repeat';
-                dom.showEdit.style.height =  coordianteAndDistanceInfo.cropAreaHeight + 'px';
-                dom.showEdit.style.width = coordianteAndDistanceInfo.cropAreaWidth + 'px';
+//                dom.showEdit.style.background = 'url(' + imgUrl + ')' + -coordianteAndDistanceInfo.cropAreaBeginX
+//                        + 'px ' + -coordianteAndDistanceInfo.cropAreaBeginY + 'px no-repeat';
+//                dom.showEdit.style.height =  dom.regional.offsetHeight + 'px';
+//                dom.showEdit.style.width = dom.regional.offsetWidth + 'px';
 
             },
 
@@ -451,6 +489,22 @@
 
                 }
             },
+
+            submitImage: function(postData) {
+                $.ajax({
+                    type: 'POST',
+                    url: '{{php}}echo base_url(){{/php}}imagetest/uploadImage',
+                    data: postData,
+                    dataType: 'json',
+                    success: function (data) {
+                        alert("上传成功");
+                    },
+                    error: function (data) {
+                        console.log(data);
+                        alert('操作失败');
+                    }
+                });
+            }
         };
         crop_image.init();
 
