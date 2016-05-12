@@ -89,7 +89,7 @@ class File{
                     include BOSPATH . 'util/VideoStream.php';
                     $objVideoStream = new VideoStream($strFileUrl, $arrFileInfo['mime']);
                     $objVideoStream->start();
-                    echo '<audio controls><source src="' . htmlentities($_SERVER['REQUEST_URI'], ENT_QUOTES, 'utf-8') . '" type="video/mp4">Your browser does not support the audio tag.</audio>';
+                    echo '<audio controls><source src="' . htmlentities($_SERVER['REQUEST_URI'], ENT_QUOTES, 'utf-8') . '" type="' . $arrFileInfo['mime'] . '">Your browser does not support the audio tag.</audio>';
                     break;
             }
             exit;
