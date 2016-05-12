@@ -68,14 +68,32 @@ class File{
         $strFileExt  = substr(strrchr($arrFileInfo['name'], '.'), 1);
         $strFileUrl  = Config::getBucketRoot() . $arrBucketInfo['user_id'] . '/' . $arrBucketInfo['bucket_root'] . '/' . $arrFileInfo['object_index'];
         if (in_array($strFileType, array('audio', 'image', 'text', 'video'))) {
-            header('content-type: ' . $arrFileInfo['mime']);
-            if (!empty($arrOption) && 'image' == $strFileType){
-                //如果有附加值，且为图片执行这个操作
-                self::compressResizeImg($strFileUrl, $arrOption, $strFileExt);
-            } else {
-                readfile($strFileUrl);
+            //先把视频情况排除
+            switch ($strFileType) {
+                case 'video':
+                    include BOSPATH . 'util/VideoStream.php';
+                    $objVideoStream = new VideoStream($strFileUrl);
+                    $objVideoStream->start();
+                    echo '<video controls><source src="' . htmlentities($_SERVER['REQUEST_URI'], ENT_QUOTES, 'utf-8') . '" type="video/mp4">Your browser does not support the video tag.</video>';
+                    break;
+                case 'image':
+                    header('content-type: ' . $arrFileInfo['mime']);
+                    if (!empty($arrOption)) {
+                        //如果有附加值，且为图片执行这个操作
+                        self::compressResizeImg($strFileUrl, $arrOption, $strFileExt);
+                    } else {
+                        readfile($strFileUrl);
+                    }
+                    break;
+                case 'audio':
+                    include BOSPATH . 'util/VideoStream.php';
+                    $objVideoStream = new VideoStream($strFileUrl, $arrFileInfo['mime']);
+                    $objVideoStream->start();
+                    echo '<audio controls><source src="' . htmlentities($_SERVER['REQUEST_URI'], ENT_QUOTES, 'utf-8') . '" type="video/mp4">Your browser does not support the audio tag.</audio>';
+                    break;
             }
             exit;
+
         } else {
             //命令浏览器下载
             header("Content-Type: application/force-download");
@@ -162,6 +180,8 @@ class File{
      *
      * @param $filePath
      * @param $options
+     * @param $strFileExt
+     * @return bool
      */
     private static function compressResizeImg($filePath, $options, $strFileExt){
         switch ($strFileExt){
