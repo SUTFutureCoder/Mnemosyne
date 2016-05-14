@@ -360,7 +360,10 @@
             displayAvatarModal:function(){
                 dom.avatarModal.modal('show');
                 dom.avatarModal.find(".preview-avatar").toggle();
+            },
 
+            hiddenAvatarModal:function(){
+                dom.avatarModal.modal('hide');
             },
 
             handleFiles: function () {
@@ -493,11 +496,12 @@
             submitImage: function(postData) {
                 $.ajax({
                     type: 'POST',
-                    url: '{{php}}echo base_url(){{/php}}imagetest/uploadImage',
+                    url: '{{php}}echo base_url(){{/php}}api/user/updateInfo/updateavatar',
                     data: postData,
                     dataType: 'json',
                     success: function (data) {
                         alert("上传成功");
+                        crop_image.hiddenAvatarModal();
                     },
                     error: function (data) {
                         console.log(data);
