@@ -21,6 +21,11 @@ class BosClient {
     //最大用户定义meta数据大小
     const MAX_USER_METADATA_SIZE = 2048;
 
+    const DATA_TYPE_STRING   = 'string';
+    const DATA_TYPE_RESOURCE = 'resource';
+
+
+
     /**
      * 用于获取文件MIME类型
      *
@@ -30,6 +35,19 @@ class BosClient {
     private static function getMimeType($strFileName){
         $objFinfo       = new finfo(FILEINFO_MIME_TYPE);
         return $objFinfo->file($strFileName);
+    }
+
+    /**
+     * 用于直接获取用户ID
+     *
+     * @return int
+     */
+    private static function getUserId(){
+        //获取用户ID
+        $objCi  =& get_instance();
+        $objCi->load->library('session');
+        $userId =  $objCi->session->user_id;
+        return $userId ? $userId : 0;
     }
 
     /**
@@ -71,10 +89,6 @@ class BosClient {
             unset($options[BosOptions::CONTENT_MD5]);
         }
 
-        //获取用户ID
-        $objCi  =& get_instance();
-        $objCi->load->library('session');
-        $userId =  $objCi->session->user_id;
         try {
             $response = self::putObject(
                 $bucketId,
@@ -84,7 +98,7 @@ class BosClient {
                 $contentLength,
                 $contentMd5,
                 $isPublic,
-                $userId,
+                self::getUserId(),
                 'File',
                 BosOptions::putObjectFromFile,
                 $options
@@ -99,6 +113,45 @@ class BosClient {
             }
             throw $e;
         }
+    }
+
+    /**
+     * string必须为base64类型
+     *
+     * @param $bucketId
+     * @param $key
+     * @param $data
+     * @param $fileName
+     * @param int $isPublic
+     * @param array $options
+     * @return mixed
+     * @throws MException
+     */
+    public static function putObjectFromString($bucketId, $key, $data, $fileName, $isPublic = 1, $options = array()){
+        if (empty($fileName)){
+            throw new MException(CoreConst::MODULE_BOS, ErrorCodes::ERROR_BOS_STRING_FILE_NAME_EMPTY);
+        }
+
+        if (!is_string($data)){
+            throw new MException(CoreConst::MODULE_BOS, ErrorCodes::ERROR_BOS_STRING_DATA_NOT_VALID);
+        }
+
+        if (empty($options[BosOptions::CONTENT_TYPE]) || false === strpos($options[BosOptions::CONTENT_TYPE], '/')){
+            throw new MException(CoreConst::MODULE_BOS, ErrorCodes::ERROR_BOS_STRING_MIME_NOT_VALID);
+        }
+
+        return self::putObject(
+            $bucketId, 
+            $key, 
+            $data, 
+            $fileName, 
+            strlen($data), 
+            base64_encode(md5($data, true)), 
+            $isPublic,
+            self::getUserId(),
+            'File',
+            BosOptions::putObjectFromString,
+            $options);
     }
 
     /**
@@ -135,9 +188,10 @@ class BosClient {
             throw new MException(CoreConst::MODULE_BOS, ErrorCodes::ERROR_BOS_CONTENT_MD5);
         }
 
-        self::checkData($data);
+        //获取数据类型 可能为string或resource
+        $dataType = self::checkData($data);
         
-        $headers = array();
+        $headers  = array();
         $headers[BosHttpHeaders::CONTENT_LENGTH] = $contentLength;
         $headers[BosHttpHeaders::CONTENT_MD5]    = $contentMd5;
         //将options中信息放入headers
@@ -158,7 +212,7 @@ class BosClient {
         }
 
         return self::sendRequest(
-//            BosOptions::PUT,
+            $dataType,
             array(
                 //指定执行的方法
                 'type'      => $funcType,
@@ -185,13 +239,18 @@ class BosClient {
      */
     private static function checkData($data){
         switch (gettype($data)){
-            case 'string':
+            case self::DATA_TYPE_STRING:
+                if (!is_string($data)){
+                    throw new MException(CoreConst::MODULE_BOS, ErrorCodes::ERROR_BOS_STRING_DATA_NOT_VALID);
+                }
+                return self::DATA_TYPE_STRING;
                 break;
-            case 'resource':
+            case self::DATA_TYPE_RESOURCE:
                 $streamMetaData = stream_get_meta_data($data);
                 if (!$streamMetaData['seekable']){
                     throw new MException(CoreConst::MODULE_BOS, ErrorCodes::ERROR_BOS_CHECK_DATA_FAIL, 'data should be seekable');
                 }
+                return self::DATA_TYPE_RESOURCE;
                 break;
             default:
                 throw new MException(CoreConst::MODULE_BOS, ErrorCodes::ERROR_BOS_CHECK_DATA_FAIL, 'invalid data type:'
@@ -199,7 +258,7 @@ class BosClient {
         }
     }
 
-    private static function sendRequest(array $arrArgs){
+    private static function sendRequest($requestType, array $arrArgs){
         //这个真是设置默认值的好方法！
         $defaultArgs = array(
             //指定执行的方法
@@ -230,7 +289,12 @@ class BosClient {
         $objCi =& get_instance();
         $strBosHost = $objCi->config->item('bos_host');
 
-        $outPut = SAL::uploadFileStream($strBosHost, $arrArgs['body'], $arrArgs['headers'][BosHttpHeaders::CONTENT_LENGTH], $arrArgs);
+        if ($requestType == self::DATA_TYPE_RESOURCE){
+            $outPut = SAL::uploadFileStream($strBosHost, $arrArgs['body'], $arrArgs['headers'][BosHttpHeaders::CONTENT_LENGTH], $arrArgs);
+        } else if ($requestType == self::DATA_TYPE_STRING){
+            $outPut = SAL::uploadString($strBosHost, $arrArgs['body'], $arrArgs);
+        }
+
 
         return $outPut;
     }

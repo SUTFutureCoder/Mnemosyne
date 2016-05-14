@@ -45,6 +45,12 @@ class ErrorCodes {
     const ERROR_BOS_CHECK_DATA_FAIL = 10004;
     const ERROR_BOS_MAX_USER_METADATA = 10005;
     const ERROR_BOS_FILE_NOT_EXIST  = 10006;
+    const ERROR_BOS_STRING_FILE_NAME_EMPTY = 10007;
+    const ERROR_BOS_STRING_DATA_NOT_VALID  = 10008;
+    const ERROR_BOS_STRING_MIME_NOT_VALID  = 10009;
+
+    //上传部分
+    const ERROR_UPLOAD_STRING_MIME_MISSING = 20001;
 
     public static $error_codes = array(
         self::ERROR_PARAM_ERROR     => 'param error',
@@ -71,6 +77,13 @@ class ErrorCodes {
         self::ERROR_BOS_CONTENT_MD5     => 'content md5 should not be empty or null',
         self::ERROR_BOS_CHECK_DATA_FAIL => 'check data failed',
         self::ERROR_BOS_MAX_USER_METADATA => 'user metadata size is too big',
+        self::ERROR_BOS_STRING_FILE_NAME_EMPTY => 'file name was empty',
+        self::ERROR_BOS_STRING_DATA_NOT_VALID  => 'string data not valid',
+        self::ERROR_BOS_STRING_MIME_NOT_VALID  => 'string mime not valid please check base64 string',
+
+
+        //上传部分
+        self::ERROR_UPLOAD_STRING_MIME_MISSING => 'upload base64 mime type missing',
     );
 
     /**

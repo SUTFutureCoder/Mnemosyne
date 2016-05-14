@@ -115,4 +115,40 @@ class SAL {
         return $ret;
     }
 
+    public static function uploadString($url, $string, $urlAppend = NULL){
+        $objCurl = self::getCurlInstance();
+
+        if (null !== $urlAppend){
+            //和resources类型不同，字符串不需要传输到body
+            unset($urlAppend['body']);
+
+            $strUrlAppend = http_build_query($urlAppend);
+            $url         .= '?' . $strUrlAppend;
+        }
+        Timer::start();
+        curl_setopt($objCurl, CURLOPT_URL, $url);
+        curl_setopt($objCurl, CURLOPT_RETURNTRANSFER, 1);
+
+        //上传相关
+        //压缩字符串
+        $compressedString = gzcompress($string, 9);
+        curl_setopt($objCurl, CURLOPT_POST, 1);
+        curl_setopt($objCurl, CURLOPT_POSTFIELDS, array('compressedString' => $compressedString));
+
+
+        $outPut = curl_exec($objCurl);
+        print_r($outPut);
+        curl_close($objCurl);
+        Timer::stop();
+        $time   = Timer::get();
+        MLog::trace(CoreConst::MODULE_BOS, sprintf('upload compressed base64 string cost[%s]', $time));
+
+        $ret    = json_decode($outPut, true);
+        if (empty($ret) || !is_array($ret) || $ret['code'] != 0){
+            MLog::warning(CoreConst::MODULE_SAL, sprintf('upload compressed base64 string error cost[%s] errMessage[%s]', $time, json_encode($ret['data'])));
+        }
+        print_r($ret);
+        return $ret;
+    }
+
 }

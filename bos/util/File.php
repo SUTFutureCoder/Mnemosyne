@@ -74,7 +74,6 @@ class File{
                     include BOSPATH . 'util/VideoStream.php';
                     $objVideoStream = new VideoStream($strFileUrl);
                     $objVideoStream->start();
-                    echo '<video controls><source src="' . htmlentities($_SERVER['REQUEST_URI'], ENT_QUOTES, 'utf-8') . '" type="video/mp4">Your browser does not support the video tag.</video>';
                     break;
                 case 'image':
                     header('content-type: ' . $arrFileInfo['mime']);
@@ -89,7 +88,6 @@ class File{
                     include BOSPATH . 'util/VideoStream.php';
                     $objVideoStream = new VideoStream($strFileUrl, $arrFileInfo['mime']);
                     $objVideoStream->start();
-                    echo '<audio controls><source src="' . htmlentities($_SERVER['REQUEST_URI'], ENT_QUOTES, 'utf-8') . '" type="' . $arrFileInfo['mime'] . '">Your browser does not support the audio tag.</audio>';
                     break;
             }
             exit;
@@ -148,6 +146,69 @@ class File{
         fwrite($objFp, $strData);
         fclose($objFp);
 
+        $user = isset($_GET['user']) ? $_GET['user'] : 0;
+
+        //数据库写入
+        $daoObject   = new Dao_Object();
+        $arrConds    = array(
+            'object_id'    => Uuid::genUUID('object'),
+            'object_index' => $strSha1,
+            'name'         => $_GET['file_name'],
+            'mime'         => $_GET['headers']['contentType'],
+            'size'         => $_GET['headers']['Content-Length'],
+            'sign'         => $_GET['headers']['Content-MD5'],
+            'user'         => $user,
+            'bucket_id'    => $_GET['bucket_id'],
+            'is_public'    => $_GET['is_public'],
+            'ctime'        => time(),
+        );
+        $objQueryRet = $daoObject->insert($arrConds);
+
+        if ($objQueryRet){
+            Response::responseResultJson(array(
+                'url' => Config::FILE_URL . $strSha1,
+            ));
+        } else {
+            Response::responseErrorJson(ErrorCodes::ERROR_DB_INSERT_OBJECT);
+        }
+    }
+
+    public static function saveStringStream($arrData){
+        //获取bucket信息
+        $arrBucketInfo = Bucket::getBucketInfo($arrData['bucket_id']);
+
+        if (empty($arrBucketInfo)){
+            Response::responseErrorJson(ErrorCodes::ERROR_NO_SUCH_BUCKET);
+        }
+
+        //保存目录下
+        $strDir = Config::getBucketRoot() . $arrBucketInfo['user_id'] . '/' . $arrBucketInfo['bucket_root'];
+
+        if (!is_dir($strDir)){
+            mkdir($strDir, 0777, true);
+        }
+        $compressedString = $_POST['compressedString'];
+        $originString     = gzuncompress($compressedString);
+
+
+        //算出文件的sha1作为文件名
+        $strSha1 = sha1($originString . Config::SALT);
+        $strDir .= '/' . $strSha1;
+
+        //检查库中是否已有此文件，如有则直接跳过，节省空间及实现秒传
+        //如果能用缓存，这里用缓存。但虚拟主机太坑爹，节约经费……
+        $arrFileInfoData = self::getFileInfo($strSha1);
+        if (!empty($arrFileInfoData)){
+            Response::responseResultJson(array(
+                'url' => Config::FILE_URL . $strSha1,
+            ));
+        }
+
+        $objFp   = fopen($strDir, 'wb');
+        fwrite($objFp, base64_decode($originString));
+        fclose($objFp);
+echo 'success';
+        exit;
         $user = isset($_GET['user']) ? $_GET['user'] : 0;
 
         //数据库写入

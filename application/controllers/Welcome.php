@@ -169,4 +169,17 @@ class Welcome extends CI_Controller {
         print_r(BosClient::putObjectFromFile('146044910610', $arrBosConfig['secret_key'], '/var/www/html/金月真美 - もっと！モット！ときめきメモリアル.mp3'));
     }
 
+    public function testPutString(){
+
+        $this->load->library('util/BosClient');
+        $arrBosConfig = $this->config->item('bos_bucket_list');
+        $arrBosConfig = $arrBosConfig['146044910610'];
+
+        print_r(BosClient::putObjectFromString('146044910610', $arrBosConfig['secret_key'], '测试图片'));
+    }
+
+    public function testBase64(){
+        echo base64_encode(file_get_contents('/var/www/html/test.png'));
+    }
+
 }

@@ -14,24 +14,67 @@ class UpdateInfo extends CI_Controller{
         $this->load->library('session');
     }
 
+//    public function updateAvatar(){
+//        checkLogin('api');
+//        $userId   = $this->session->user_id;
+//
+//        if($_POST){
+//            $imgDecoded = $this->input->post('imgDecoded');
+//            $img = str_replace('','+', $imgDecoded);
+//            $img = str_replace('data:image/png;base64,', '', $img);
+//            $img = base64_decode($img);
+//            $fileDir = getcwd() . "/" . "static/public/tmp/img/avatar" . "/" . $userId;
+//            if(!file_exists($fileDir)){
+//                mkdir($fileDir, 0777, true);
+//            }
+//            $file = $fileDir . "/avatar.png";
+//            $f = fopen($file, 'w+');
+//            fwrite($f,$img);
+//            fclose($f);
+//            $this->response->jsonSuccess();
+//        }
+//    }
+
     public function updateAvatar(){
         checkLogin('api');
-        $userId   = $this->session->user_id;
 
         if($_POST){
             $imgDecoded = $this->input->post('imgDecoded');
-            $img = str_replace('','+', $imgDecoded);
-            $img = str_replace('data:image/png;base64,', '', $img);
-            $img = base64_decode($img);
-            $fileDir = getcwd() . "/" . "static/public/tmp/img/avatar" . "/" . $userId;
-            if(!file_exists($fileDir)){
-                mkdir($fileDir, 0777, true);
+
+            $this->load->library('util/BosClient');
+            $this->load->library('BosOptions');
+            $strTempMime = $this->parseImageMimeFromUploadImgBase64($imgDecoded);
+            if (false === $strTempMime || false === strpos($strTempMime, '/')){
+                Response::responseErrorJson(ErrorCodes::ERROR_UPLOAD_STRING_MIME_MISSING);
             }
-            $file = $fileDir . "/avatar.png";
-            $f = fopen($file, 'w+');
-            fwrite($f,$img);
-            fclose($f);
+            $options[BosOptions::CONTENT_TYPE] = $strTempMime;
+
+
+            $img  = str_replace('','+', $imgDecoded);
+            $data = str_replace('data:image/png;base64,', '', $img);
+
+            $arrBosConfig = $this->config->item('bos_bucket_list');
+            $arrBosConfig = $arrBosConfig['146044910610'];
+
+            //用于接收bos返回数据,记录在数据库中
+            $bosResult    = BosClient::putObjectFromString('146044910610', $arrBosConfig['secret_key'], $data, 'testPng', 1, $options);
+
+
             $this->response->jsonSuccess();
         }
     }
+
+
+    private function parseImageMimeFromUploadImgBase64($strBase64){
+        //mime应该能在标准base64开头获得
+        $strBase64  = substr($strBase64, strpos($strBase64, ':') + 1);
+        $strMime   = substr($strBase64, 0, strpos($strBase64, ';'));
+
+        return $strMime;
+    }
+
+
 }
+
+
+
