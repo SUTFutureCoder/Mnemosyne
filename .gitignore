@@ -9,7 +9,7 @@ application/cache/*
 
 application/config/*
 bos/config.php
-
+bos/resroot/*
 
 application/logs/*
 !application/logs/index.html

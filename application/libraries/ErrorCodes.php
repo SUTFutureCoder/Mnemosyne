@@ -44,6 +44,7 @@ class ErrorCodes {
     const ERROR_BOS_CONTENT_MD5     = 10003;
     const ERROR_BOS_CHECK_DATA_FAIL = 10004;
     const ERROR_BOS_MAX_USER_METADATA = 10005;
+    const ERROR_BOS_FILE_NOT_EXIST  = 10006;
 
     public static $error_codes = array(
         self::ERROR_PARAM_ERROR     => 'param error',
@@ -64,6 +65,7 @@ class ErrorCodes {
         self::ERROR_IP_UNAUTHORIZED => 'unauthorized IP',
 
         //BOS服务
+        self::ERROR_BOS_FILE_NOT_EXIST  => 'file not exist',
         self::ERROR_BOS_CONTENT_LENGTH  => 'content length should be int or long',
         self::ERROR_BOS_KEY_EMPTY       => 'key should not be empty or null',
         self::ERROR_BOS_CONTENT_MD5     => 'content md5 should not be empty or null',

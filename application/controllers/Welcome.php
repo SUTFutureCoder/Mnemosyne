@@ -166,7 +166,7 @@ class Welcome extends CI_Controller {
         $arrBosConfig = $this->config->item('bos_bucket_list');
         $arrBosConfig = $arrBosConfig['146044910610'];
 
-        print_r(BosClient::putObjectFromFile('146044910610', $arrBosConfig['secret_key'], APPPATH . '../static/img/public/lena.jpg'));
+        print_r(BosClient::putObjectFromFile('146044910610', $arrBosConfig['secret_key'], '/var/www/html/金月真美 - もっと！モット！ときめきメモリアル.mp3'));
     }
 
 }

@@ -45,7 +45,7 @@ class BosClient {
      */
     public static function putObjectFromFile($bucketId, $key, $fileName, $isPublic = 1, $options = array()){
         if (!is_file($fileName)){
-            return false;
+            throw new MException(CoreConst::MODULE_BOS, ErrorCodes::ERROR_BOS_FILE_NOT_EXIST);
         }
 
         //百度库首先获取mime
