@@ -185,4 +185,26 @@ class UserModels extends CI_Model{
         return $arrUpdateConds['run_status'];
     }
 
+    /**
+     * 更新用户头像
+     *
+     * @param $userId
+     * @param $avatarUrl
+     * @return int
+     */
+    public function modifyAvatar($userId, $avatarUrl){
+        $this->db->where('user_id', $userId);
+        $this->db->update(self::$tableName, array(
+            'user_avatar' => $avatarUrl,
+        ));
+
+        //打log
+        $arrUpdateConds['affected_rows'] = $this->db->affected_rows();
+
+        $arrUpdateConds['affected_rows'] ? $arrUpdateConds['run_status'] = 1 : $arrUpdateConds['run_status'] = 0;
+
+        $this->UserLogModels->addUserLog($userId, $arrUpdateConds, self::$tableName, __METHOD__);
+        return $arrUpdateConds['run_status'];
+    }
+
 }

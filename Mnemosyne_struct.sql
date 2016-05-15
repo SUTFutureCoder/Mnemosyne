@@ -121,6 +121,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `user_password` varchar(256) NOT NULL COMMENT '用户密码',
   `user_mobile` varchar(16) NOT NULL COMMENT '用户联系方式',
   `user_email` varchar(64) NOT NULL COMMENT '用户email',
+  `user_avatar` varchar(512) NOT NULL COMMENT '用户头像',
   `user_sign` varchar(256) NOT NULL COMMENT '用户签名',
   `user_status` tinyint(4) NOT NULL COMMENT '用户状态',
   `user_create_time` int(11) unsigned NOT NULL COMMENT '加入时间',

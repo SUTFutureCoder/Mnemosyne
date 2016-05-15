@@ -137,7 +137,6 @@ class SAL {
 
 
         $outPut = curl_exec($objCurl);
-        print_r($outPut);
         curl_close($objCurl);
         Timer::stop();
         $time   = Timer::get();
@@ -147,7 +146,6 @@ class SAL {
         if (empty($ret) || !is_array($ret) || $ret['code'] != 0){
             MLog::warning(CoreConst::MODULE_SAL, sprintf('upload compressed base64 string error cost[%s] errMessage[%s]', $time, json_encode($ret['data'])));
         }
-        print_r($ret);
         return $ret;
     }
 

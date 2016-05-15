@@ -207,8 +207,7 @@ class File{
         $objFp   = fopen($strDir, 'wb');
         fwrite($objFp, base64_decode($originString));
         fclose($objFp);
-echo 'success';
-        exit;
+
         $user = isset($_GET['user']) ? $_GET['user'] : 0;
 
         //数据库写入

@@ -43,6 +43,7 @@ class UpdateInfo extends CI_Controller{
 
             $this->load->library('util/BosClient');
             $this->load->library('BosOptions');
+            $this->load->model('UserModels');
             $strTempMime = $this->parseImageMimeFromUploadImgBase64($imgDecoded);
             if (false === $strTempMime || false === strpos($strTempMime, '/')){
                 Response::responseErrorJson(ErrorCodes::ERROR_UPLOAD_STRING_MIME_MISSING);
@@ -59,14 +60,18 @@ class UpdateInfo extends CI_Controller{
             //用于接收bos返回数据,记录在数据库中
             $bosResult    = BosClient::putObjectFromString('146044910610', $arrBosConfig['secret_key'], $data, 'testPng', 1, $options);
 
+            if ($bosResult['code'] != 0){
+                Response::responseErrorJson(ErrorCodes::ERROR_UPLOAD_FILE_ERROR);
+            }
 
+            $this->UserModels->modifyAvatar($this->session->userdata('user_id'), $bosResult['data']['url']);
             $this->response->jsonSuccess();
         }
     }
 
 
     private function parseImageMimeFromUploadImgBase64($strBase64){
-        //mime应该能在标准base64开头获得
+        //mime应该能在上传头像后的base64开头获得
         $strBase64  = substr($strBase64, strpos($strBase64, ':') + 1);
         $strMime   = substr($strBase64, 0, strpos($strBase64, ';'));
 
