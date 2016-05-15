@@ -65,7 +65,7 @@ class UpdateInfo extends CI_Controller{
             }
 
             $this->UserModels->modifyAvatar($this->session->userdata('user_id'), $bosResult['data']['url']);
-            $this->response->jsonSuccess();
+            $this->response->jsonSuccess($bosResult['data']['url']);
         }
     }
 
