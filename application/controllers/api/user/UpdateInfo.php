@@ -46,7 +46,7 @@ class UpdateInfo extends CI_Controller{
             $this->load->model('UserModels');
             $strTempMime = $this->parseImageMimeFromUploadImgBase64($imgDecoded);
             if (false === $strTempMime || false === strpos($strTempMime, '/')){
-                Response::responseErrorJson(ErrorCodes::ERROR_UPLOAD_STRING_MIME_MISSING);
+                throw new MException(CoreConst::MODULE_ALUMNI, ErrorCodes::ERROR_UPLOAD_STRING_MIME_MISSING);
             }
             $options[BosOptions::CONTENT_TYPE] = $strTempMime;
 
@@ -61,7 +61,7 @@ class UpdateInfo extends CI_Controller{
             $bosResult    = BosClient::putObjectFromString('146044910610', $arrBosConfig['secret_key'], $data, 'testPng', 1, $options);
 
             if ($bosResult['code'] != 0){
-                Response::responseErrorJson(ErrorCodes::ERROR_UPLOAD_FILE_ERROR);
+                throw new MException(CoreConst::MODULE_ALUMNI, ErrorCodes::ERROR_UPLOAD_FILE_ERROR);
             }
 
             $this->UserModels->modifyAvatar($this->session->userdata('user_id'), $bosResult['data']['url']);
