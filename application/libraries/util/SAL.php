@@ -130,10 +130,10 @@ class SAL {
         curl_setopt($objCurl, CURLOPT_RETURNTRANSFER, 1);
 
         //上传相关
-        //压缩字符串
-        $compressedString = gzcompress($string, 9);
+        //压缩字符串 尼玛共享主机不支持压缩……
+        //$compressedString = gzcompress($string, 9);
         curl_setopt($objCurl, CURLOPT_POST, 1);
-        curl_setopt($objCurl, CURLOPT_POSTFIELDS, array('compressedString' => $compressedString));
+        curl_setopt($objCurl, CURLOPT_POSTFIELDS, array('compressedString' => $string));
 
 
         $outPut = curl_exec($objCurl);

@@ -187,8 +187,9 @@ class File{
         if (!is_dir($strDir)){
             mkdir($strDir, 0777, true);
         }
-        $compressedString = $_POST['compressedString'];
-        $originString     = gzuncompress($compressedString);
+        $originString = $_POST['compressedString'];
+//        $compressedString = $_POST['compressedString'];
+        //$originString     = gzuncompress($compressedString);
 
 
         //算出文件的sha1作为文件名
