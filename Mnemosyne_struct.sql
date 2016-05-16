@@ -116,6 +116,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '用户自增id',
   `user_id` bigint(20) NOT NULL COMMENT '用户唯一id',
   `user_name` varchar(32) NOT NULL COMMENT '用户姓名',
+  `user_nickname` varchar(32) NOT NULL COMMENT '用户昵称',
   `user_birthday` date NOT NULL COMMENT '用户生日',
   `user_sex` tinyint(4) NOT NULL COMMENT '用户性别',
   `user_password` varchar(256) NOT NULL COMMENT '用户密码',
