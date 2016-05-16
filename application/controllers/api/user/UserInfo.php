@@ -92,6 +92,27 @@ class UserInfo extends CI_Controller{
         checkLogin('api');
     }
 
+    public function loadUserInfo(){
+        checkLogin("api");
+        $userId = $this->session->user_id;
+        $this->load->model('UserModels', 'um');
+        $userInfo = $this->um->getUserBasicInfo($userId);
+        $userInfoRes = $userInfo;
+        if($_GET){
+            $userInfoRes = Array();
+            $info = $this->input->get('info', true);
+            $infoArr = array_unique(explode(',', $info));
+            foreach ($infoArr as $item){
+                if(isset($userInfo[$item])){
+                    $userInfoRes[$item] = $userInfo[$item]; 
+                }
+            }
+        }
+        $this->response->jsonSuccess(array(
+            'userinfo' => $userInfoRes,
+        ));
+    }
+
     public function getUserMessage(){
         $userId = $this->session->user_id;
         $this->load->model('MessageModels', 'message');

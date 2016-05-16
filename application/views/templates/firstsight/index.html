@@ -18,7 +18,7 @@
             </div><!--tabs-header!-->
 
             <div id="tabs-content" class="tab-content">
-                <div class="tab-pane fade" id="tabs-content-base-info">
+                <div class="tab-pane fade in active" id="tabs-content-base-info">
                     <div class="container">
                         <table id="tabs-content-base-info-table" class="table">
                             <tr>
@@ -62,7 +62,7 @@
                     </div><!--container base-info!-->
                 </div><!--tabs-content-base-info!-->
 
-                <div class="tab-pane fade in active" id="tabs-content-self-profile">
+                <div class="tab-pane fade " id="tabs-content-self-profile">
                     <div class="container">
                         <div class="row">
                         <div id="tabs-content-self-profile-content" class="col-md-11">
@@ -73,7 +73,7 @@
                                         <h3>bricks</h3>
                                     </div>
                                     <div class="avatar-content">
-                                        <center><img class="avatar-mid" src="{{php}}echo base_url();{{/php}}static/img/public/default-avatar.jpg"/></center>
+                                        <center><img class="avatar-mid" src="http://bucket.bricksfx.cn/file.php?file=460f61e9a26510b06ecf9c84c5bf44e85d6d7c0a"/></center>
                                         <!--<img class="avatar-mid" src="{{php}}echo base_url();{{/php}}static/img/public/test.png"/>-->
                                     </div>
 
@@ -500,6 +500,7 @@
                     data: postData,
                     dataType: 'json',
                     success: function (data) {
+                        console.log(data);
                         alert("上传成功");
                         crop_image.hiddenAvatarModal();
                     },
@@ -510,7 +511,19 @@
                 });
             }
         };
+        var updateBaseInfo = {
+            init : function(){
+                updateBaseInfo.loadBaseInfo();
+            },
+            loadBaseInfo : function(){
+                alert("基本信息加载");
+            },
+            updateCellPhone : function(){
+                alert("修改手机号");
+            },
+        };
         crop_image.init();
+        updateBaseInfo.init();
 
     })();
 </script>
