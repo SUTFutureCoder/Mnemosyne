@@ -98,9 +98,9 @@ class UserInfo extends CI_Controller{
         $this->load->model('UserModels', 'um');
         $userInfo = $this->um->getUserBasicInfo($userId);
         $userInfoRes = $userInfo;
-        if($_GET){
+        if($_POST){
             $userInfoRes = Array();
-            $info = $this->input->get('info', true);
+            $info = $this->input->post('info', true);
             $infoArr = array_unique(explode(',', $info));
             foreach ($infoArr as $item){
                 if(isset($userInfo[$item])){

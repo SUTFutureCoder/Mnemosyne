@@ -23,38 +23,38 @@
                         <table id="tabs-content-base-info-table" class="table">
                             <tr>
                                 <td>手机号</td>
-                                <td>13555791383</td>
-                                <td><button type="button" class="btn btn-info btn-xs">更换</button></td>
+                                <td id="user_mobile">13555791383</td>
+                                <td><button type="button" id="update_user_mobile_btn" class="btn btn-info btn-xs">更换</button></td>
                             </tr>
 
                             <tr>
                                 <td>邮箱</td>
-                                <td>test@test.com</td>
-                                <td><button type="button" class="btn btn-info btn-xs">更换</button></td>
+                                <td id="user_email">test@test.com</td>
+                                <td><button type="button" id="update_user_email_btn" class="btn btn-info btn-xs">更换</button></td>
                             </tr>
                             
                             <tr>
                                 <td>真实姓名</td>
-                                <td>林二狗</td>
-                                <td><button type="button" class="btn btn-info btn-xs">更换</button></td>
+                                <td id="user_name">林二狗</td>
+                                <td><button type="button" id="update_user_name_btn" class="btn btn-info btn-xs">更换</button></td>
                             </tr>
 
                             <tr>
                                 <td>昵称</td>
-                                <td>林二狗</td>
-                                <td><button type="button" class="btn btn-info btn-xs">更换</button></td>
+                                <td id="user_nickname"></td>
+                                <td><button type="button" id="update_user_nickname_btn" class="btn btn-info btn-xs">更换</button></td>
                             </tr>
 
                             <tr>
                                 <td>生日</td>
-                                <td>1993-9-10</td>
-                                <td><button type="button" class="btn btn-info btn-xs">更换</button></td>
+                                <td id="user_birthday">1993-9-10</td>
+                                <td><button type="button" id="update_user_birthday_btn" class="btn btn-info btn-xs">更换</button></td>
                             </tr>
 
                             <tr>
                                 <td>密码</td>
-                                <td>••••••</td>
-                                <td><button type="button" class="btn btn-info btn-xs">更换</button></td>
+                                <td id="user_password">••••••</td>
+                                <td><button type="button" id="update_user_password_btn" class="btn btn-info btn-xs">更换</button></td>
                             </tr>
 
 
@@ -237,6 +237,29 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div class="modal fade" id="baseinfo_modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button> 
+                <h4 class="modal-title">修改基本信息</h4> 
+            </div>
+            <div class="modal-body">
+                <div id="update_user_mobile_form">
+                    <div class="form-group">
+                        <label for="exampleInputPassword1">Password</label>
+                        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                    </div> 
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
@@ -511,15 +534,66 @@
                 });
             }
         };
+        var BaseInfoDom = {
+            baseInfoTable : $('#tabs-content-base-info-table'),
+            baseInfoModal : $('#baseinfo_modal'),
+        };
         var updateBaseInfo = {
             init : function(){
                 updateBaseInfo.loadBaseInfo();
+                updateBaseInfo.updateBaseInfoListener();
             },
             loadBaseInfo : function(){
-                alert("基本信息加载");
+                var postData = {
+                    info : "user_mobile,user_email,user_name,user_birthday,user_nickname",
+                };
+                $.ajax({
+                    type: 'POST',
+                    url: '{{php}}echo base_url(){{/php}}api/user/userInfo/loadUserInfo',
+                    data: postData,
+                    dataType: 'json',
+                    success: function (data) {
+                        var userInfo = data['data']['userinfo'];
+                        updateBaseInfo.preLoadBaseInfo(userInfo);
+                    },
+                    error: function (data) {
+                        console.log(data);
+                        alert('操作失败');
+                    }
+                });
+                
+            },
+            preLoadBaseInfo :function(userInfo){
+                BaseInfoDom.baseInfoTable.find('#user_mobile').text(userInfo['user_mobile']);
+                BaseInfoDom.baseInfoTable.find('#user_email').text(userInfo['user_email']);
+                BaseInfoDom.baseInfoTable.find('#user_name').text(userInfo['user_name']);
+                BaseInfoDom.baseInfoTable.find('#user_nickname').text(userInfo['user_nickname']);
+                BaseInfoDom.baseInfoTable.find('#user_birthday').text(userInfo['user_birthday']);
+            },
+            updateBaseInfoListener : function(){
+                BaseInfoDom.baseInfoTable.find('#update_user_mobile_btn').on('click', function(){
+                    updateBaseInfo.updateCellPhone();
+                });
+            },
+            modalFormToggle : function(toggleFormNum){
+                var formList = new Array(
+                    BaseInfoDom.baseInfoModal.find('#update_user_mobile_form')
+                );
+                formList[0].hide();
+
             },
             updateCellPhone : function(){
-                alert("修改手机号");
+                BaseInfoDom.baseInfoModal.modal('show');
+                updateBaseInfo.modalFormToggle(0);
+            },
+            updateEmail : function(){
+                
+            },
+            updatePassword : function(){
+
+            },
+            updateOtherBaseInfo : function(){
+
             },
         };
         crop_image.init();
