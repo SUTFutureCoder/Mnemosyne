@@ -131,7 +131,8 @@ class UserModels extends CI_Model{
      * @return bool
      */
     public function updateUser($userId, $userName = false, $userBirthday = false, $userSex = false,
-                               $userMobile = false, $userEmail = false, $userSign = false, $userStatus = false){
+                               $userMobile = false, $userEmail = false, $userSign = false, $userStatus = false,
+                               $userNickname = false){
 
         $arrUpdateConds = array();
 
@@ -157,6 +158,10 @@ class UserModels extends CI_Model{
 
         if (!empty($userSign)){
             $arrUpdateConds['user_sign']     = $userSign;
+        }
+
+        if (!empty($userNickname)){
+            $arrUpdateConds['user_nickname']     = $userNickname;
         }
 
         if (FALSE !== $userStatus){

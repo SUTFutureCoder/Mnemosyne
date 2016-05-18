@@ -143,6 +143,44 @@ class UpdateInfo extends CI_Controller{
         }
     }
 
+    public function updateUserBaseInfo(){
+        checkLogin('api');
+        if($_POST){
+            $userName = $this->input->post('user_name', true);
+            $userNickname = $this->input->post('user_nickname', true);
+            $userBirthday = $this->input->post('user_birthday', true);
+            $userId = $this->session->user_id;
+
+            if(isset($userName)){
+                if(empty($userName)){
+                    Validator::setMessage('真实姓名不能为空');
+                    $this->response->jsonFail(Response::CODE_PARAMS_WRONG, Validator::getMessage());
+                }
+                $this->UserModels->updateUser($userId, $userName);
+            }
+            if(isset($userNickname)){
+                if(empty($userNickname)){
+                    Validator::setMessage('绰号不能为空');
+                    $this->response->jsonFail(Response::CODE_PARAMS_WRONG, Validator::getMessage());
+                }
+                $this->UserModels->updateUser($userId, false, false, false, false,
+                                              false, false, false, $userNickname);
+            }
+            if(isset($userBirthday)){
+                if(empty($userBirthday)){
+                    Validator::setMessage('出生日期不能为空');
+                    $this->response->jsonFail(Response::CODE_PARAMS_WRONG, Validator::getMessage());
+                }
+                if(!Validator::isTrue(false !== strtotime($userBirthday), '请输入正确的出生日期')){
+                    $this->response->jsonFail(Response::CODE_PARAMS_WRONG, Validator::getMessage());
+                }
+                $this->UserModels->updateUser($userId, false, $userBirthday);
+            }
+            $this->response->jsonSuccess();
+            
+        }
+    }
+
 
 }
 

@@ -274,9 +274,9 @@
                 <div id="update_user_nickname_form">
                     <div class="form-group">
                         <label for="user_nickname_input">修改绰号</label>
-                        <input type="text" class="form-control" id="user_name_input"/>
+                        <input type="text" class="form-control" id="user_nickname_input"/>
                     </div>
-                    <button type="button" id="user_name_upload_btn" class="btn btn-primary">确认修改</button>
+                    <button type="button" id="user_nickname_upload_btn" class="btn btn-primary">确认修改</button>
                 </div>
                 <div id="update_user_birthday_form">
                     <div class="form-group">
@@ -306,6 +306,9 @@
 
 
 {{ include file='./public/load_script.html' }}
+<link href="{{php}}echo base_url();{{/php}}static/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+<script type="text/javascript" src="{{php}}echo base_url();{{/php}}static/js/bootstrap-datetimepicker.min.js" charset="UTF-8"></script>
+<script type="text/javascript" src="{{php}}echo base_url();{{/php}}static/js/locales/bootstrap-datetimepicker.zh-CN.js" charset="UTF-8"></script>
 <script>
     (function(){
         var dom = {
@@ -581,6 +584,7 @@
             init : function(){
                 updateBaseInfo.loadBaseInfo();
                 updateBaseInfo.updateBaseInfoListener();
+                updateBaseInfo.initDateTimePicker();
             },
             loadBaseInfo : function(){
                 var postData = {
@@ -618,6 +622,15 @@
                 });
                 BaseInfoDom.baseInfoTable.find('#update_user_password_btn').on('click', function(){
                     updateBaseInfo.updatePassword();
+                });
+                BaseInfoDom.baseInfoTable.find('#update_user_name_btn').on('click', function(){
+                    updateBaseInfo.updateOtherBaseInfo('user_name');
+                });
+                BaseInfoDom.baseInfoTable.find('#update_user_nickname_btn').on('click', function(){
+                    updateBaseInfo.updateOtherBaseInfo('user_nickname');
+                });
+                BaseInfoDom.baseInfoTable.find('#update_user_birthday_btn').on('click', function(){
+                    updateBaseInfo.updateOtherBaseInfo('user_birthday');
                 });
             },
             modalFormToggle : function(toggleFormNum){
@@ -719,9 +732,66 @@
                 });
 
             },
-            updateOtherBaseInfo : function(){
-
+            updateOtherBaseInfo : function(type){
+                if(type == 'user_name'){
+                    updateBaseInfo.modalFormToggle(2);
+                    BaseInfoDom.baseInfoModal.find('#user_name_upload_btn').on('click', function(){
+                        var postData = {
+                            'user_name': BaseInfoDom.baseInfoModal.find('#user_name_input').val()
+                        };
+                        updateBaseInfo.uploadOtherBaseInfo(postData);
+                    });
+                }else if (type == 'user_nickname'){
+                    updateBaseInfo.modalFormToggle(3);
+                    BaseInfoDom.baseInfoModal.find('#user_nickname_upload_btn').on('click', function(){
+                        var postData = {
+                            'user_nickname': BaseInfoDom.baseInfoModal.find('#user_nickname_input').val()
+                        };
+                        updateBaseInfo.uploadOtherBaseInfo(postData);
+                    });
+                }else if (type == 'user_birthday'){
+                    updateBaseInfo.modalFormToggle(4);
+                    BaseInfoDom.baseInfoModal.find('#user_birthday_upload_btn').on('click', function(){
+                        var postData = {
+                            'user_birthday': BaseInfoDom.baseInfoModal.find('#user_birthday_input').val()
+                        };
+                        console.log(postData);
+                        updateBaseInfo.uploadOtherBaseInfo(postData);
+                    });
+                }
             },
+            initDateTimePicker : function(){
+                //计算推荐出生时间
+                var objNowTime = new Date();
+                BaseInfoDom.baseInfoModal.find('#user_birthday_input').datetimepicker({
+                    minView     : 2,
+                    startView   : 4,
+                    format      : 'yyyy-mm-dd',
+                    language    : 'zh-CN',
+                    initialDate : (objNowTime.getFullYear() - 23)+'-01-01',
+                });
+            },
+            uploadOtherBaseInfo : function(postData){
+                $.ajax({
+                    type: 'POST',
+                    url: '{{php}}echo base_url(){{/php}}api/user/UpdateInfo/updateUserBaseInfo',
+                    data: postData,
+                    dataType: 'json',
+                    success: function (data) {
+                        console.log(data);
+                        if (data['status'] == 0){
+                            alert("修改成功");
+                            BaseInfoDom.baseInfoModal.modal('hide');
+                        } else{
+                            alert(data['description']);
+                        }
+                    },
+                    error: function (data) {
+                        console.log(data);
+                        alert('操作失败');
+                    }
+                });
+            }
         };
         crop_image.init();
         updateBaseInfo.init();
