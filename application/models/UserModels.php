@@ -185,6 +185,36 @@ class UserModels extends CI_Model{
         return $arrUpdateConds['run_status'];
     }
 
+
+    /**
+     * 修改用户密码
+     *
+     * $userId
+     * $password
+     * @return bool
+     */
+    public function updatePassword($userId, $password){
+        $this->db->trans_start();
+
+        $this->db->where('user_id', $userId);
+        $arrUpdateConds['user_password'] = $password;
+        $this->db->update(self::$tableName, $arrUpdateConds);
+
+        //打log
+        $arrUpdateConds['affected_rows'] = $this->db->affected_rows();
+
+        $this->db->trans_complete();
+
+        if (!$this->db->trans_status()){
+            $arrUpdateConds['run_status'] = 0;
+        } else {
+            $arrUpdateConds['run_status'] = 1;
+        }
+        $this->UserLogModels->addUserLog($userId, $arrUpdateConds, self::$tableName, __METHOD__);
+        return $arrUpdateConds['run_status'];
+
+    }
+
     /**
      * 更新用户头像
      *

@@ -252,14 +252,53 @@
             <div class="modal-body">
                 <div id="update_user_mobile_form">
                     <div class="form-group">
-                        <label for="exampleInputPassword1">Password</label>
-                        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                        <label for="user_mobile_input">修改手机号</label>
+                        <input type="text" class="form-control" id="user_mobile_input"/>
                     </div> 
+                    <button type="button" id="user_mobile_upload_btn" class="btn btn-primary">确认修改</button>
+                </div>
+                <div id="update_user_email_form">
+                    <div class="form-group">
+                        <label for="user_email_input">修改邮箱</label>
+                        <input type="text" class="form-control" id="user_email_input"/>
+                    </div>
+                    <button type="button" id="user_email_upload_btn" class="btn btn-primary">确认修改</button>
+                </div>
+                <div id="update_user_name_form">
+                    <div class="form-group">
+                        <label for="user_name_input">修改真实姓名</label>
+                        <input type="text" class="form-control" id="user_name_input"/>
+                    </div>
+                    <button type="button" id="user_name_upload_btn" class="btn btn-primary">确认修改</button>
+                </div>
+                <div id="update_user_nickname_form">
+                    <div class="form-group">
+                        <label for="user_nickname_input">修改绰号</label>
+                        <input type="text" class="form-control" id="user_name_input"/>
+                    </div>
+                    <button type="button" id="user_name_upload_btn" class="btn btn-primary">确认修改</button>
+                </div>
+                <div id="update_user_birthday_form">
+                    <div class="form-group">
+                        <label for="user_birthday_input">修改生日</label>
+                        <input type="text" class="form-control" id="user_birthday_input"/>
+                    </div>
+                    <button type="button" id="user_birthday_upload_btn" class="btn btn-primary">确认修改</button>
+                </div>
+                <div id="update_user_password_form">
+                    <div class="form-group">
+                        <label for="user_password_input">原密码</label>
+                        <input type="password" class="form-control" id="user_password_input"/>
+                        <label for="user_password_input">新密码</label>
+                        <input type="password" class="form-control" id="user_password_input1"/>
+                        <label for="user_password_input">确认新密码</label>
+                        <input type="password" class="form-control" id="user_password_input2"/>
+                    </div>
+                    <button type="button" id="user_password_upload_btn" class="btn btn-primary">确认修改</button>
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
@@ -572,24 +611,112 @@
             },
             updateBaseInfoListener : function(){
                 BaseInfoDom.baseInfoTable.find('#update_user_mobile_btn').on('click', function(){
-                    updateBaseInfo.updateCellPhone();
+                    updateBaseInfo.updateMobile();
+                });
+                BaseInfoDom.baseInfoTable.find('#update_user_email_btn').on('click', function(){
+                    updateBaseInfo.updateEmail();
+                });
+                BaseInfoDom.baseInfoTable.find('#update_user_password_btn').on('click', function(){
+                    updateBaseInfo.updatePassword();
                 });
             },
             modalFormToggle : function(toggleFormNum){
+                BaseInfoDom.baseInfoModal.modal('show');
                 var formList = new Array(
-                    BaseInfoDom.baseInfoModal.find('#update_user_mobile_form')
+                    BaseInfoDom.baseInfoModal.find('#update_user_mobile_form'),
+                    BaseInfoDom.baseInfoModal.find('#update_user_email_form'),
+                    BaseInfoDom.baseInfoModal.find('#update_user_name_form'),
+                    BaseInfoDom.baseInfoModal.find('#update_user_nickname_form'),
+                    BaseInfoDom.baseInfoModal.find('#update_user_birthday_form'),
+                    BaseInfoDom.baseInfoModal.find('#update_user_password_form')
                 );
-                formList[0].hide();
+                for(i = 0; i < formList.length; i++){
+                    formList[i].hide();
+                    if(i == toggleFormNum){
+                        formList[i].show();
+                    }
+                }
 
             },
-            updateCellPhone : function(){
-                BaseInfoDom.baseInfoModal.modal('show');
+            updateMobile : function(){
                 updateBaseInfo.modalFormToggle(0);
+                BaseInfoDom.baseInfoModal.find('#user_mobile_upload_btn').on('click', function(){
+                    var postData = {
+                        'user_mobile': BaseInfoDom.baseInfoModal.find('#user_mobile_input').val()
+                    };
+                    $.ajax({
+                        type: 'POST',
+                        url: '{{php}}echo base_url(){{/php}}api/user/UpdateInfo/updateUserMobile',
+                        data: postData,
+                        dataType: 'json',
+                        success: function (data) {
+                            if (data['status'] == 0){
+                                alert("修改成功");
+                                BaseInfoDom.baseInfoModal.modal('hide');
+                            } else{
+                                alert(data['description']);
+                            }
+                        },
+                        error: function (data) {
+                            console.log(data);
+                            alert('操作失败');
+                        }
+                    });
+                });
             },
             updateEmail : function(){
-                
+                updateBaseInfo.modalFormToggle(1);
+                BaseInfoDom.baseInfoModal.find('#user_email_upload_btn').on('click', function(){
+                    var postData = {
+                        'user_email': BaseInfoDom.baseInfoModal.find('#user_email_input').val()
+                    };
+                    $.ajax({
+                        type: 'POST',
+                        url: '{{php}}echo base_url(){{/php}}api/user/UpdateInfo/updateUserEmail',
+                        data: postData,
+                        dataType: 'json',
+                        success: function (data) {
+                            if (data['status'] == 0){
+                                alert("修改成功");
+                                BaseInfoDom.baseInfoModal.modal('hide');
+                            } else{
+                                alert(data['description']);
+                            }
+                        },
+                        error: function (data) {
+                            console.log(data);
+                            alert('操作失败');
+                        }
+                    });
+                });
             },
             updatePassword : function(){
+                updateBaseInfo.modalFormToggle(5);
+                BaseInfoDom.baseInfoModal.find('#user_password_upload_btn').on('click', function(){
+                    var postData = {
+                        'user_password': BaseInfoDom.baseInfoModal.find('#user_password_input').val(),
+                        'user_password_new1': BaseInfoDom.baseInfoModal.find('#user_password_input1').val(),
+                        'user_password_new2': BaseInfoDom.baseInfoModal.find('#user_password_input2').val()
+                    };
+                    $.ajax({
+                        type: 'POST',
+                        url: '{{php}}echo base_url(){{/php}}api/user/UpdateInfo/updateUserPassword',
+                        data: postData,
+                        dataType: 'json',
+                        success: function (data) {
+                            if (data['status'] == 0){
+                                alert("修改成功");
+                                BaseInfoDom.baseInfoModal.modal('hide');
+                            } else{
+                                alert(data['description']);
+                            }
+                        },
+                        error: function (data) {
+                            console.log(data);
+                            alert('操作失败');
+                        }
+                    });
+                });
 
             },
             updateOtherBaseInfo : function(){
