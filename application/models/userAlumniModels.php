@@ -6,7 +6,7 @@
  * Date: 16/5/19
  * Time: 下午3:40
  */
-class userAlumniModels extends CI_Model {
+class UserAlumniModels extends CI_Model {
     private static $tableName = 'user_alumni';
     private static $tableColumn = array(
         0 => "user_bloodgroup",
