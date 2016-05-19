@@ -113,9 +113,9 @@
                                                 </div><!--form-group!-->
 
                                                 <div class="form-group">
-                                                    <label for="favorite_food" class="col-md-2 control-label">最喜欢吃</label>
+                                                    <label for="like_eating" class="col-md-2 control-label">最喜欢吃</label>
                                                     <div class="col-md-10">
-                                                        <input type="text" class="form-control" id="favorite_food">
+                                                        <input type="text" class="form-control" id="like_eating">
                                                     </div>
                                                 </div>
 
@@ -793,6 +793,17 @@
                 });
             }
         };
+
+        var self_profile = {
+            init : function(){
+                this.loadUserProfile();
+            },
+            loadUserProfile : function() {
+                alert("test");
+            }
+
+        };
+        self_profile.init();
         crop_image.init();
         updateBaseInfo.init();
 
