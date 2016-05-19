@@ -312,6 +312,7 @@
 <script>
     (function(){
         var dom = {
+            avatarContent: $(".avatar-content"),
             avatarStartCropBtn : $("#avatar-start-crop-btn"),
             regional : $("#label")[0],
             getImage : $("#get_image")[0],
@@ -566,14 +567,23 @@
                     data: postData,
                     dataType: 'json',
                     success: function (data) {
-                        alert("上传成功");
-                        crop_image.hiddenAvatarModal();
+                        if (0 == data['status']){
+                            //更新照片
+                            crop_image.updateImageAvatarContent(data['data']);
+                            crop_image.hiddenAvatarModal();
+                        } else {
+                            alert(data['description']);
+                        }
                     },
                     error: function (data) {
                         console.log(data);
                         alert('操作失败');
                     }
                 });
+            },
+
+            updateImageAvatarContent: function (url){
+                dom.avatarContent.find('.avatar-mid').attr('src', url);
             }
         };
         var BaseInfoDom = {
@@ -613,9 +623,9 @@
                 BaseInfoDom.baseInfoTable.find('#user_nickname').text(userInfo['user_nickname']);
                 BaseInfoDom.baseInfoTable.find('#user_birthday').text(userInfo['user_birthday']);
                 if(userInfo['user_avatar'] != ""){
-                    $(".avatar-content .avatar-mid").attr("src", userInfo['user_avatar']);
+                    dom.avatarContent.find('.avatar-mid').attr("src", userInfo['user_avatar']);
                 }else{
-                    $(".avatar-content .avatar-mid").attr("src", 
+                    dom.avatarContent.find('.avatar-mid').attr("src",
                                     "{{php}}echo base_url();{{/php}}static/img/public/default-avatar.jpg");
                 }
             },
