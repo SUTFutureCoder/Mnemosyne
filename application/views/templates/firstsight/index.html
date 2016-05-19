@@ -113,16 +113,16 @@
                                                 </div><!--form-group!-->
 
                                                 <div class="form-group">
-                                                    <label for="like_eating" class="col-md-2 control-label">最喜欢吃</label>
+                                                    <label for="favorite_food" class="col-md-2 control-label">最喜欢吃</label>
                                                     <div class="col-md-10">
-                                                        <input type="text" class="form-control" id="like_eating">
+                                                        <input type="text" class="form-control" id="favorite_food">
                                                     </div>
                                                 </div>
 
                                                 <div class="form-group">
-                                                    <label for="favorite-animal" class="col-md-2 control-label">最喜欢的动物</label>
+                                                    <label for="favorite_animal" class="col-md-2 control-label">最喜欢的动物</label>
                                                     <div class="col-md-10">
-                                                        <input type="text" class="form-control" id="favorite-animal">
+                                                        <input type="text" class="form-control" id="favorite_animal">
                                                     </div>
                                                 </div>
 
@@ -148,16 +148,16 @@
                                                 </div>
 
                                                 <div class="form-group">
-                                                    <label for="favorite-star" class="col-md-2 control-label">喜欢的明星</label>
+                                                    <label for="favorite_star" class="col-md-2 control-label">喜欢的明星</label>
                                                     <div class="col-md-10">
-                                                        <input type="text" class="form-control" id="favorite-star">
+                                                        <input type="text" class="form-control" id="favorite_star">
                                                     </div>
                                                 </div>
 
                                                 <div class="form-group">
-                                                    <label for="favorite-color" class="col-md-2 control-label">喜欢的颜色</label>
+                                                    <label for="favorite_color" class="col-md-2 control-label">喜欢的颜色</label>
                                                     <div class="col-md-10">
-                                                        <input type="text" class="form-control" id="favorite-color">
+                                                        <input type="text" class="form-control" id="favorite_color">
                                                     </div>
                                                 </div>
 
@@ -565,7 +565,6 @@
                     data: postData,
                     dataType: 'json',
                     success: function (data) {
-                        console.log(data);
                         alert("上传成功");
                         crop_image.hiddenAvatarModal();
                     },
@@ -778,7 +777,6 @@
                     data: postData,
                     dataType: 'json',
                     success: function (data) {
-                        console.log(data);
                         if (data['status'] == 0){
                             alert("修改成功");
                             BaseInfoDom.baseInfoModal.modal('hide');
@@ -794,12 +792,77 @@
             }
         };
 
+        var selfProfileDom = {
+            selfProfileFrom : $('.self-profile-form')
+        }
+
         var self_profile = {
             init : function(){
                 this.loadUserProfile();
+                this.updateUserProfile();
             },
             loadUserProfile : function() {
-                alert("test");
+                postData = {};
+                $.ajax({
+                    type: 'POST',
+                    url: '{{php}}echo base_url(){{/php}}api/user/Alumni/getUserAlumniInfo',
+                    data: postData,
+                    dataType: 'json',
+                    success: function (data) {
+                        if(!(typeof(data['data']) == "undefined")){
+                            self_profile.fillInUserProfile(data['data']);
+                        }
+                    },
+                    error: function (data) {
+                        console.log(data);
+                        alert('加载个人资料失败');
+                    }
+                });
+            },
+            updateUserProfile : function(){
+                var t = this;
+                selfProfileDom.selfProfileFrom.find("#self-profile-upload-btn").on('click', function(){
+                    postData = t.getPostArr();
+                    $.ajax({
+                        type: 'POST',
+                        url: '{{php}}echo base_url(){{/php}}api/user/Alumni/updateUserAlumni',
+                        data: postData,
+                        dataType: 'json',
+                        success: function (data) {
+                            alert("修改成功");
+                        },
+                        error: function (data) {
+                            console.log(data);
+                            alert('加载个人资料失败');
+                        }
+                    });
+                })
+            },
+
+            getPostArr : function(){
+                var postData = {
+                    "user_favorite_food" : selfProfileDom.selfProfileFrom.find("#favorite_food").val(),
+                    "user_bloodgroup" : selfProfileDom.selfProfileFrom.find(":input[name='blood-group']:checked").val(),
+                    "user_favorite_animal" : selfProfileDom.selfProfileFrom.find("#favorite_animal").val(),
+                    "user_worship_people" : selfProfileDom.selfProfileFrom.find("#worship_people").val(),
+                    "user_want_to_go" : selfProfileDom.selfProfileFrom.find("#want_to_go").val(),
+                    "user_desire" : selfProfileDom.selfProfileFrom.find("#desire").val(),
+                    "user_favorite_star" : selfProfileDom.selfProfileFrom.find("#favorite_star").val(),
+                    "user_favorite_color" : selfProfileDom.selfProfileFrom.find("#favorite_color").val(),
+                };
+                return postData;
+            },
+
+            fillInUserProfile : function($userProfile){
+                selfProfileDom.selfProfileFrom.find("#favorite_food").attr('value', $userProfile['user_favorite_food']);
+                selfProfileDom.selfProfileFrom.find("#blood-group-" + $userProfile['user_bloodgroup']).attr('checked', true);
+                selfProfileDom.selfProfileFrom.find("#favorite_animal").attr('value', $userProfile['user_favorite_animal']);
+                selfProfileDom.selfProfileFrom.find("#worship_people").attr('value', $userProfile['user_worship_people']);
+                selfProfileDom.selfProfileFrom.find("#want_to_go").attr('value', $userProfile['user_want_to_go']);
+                selfProfileDom.selfProfileFrom.find("#desire").attr('value', $userProfile['user_desire']);
+                selfProfileDom.selfProfileFrom.find("#favorite_star").attr('value', $userProfile['user_favorite_star']);
+                selfProfileDom.selfProfileFrom.find("#favorite_color").attr('value', $userProfile['user_favorite_color']);
+                 
             }
 
         };

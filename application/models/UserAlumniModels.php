@@ -31,7 +31,7 @@ class UserAlumniModels extends CI_Model {
         $arrAddConds = $this->generateUpdateArr($arrAddConds);
         $arrAddConds['user_id'] = $userId;
         $this->db->trans_start();
-        $this->db->insert($arrAddConds);
+        $this->db->insert(self::$tableName, $arrAddConds);
 
         $logContent = array(
             "userId" => $userId,
@@ -79,7 +79,7 @@ class UserAlumniModels extends CI_Model {
     }
 
     public function checkUserAlumniInfoExists($userId){
-        $this->db->where('user_mobile', $userId);
+        $this->db->where('user_id', $userId);
         return $this->db->count_all_results(self::$tableName);
     }
 

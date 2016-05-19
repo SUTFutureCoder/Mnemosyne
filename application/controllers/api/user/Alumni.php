@@ -10,9 +10,11 @@ class Alumni extends CI_Controller{
 
     public function __construct(){
         parent::__construct();
+        $this->load->helper('login_helper');
         $this->load->library('util/Validator');
         $this->load->library("session");
         $this->load->library('util/Response');
+        $this->load->model("UserAlumniModels", 'uam');
     }
 
     public function updateAlumni(){
@@ -69,6 +71,33 @@ class Alumni extends CI_Controller{
         }
         $this->response->jsonSuccess();
 
+    }
+    
+    public function updateUserAlumni(){
+        $userId = $this->session->user_id;
+        $userAlumniExists = $this->uam->checkUserAlumniInfoExists($userId);
+        $updateArr['user_favorite_food'] = trim($this->input->post("user_favorite_food"));
+        $updateArr['user_bloodgroup'] = trim($this->input->post("user_bloodgroup"));
+        $updateArr['user_favorite_animal'] = trim($this->input->post("user_favorite_animal"));
+        $updateArr['user_worship_people'] = trim($this->input->post("user_worship_people"));
+        $updateArr['user_want_to_go'] = trim($this->input->post("user_want_to_go"));
+        $updateArr['user_desire'] = trim($this->input->post("user_desire"));
+        $updateArr['user_favorite_star'] = trim($this->input->post("user_favorite_star"));
+        $updateArr['user_favorite_color'] = trim($this->input->post("user_favorite_color"));
+
+        if($userAlumniExists){
+            $this->uam->updateAlumni($userId, $updateArr);             
+        }else{
+            $this->uam->addUserAlumni($userId, $updateArr);
+        }
+        $this->response->jsonSuccess();
+
+    }
+    public function getUserAlumniInfo(){
+        checkLogin('api');
+        $userId = $this->session->user_id;
+        $userAlumniInfo = $this->uam->getUserAlumniInfo($userId);
+        $this->response->jsonSuccess($userAlumniInfo);
     }
 
 }
