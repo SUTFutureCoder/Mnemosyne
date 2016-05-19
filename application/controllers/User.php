@@ -43,7 +43,7 @@ class User extends CI_Controller{
         $this->template->display("firstsight/index.html");
 
         //此处需要检测是否已经初始化
-        if ($this->session->needinit){
+        if ($this->session->userdata('needinit')){
             //如未初始化显示
             $this->template->display("firstsight/completeinfo.html");
         }

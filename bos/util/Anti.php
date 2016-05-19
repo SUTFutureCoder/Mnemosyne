@@ -22,7 +22,8 @@ class Anti{
      * @return bool
      */
     public static function antiStealingLink($enableHostList, $enableNullReferer){
-        if (empty($enableHostList)){
+        $arrEnableHostList = json_decode($enableHostList, true);
+        if (empty($arrEnableHostList)){
             //当为空时则允许全域访问
             return true;
         }
@@ -33,7 +34,6 @@ class Anti{
             return false;
         }
 
-        $arrEnableHostList = json_decode($enableHostList, true);
         if ($referUrl && !in_array(parse_url($referUrl, PHP_URL_HOST), $arrEnableHostList)){
             return false;
         }

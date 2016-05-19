@@ -36,7 +36,7 @@ class File{
             return false;
         }
 
-        return $arrMime[0];
+        return $arrMime;
     }
 
     /**
@@ -63,13 +63,13 @@ class File{
      */
     public static function outPut($arrFileInfo, $arrBucketInfo, $arrOption = array()){
         //通过mime决定如何返回（header），仅限audio，image，text，video
-        $strFileType = self::getFileTypeFromMime($arrFileInfo['mime']);
-        //获取后缀名
+        $arrFileType = self::getFileTypeFromMime($arrFileInfo['mime']);
+        //获取后缀名 
         $strFileExt  = substr(strrchr($arrFileInfo['name'], '.'), 1);
         $strFileUrl  = Config::getBucketRoot() . $arrBucketInfo['user_id'] . '/' . $arrBucketInfo['bucket_root'] . '/' . $arrFileInfo['object_index'];
-        if (in_array($strFileType, array('audio', 'image', 'text', 'video'))) {
+        if (in_array($arrFileType[0], array('audio', 'image', 'text', 'video'))) {
             //先把视频情况排除
-            switch ($strFileType) {
+            switch ($arrFileType[0]) {
                 case 'video':
                     include BOSPATH . 'util/VideoStream.php';
                     $objVideoStream = new VideoStream($strFileUrl);
@@ -91,11 +91,20 @@ class File{
                     break;
             }
             exit;
-
+        } elseif (in_array($arrFileType[1], array('pdf'))){
+            //针对后缀名的情况
+            switch ($arrFileType[1]){
+                case 'pdf':
+                    header('content-type: ' . $arrFileInfo['mime']);
+                    readfile($strFileUrl);
+                    break;
+            }
         } else {
             //命令浏览器下载
             header("Content-Type: application/force-download");
-            header("Content-Disposition: attachment; filename=" . basename($strFileUrl));
+            header("Accept-Ranges: bytes");
+            header("Content-Length: " . $arrFileInfo['size']);
+            header("Content-Disposition: attachment; filename=" . $arrFileInfo['name']);
             readfile($strFileUrl);
             exit;
         }
