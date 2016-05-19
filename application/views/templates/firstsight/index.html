@@ -73,7 +73,7 @@
                                         <h3>bricks</h3>
                                     </div>
                                     <div class="avatar-content">
-                                        <center><img class="avatar-mid" src="http://bucket.bricksfx.cn/file.php?file=460f61e9a26510b06ecf9c84c5bf44e85d6d7c0a"/></center>
+                                        <center><img class="avatar-mid" src="{{php}}echo base_url();{{/php}}static/img/public/default-avatar.jpg"/></center>
                                         <!--<img class="avatar-mid" src="{{php}}echo base_url();{{/php}}static/img/public/test.png"/>-->
                                     </div>
 
@@ -359,8 +359,8 @@
                 });
 
                 dom.avatarModal.find("#return-to-crop-avatar-btn").on('click', function(){
-                    dom.avatarModal.find(".preview-avatar").toggle();
-                    dom.avatarModal.find(".crop-avatar").toggle();
+                    dom.avatarModal.find(".preview-avatar").hide();
+                    dom.avatarModal.find(".crop-avatar").show();
                 });
 
                 dom.avatarStartCropBtn.on('click', function(){
@@ -373,8 +373,8 @@
             previedAvatar: function(){
 //                dom.showPic.style.height = coordianteAndDistanceInfo.cropAreaHeight + 'px';
 //                dom.showPic.style.width = coordianteAndDistanceInfo.cropAreaWidth + 'px';
-                dom.avatarModal.find(".preview-avatar").toggle();
-                dom.avatarModal.find(".crop-avatar").toggle();
+                dom.avatarModal.find(".preview-avatar").show();
+                dom.avatarModal.find(".crop-avatar").hide();
 
                 var ctx = dom.editPic.getContext("2d");
                 var images = new Image();
@@ -424,7 +424,8 @@
 
             displayAvatarModal:function(){
                 dom.avatarModal.modal('show');
-                dom.avatarModal.find(".preview-avatar").toggle();
+                dom.avatarModal.find(".preview-avatar").hide();
+                dom.avatarModal.find(".crop-avatar").show()
             },
 
             hiddenAvatarModal:function(){
@@ -587,7 +588,7 @@
             },
             loadBaseInfo : function(){
                 var postData = {
-                    info : "user_mobile,user_email,user_name,user_birthday,user_nickname",
+                    info : "user_mobile,user_email,user_name,user_birthday,user_nickname,user_avatar",
                 };
                 $.ajax({
                     type: 'POST',
@@ -611,6 +612,12 @@
                 BaseInfoDom.baseInfoTable.find('#user_name').text(userInfo['user_name']);
                 BaseInfoDom.baseInfoTable.find('#user_nickname').text(userInfo['user_nickname']);
                 BaseInfoDom.baseInfoTable.find('#user_birthday').text(userInfo['user_birthday']);
+                if(userInfo['user_avatar'] != ""){
+                    $(".avatar-content .avatar-mid").attr("src", userInfo['user_avatar']);
+                }else{
+                    $(".avatar-content .avatar-mid").attr("src", 
+                                    "{{php}}echo base_url();{{/php}}static/img/public/default-avatar.jpg");
+                }
             },
             updateBaseInfoListener : function(){
                 BaseInfoDom.baseInfoTable.find('#update_user_mobile_btn').on('click', function(){
@@ -866,9 +873,9 @@
             }
 
         };
-        self_profile.init();
-        crop_image.init();
         updateBaseInfo.init();
+        crop_image.init();
+        self_profile.init();
 
     })();
 </script>
