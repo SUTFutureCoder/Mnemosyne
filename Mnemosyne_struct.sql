@@ -145,15 +145,16 @@ CREATE TABLE IF NOT EXISTS `user` (
 CREATE TABLE IF NOT EXISTS `user_alumni` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'id',
   `user_id` bigint(20) NOT NULL COMMENT '用户唯一id',
-  `user_realname` varchar(32) NOT NULL DEFAULT '' COMMENT '真实姓名',
-  `user_shape` VARCHAR(32) NOT NULL DEFAULT '' COMMENT '用户体型',
   `user_bloodgroup` char(2) DEFAULT 'A' NOT NULL COMMENT '血型',
-  `user_specialty` varchar(32) NOT NULL DEFAULT '' COMMENT '用户特长',
-  `user_birty_place` varchar(128) NOT NULL DEFAULT '' COMMENT '用户出生地',
-  `user_recent_dream` varchar(128)  NOT NULL DEFAULT '' COMMENT '近期梦想',
+  `user_favorite_food` varchar(32) NOT NULL DEFAULT '' COMMENT '最喜欢吃',
+  `user_favorite_animal` varchar(32) NOT NULL DEFAULT '' COMMENT '最喜欢的动物',
+  `user_worship_people` varchar(32) NOT NULL DEFAULT '' COMMENT '崇拜的人',
+  `user_want_to_go` varchar(32) NOT NULL DEFAULT '' COMMENT '想去的地方',
+  `user_desire` varchar(32) NOT NULL DEFAULT '' COMMENT '愿望',
+  `user_favorite_star` varchar(32) NOT NULL DEFAULT '' COMMENT '最喜欢的明星',
+  `user_favorite_color` varchar(32) NOT NULL DEFAULT '' COMMENT '最喜欢的颜色',
   PRIMARY KEY (`id`),
-  KEY `user_id` (`user_id`),
-  KEY `user_realname` (`user_realname`)
+  KEY `user_id` (`user_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='用户同学录信息表';
 
 
