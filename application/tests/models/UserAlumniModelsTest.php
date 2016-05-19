@@ -17,7 +17,7 @@ class UserAlumniModelsTest extends PHPUnit_Framework_TestCase
     public static function setUpBeforeClass()
     {
         self::$ci =& get_instance();
-        self::$ci->load->model('userAlumniModels');
+        self::$ci->load->model('UserAlumniModels');
         self::$model = self::$ci->userAlumniModels;
         self::$userObj = new UserModelsTest();
         self::$userObj->setUpBeforeClass();
