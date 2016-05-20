@@ -24,7 +24,7 @@ class SchoolModels extends CI_Model{
 
     public function getSchoolList(){
         $this->db->select('school_id, school_name');
-        $row = $this->db->get('school')->row_array();
+        $row = $this->db->get('school')->result();
         return $row;
     }
 }

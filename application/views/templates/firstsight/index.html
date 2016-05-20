@@ -13,7 +13,7 @@
                     </li>
 
                     <li><a href="#tabs-content-self-profile" data-toggle="tab">个人资料</a></li>
-                    <li><a href="#tabs-content-school-info" data-toggle="tab">学校信息</a></li>
+                    <!--<li><a href="#tabs-content-school-info" data-toggle="tab">学校信息</a></li>-->
                 </ul>
             </div><!--tabs-header!-->
 
@@ -55,6 +55,20 @@
                                 <td>密码</td>
                                 <td id="user_password">••••••</td>
                                 <td><button type="button" id="update_user_password_btn" class="btn btn-info btn-xs">更换</button></td>
+                            </tr>
+                            <tr>
+                                <td>大学</td>
+                                <td id="user_password">
+                                    <form class="school_info_form form-inline">
+                                        <select id="user_school_select" class="form-control"> 
+                                            <option value="0">请选择学校</option>
+                                        </select>
+                                        <select id="user_class_select" class="form-control">
+                                            <option value="0">请选择班级</option>
+                                        </select>
+                                    </form>
+                                </td>
+                                <td><button type="button" id="update_user_school_info_btn" class="btn btn-info btn-xs">更换</button></td>
                             </tr>
 
 
@@ -180,9 +194,6 @@
                     </div><!--container self-profile!-->
 
                 </div><!--tabs-content-self-profile!-->
-
-                <div class="tab-pane fade" id="tabs-content-school-info">
-                    <p>test</p> 
                 </div><!--tabs-content-school-info!-->
 
             </div><!--tabs-content!-->
@@ -595,6 +606,8 @@
                 updateBaseInfo.loadBaseInfo();
                 updateBaseInfo.updateBaseInfoListener();
                 updateBaseInfo.initDateTimePicker();
+                this.loadSchoolList();
+                this.updateClassList();
             },
             loadBaseInfo : function(){
                 var postData = {
@@ -614,6 +627,55 @@
                         alert('操作失败');
                     }
                 });
+                
+            },
+            loadSchoolList : function(){
+                $.ajax({
+                    type: 'GET',
+                    url: '{{php}}echo base_url(){{/php}}api/school/School/getSchoolList',
+                    dataType: 'json',
+                    success: function (data) {
+                        var schoolList = data['data']['school_list'];
+                        for(var school in schoolList){
+                            var schoolSingle = schoolList[school];
+                            BaseInfoDom.baseInfoTable.find("#user_school_select").append(
+                                $("<option value='" + schoolSingle['school_id'] + "'>" + schoolSingle['school_name'] + "</option>")
+                            );
+                        }
+                    },
+                    error: function (data) {
+                        console.log(data);
+                        alert('操作失败');
+                    }
+                });
+            },
+
+            updateClassList : function(){
+                var schoolIdDom = BaseInfoDom.baseInfoTable.find("#user_school_select");
+                schoolIdDom.on('change', function(){
+                    BaseInfoDom.baseInfoTable.find("#user_class_select").empty();
+                    $.ajax({
+                        type: 'GET',
+                        url: '{{php}}echo base_url(){{/php}}api/school/School/getClassListBySchoolId' + '/' + schoolIdDom.val(),
+                        dataType: 'json',
+                        success: function (data) {
+                            var classList = data['data']['class_list'];
+                            for(var classTmp in classList){
+                                var classSingle = classList[classTmp];
+                                BaseInfoDom.baseInfoTable.find("#user_class_select").append(
+                                    $("<option value='" + classSingle['class_id'] + "'>" + classSingle['class_name'] + "</option>")
+                                );
+                            }
+                        },
+                        error: function (data) {
+                            console.log(data);
+                            alert('获取班级信息失败');
+                        }
+                    });
+                });
+            },
+
+            choseUserSchoolAndClassInfo(){
                 
             },
             preLoadBaseInfo :function(userInfo){

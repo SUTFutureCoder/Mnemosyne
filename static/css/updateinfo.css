@@ -159,3 +159,13 @@
     display:inline-block; 
 }
 
+#school_info {
+    margin: 30px 0;
+    padding: 20px;
+    height:500px;
+    #width:1080px;
+    border-style:solid;
+    border-width:1px;
+    border-color:rgb(238, 238, 238);
+}
+
