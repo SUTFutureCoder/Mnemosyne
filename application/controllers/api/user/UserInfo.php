@@ -113,6 +113,16 @@ class UserInfo extends CI_Controller{
         ));
     }
 
+    public function getUserSchoolAndClass(){
+        checkLogin();
+        $this->load->model('SchoolClassUserMapModels', 'scum');
+        $userId= $this->session->user_id;
+        $SchoolAndClassInfo = $this->scum->getUserBindList($userId);
+        $this->response->jsonSuccess(
+            $SchoolAndClassInfo
+        );
+    }
+
     public function getUserMessage(){
         $userId = $this->session->user_id;
         $this->load->model('MessageModels', 'message');

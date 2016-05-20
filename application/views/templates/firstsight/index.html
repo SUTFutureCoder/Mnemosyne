@@ -607,7 +607,11 @@
                 updateBaseInfo.updateBaseInfoListener();
                 updateBaseInfo.initDateTimePicker();
                 this.loadSchoolList();
-                this.updateClassList();
+                var schoolIdDom = BaseInfoDom.baseInfoTable.find("#user_school_select");
+                schoolIdDom.on('change', function(){
+                    updateBaseInfo.updateClassList();
+                });
+                this.choseUserSchoolAndClassInfo();
             },
             loadBaseInfo : function(){
                 var postData = {
@@ -650,33 +654,50 @@
                 });
             },
 
-            updateClassList : function(){
+            updateClassList : function(class_id){
                 var schoolIdDom = BaseInfoDom.baseInfoTable.find("#user_school_select");
-                schoolIdDom.on('change', function(){
-                    BaseInfoDom.baseInfoTable.find("#user_class_select").empty();
-                    $.ajax({
-                        type: 'GET',
-                        url: '{{php}}echo base_url(){{/php}}api/school/School/getClassListBySchoolId' + '/' + schoolIdDom.val(),
-                        dataType: 'json',
-                        success: function (data) {
-                            var classList = data['data']['class_list'];
-                            for(var classTmp in classList){
-                                var classSingle = classList[classTmp];
-                                BaseInfoDom.baseInfoTable.find("#user_class_select").append(
-                                    $("<option value='" + classSingle['class_id'] + "'>" + classSingle['class_name'] + "</option>")
-                                );
-                            }
-                        },
-                        error: function (data) {
-                            console.log(data);
-                            alert('获取班级信息失败');
+                BaseInfoDom.baseInfoTable.find("#user_class_select").empty();
+                $.ajax({
+                    type: 'GET',
+                    url: '{{php}}echo base_url(){{/php}}api/school/School/getClassListBySchoolId' + '/' + schoolIdDom.val(),
+                    dataType: 'json',
+                    success: function (data) {
+                        var classList = data['data']['class_list'];
+                        for(var classTmp in classList){
+                            var classSingle = classList[classTmp];
+                            BaseInfoDom.baseInfoTable.find("#user_class_select").append(
+                                $("<option value='" + classSingle['class_id'] + "'>" + classSingle['class_name'] + "</option>")
+                            );
                         }
-                    });
+                        if(class_id){
+                            BaseInfoDom.baseInfoTable.find("#user_class_select").val(class_id);
+                        }
+                    },
+                    error: function (data) {
+                        console.log(data);
+                        alert('获取班级信息失败');
+                    }
                 });
             },
 
-            choseUserSchoolAndClassInfo(){
-                
+            choseUserSchoolAndClassInfo: function(){
+                $.ajax({
+                    type: 'GET',
+                    url: '{{php}}echo base_url(){{/php}}api/user/userInfo/getUserSchoolAndClass',
+                    dataType: 'json',
+                    success: function (data) {
+                        var school_id = data['data'][0]['school_unique_id'];
+                        var class_id = data['data'][0]['class_unique_id']
+                        BaseInfoDom.baseInfoTable.find("#user_school_select").val(school_id);
+                        updateBaseInfo.updateClassList(class_id);
+                        BaseInfoDom.baseInfoTable.find("#user_class_select").val("");
+                    },
+                    error: function (data) {
+                        console.log(data);
+                        alert('获取班级信息失败');
+                    }
+                });
+             
             },
             preLoadBaseInfo :function(userInfo){
                 BaseInfoDom.baseInfoTable.find('#user_mobile').text(userInfo['user_mobile']);
