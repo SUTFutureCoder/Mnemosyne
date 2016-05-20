@@ -731,6 +731,10 @@
                 BaseInfoDom.baseInfoTable.find('#update_user_birthday_btn').on('click', function(){
                     updateBaseInfo.updateOtherBaseInfo('user_birthday');
                 });
+                BaseInfoDom.baseInfoTable.find('#update_user_school_info_btn').on('click', function(){
+                    updateBaseInfo.updateSchoolAndClass();
+                });
+
             },
             modalFormToggle : function(toggleFormNum){
                 BaseInfoDom.baseInfoModal.modal('show');
@@ -858,6 +862,9 @@
                         updateBaseInfo.uploadOtherBaseInfo(postData);
                     });
                 }
+            },
+            updateSchoolAndClass : function(){
+                
             },
             initDateTimePicker : function(){
                 //计算推荐出生时间
