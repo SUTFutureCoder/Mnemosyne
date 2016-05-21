@@ -66,6 +66,7 @@
                                         <select id="user_class_select" class="form-control">
                                             <option value="0">请选择班级</option>
                                         </select>
+                                        
                                     </form>
                                 </td>
                                 <td><button type="button" id="update_user_school_info_btn" class="btn btn-info btn-xs">更换</button></td>
@@ -686,11 +687,11 @@
                     url: '{{php}}echo base_url(){{/php}}api/user/userInfo/getUserSchoolAndClass',
                     dataType: 'json',
                     success: function (data) {
+                        console.log(data);
                         var school_id = data['data'][0]['school_unique_id'];
                         var class_id = data['data'][0]['class_unique_id']
                         BaseInfoDom.baseInfoTable.find("#user_school_select").val(school_id);
                         updateBaseInfo.updateClassList(class_id);
-                        BaseInfoDom.baseInfoTable.find("#user_class_select").val("");
                     },
                     error: function (data) {
                         console.log(data);
@@ -864,7 +865,7 @@
                 }
             },
             updateSchoolAndClass : function(){
-                
+                alert("修改绑定班级"); 
             },
             initDateTimePicker : function(){
                 //计算推荐出生时间
