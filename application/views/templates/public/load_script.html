@@ -1,7 +1,7 @@
 <script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
 <script src="http://cdn.bootcss.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 <script src="http://project-m.oss-cn-qingdao.aliyuncs.com/static/store.min.js"></script>
-<script src="{{php}}echo base_url();{{/php}}static/js/utils/crop_avatar.js"/>
+<script src="{{php}}echo base_url();{{/php}}static/js/utils/crop_avatar.js"></script>
 <!--直接验证是否登录及附加全局变量 -->
 <script>
     if (!store.get('token')){
@@ -9,4 +9,47 @@
     } else {
         var userToken = store.get('token');
     }
+
+    (function(){
+        dom = {
+            messagePopover: $('.message_popover')
+        };
+        var messageLoad = {
+            init : function(){
+                this.loadPopoverFn();     
+                this.messageLoadFn();
+            },
+
+            loadPopoverFn: function(){
+                dom.messagePopover.popover();
+            },
+            messageLoadFn: function(){
+                $.ajax({
+                    type: 'GET',
+                    url: '{{php}}echo base_url(){{/php}}api/user/UserInfo/getUserMessage',
+                    dataType: 'json',
+                    success: function(data){
+                        if (data['status'] == 0){
+                            var messageList = data['data']['message'];
+                            var messagePopover = "<div class='message_unread container'>";
+                            for(var i = 0; i < messageList.length; i++)
+                            {
+                                messagePopover += "<p>" + messageList[i]['message'] +"</p>";
+                            }
+                            messagePopover += "</div>";
+                            dom.messagePopover.attr('data-content', messagePopover);
+                        } else {
+                            dom.userInfoTable.find('#user_name').html();
+                            alert(data['description']);
+                        }
+                    },
+                    error: function(data){
+                        alert('操作失败');
+                    }
+                });
+            },
+
+        };
+        messageLoad.init();
+    })();
 </script>

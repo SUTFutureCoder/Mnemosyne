@@ -29,7 +29,7 @@ class User extends CI_Controller{
         $this->load->library('session');
         $this->load->helper('login_helper');
 
-        $navbar     = getHorizontalNavbar(-1);
+        $navbar     = getHorizontalNavbar(1);
         $this->template->assign("navbar", $navbar);
 
         //检查是否登录，未登录则强制跳到登录页
