@@ -13,10 +13,10 @@
     (function(){
         var test = {
             init : function(){
-                this.choseUser();
                 this.loadBaseInfo();
+                this.choseUserSchoolAndChassInfo();
             },
-            choseUser: function(){
+            choseUserSchoolAndChassInfo: function(){
                     $.ajax({
                         type: 'GET',
                         url: '{{php}}echo base_url(){{/php}}api/user/userInfo/getUserSchoolAndClass',
