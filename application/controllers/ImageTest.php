@@ -50,6 +50,9 @@ class ImageTest extends CI_Controller
     }
 
 
+    public function testSchoolInfo(){
+        $this->template->display("test/testSchoolInfo.html");
+    }
     private function parseImageMimeFromUploadImgBase64($strBase64){
         //mime应该能在标准base64开头获得
         $strBase64  = substr($strBase64, strpos($strBase64, ':') + 1);

@@ -114,10 +114,20 @@ class UserInfo extends CI_Controller{
     }
 
     public function getUserSchoolAndClass(){
-        checkLogin();
-        $this->load->model('SchoolClassUserMapModels', 'scum');
-        $userId= $this->session->user_id;
-        $SchoolAndClassInfo = $this->scum->getUserBindList($userId);
+        //checkLogin();
+        //$this->load->model('SchoolClassUserMapModels', 'scum');
+        //$userId= $this->session->user_id;
+        //$userId= "14565575711";
+        //$SchoolAndClassInfo = $this->scum->getUserBindList($userId);
+        $SchoolAndClassInfo = array(
+            array(
+                "map_id" => "5",
+                "school_unique_id" => "1",
+                "class_unique_id" => "1204063",
+                "user_unique_id" => "14565575711",
+                "student_id" => "120406321",
+            )
+        );
         $this->response->jsonSuccess(
             $SchoolAndClassInfo
         );
