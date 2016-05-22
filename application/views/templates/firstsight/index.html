@@ -607,12 +607,12 @@
                 updateBaseInfo.loadBaseInfo();
                 updateBaseInfo.updateBaseInfoListener();
                 updateBaseInfo.initDateTimePicker();
-                this.loadSchoolList();
+                updateBaseInfo.loadSchoolList();
                 var schoolIdDom = BaseInfoDom.baseInfoTable.find("#user_school_select");
                 schoolIdDom.on('change', function(){
                     updateBaseInfo.updateClassList();
                 });
-                this.choseUserSchoolAndClassInfo();
+                updateBaseInfo.choseUserSchoolAndClassInfo();
             },
             loadBaseInfo : function(){
                 var postData = {
@@ -620,6 +620,7 @@
                 };
                 $.ajax({
                     type: 'POST',
+                    async: false,
                     url: '{{php}}echo base_url(){{/php}}api/user/userInfo/loadUserInfo',
                     data: postData,
                     dataType: 'json',
@@ -638,6 +639,7 @@
                 $.ajax({
                     type: 'GET',
                     url: '{{php}}echo base_url(){{/php}}api/school/School/getSchoolList',
+                    async : false,
                     dataType: 'json',
                     success: function (data) {
                         var schoolList = data['data']['school_list'];
@@ -684,10 +686,10 @@
             choseUserSchoolAndClassInfo: function(){
                 $.ajax({
                     type: 'GET',
+                    async: false,
                     url: '{{php}}echo base_url(){{/php}}api/user/userInfo/getUserSchoolAndClass',
                     dataType: 'json',
                     success: function (data) {
-                        console.log(data);
                         var school_id = data['data'][0]['school_unique_id'];
                         var class_id = data['data'][0]['class_unique_id']
                         BaseInfoDom.baseInfoTable.find("#user_school_select").val(school_id);
@@ -700,6 +702,7 @@
                 });
              
             },
+
             preLoadBaseInfo :function(userInfo){
                 BaseInfoDom.baseInfoTable.find('#user_mobile').text(userInfo['user_mobile']);
                 BaseInfoDom.baseInfoTable.find('#user_email').text(userInfo['user_email']);
@@ -910,11 +913,10 @@
                 this.updateUserProfile();
             },
             loadUserProfile : function() {
-                postData = {};
                 $.ajax({
-                    type: 'POST',
+                    type: 'GET',
+                    async: false,
                     url: '{{php}}echo base_url(){{/php}}api/user/Alumni/getUserAlumniInfo',
-                    data: postData,
                     dataType: 'json',
                     success: function (data) {
                         if(!(typeof(data['data']) == "undefined")){

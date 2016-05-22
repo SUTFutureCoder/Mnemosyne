@@ -13,11 +13,12 @@
     (function(){
         var test = {
             init : function(){
-                this.loadBaseInfo();
                 this.choseUserSchoolAndChassInfo();
+                this.loadBaseInfo();
             },
             choseUserSchoolAndChassInfo: function(){
                     $.ajax({
+                        async: false,
                         type: 'GET',
                         url: '{{php}}echo base_url(){{/php}}api/user/userInfo/getUserSchoolAndClass',
                         dataType: 'json',
@@ -42,6 +43,7 @@
                 };
                 $.ajax({
                     type: 'POST',
+                    async: false,
                     url: '{{php}}echo base_url(){{/php}}api/user/userInfo/loadUserInfo',
                     data: postData,
                     dataType: 'json',
