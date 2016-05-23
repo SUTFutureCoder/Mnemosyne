@@ -6,7 +6,6 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                 <h4 id="init-modallabel">只需三步，找到组织</h4>
             </div>
             <div class="modal-body">
@@ -68,6 +67,7 @@
                             </div>
 			                {{/section}}
                             <div class="friend-info-list-content-footer">
+                                <button class="btn btn-success btn-block" id="friend-skip" type="button">跳过并翻开同学录</button>
                             </div>
 
                         </div>
@@ -99,7 +99,6 @@
             userClassId     : '',
             userStudentId   : '',
             userSUTFastBind : 0,
-
         };
 
         var initReg = {
@@ -113,7 +112,7 @@
             },
 
             displayInitModal: function(){
-                dom.initInfoModal.modal('show');
+                dom.initInfoModal.modal({backdrop: 'static', keyboard: false});
             },
 
             initDateTimePicker: function(){
@@ -213,6 +212,8 @@
                         dataType: 'json',
                         success: function(data){
                             if (data['status'] == 0){
+                                //填入到背景中
+
                                 formData.toggle();
                                 initReg.userChooseFriend();
                             } else {
@@ -235,12 +236,16 @@
                         {width: '100%'},
                         {speed: 'fast', easing: 'swing'}
                 );
+
+                //当跳过时重新加载页面
+                dom.initInfoModal.find('#friend-skip').on('click', function(){
+                    window.location.href=window.location.href;
+                });
                 var formData = dom.initInfoModal.find('#complete-info-modal-choose-friend');
                 formData.toggle();
 
 
             },
-
         };
 
         initReg.init();
