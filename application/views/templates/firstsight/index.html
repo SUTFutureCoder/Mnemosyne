@@ -58,7 +58,7 @@
                             </tr>
                             <tr>
                                 <td>大学</td>
-                                <td id="user_password">
+                                <td id="user_college">
                                     <form class="school_info_form form-inline">
                                         <select id="user_school_select" class="form-control"> 
                                             <option value="0">请选择学校</option>
@@ -85,7 +85,7 @@
                             <div class="avatar-container col-md-3 col-xs-12">
                                 <div class="container col-md-12">
                                     <div class="username">
-                                        <h3>bricks</h3>
+                                        <h3 id="avatar-container-username"></h3>
                                     </div>
                                     <div class="avatar-content">
                                         <center><img class="avatar-mid" src="{{php}}echo base_url();{{/php}}static/img/public/default-avatar.jpg"/></center>
@@ -324,6 +324,9 @@
 <script>
     (function(){
         var dom = {
+            //头像全部
+            avatarContainer: $(".avatar-container"),
+            //仅图片部分
             avatarContent: $(".avatar-content"),
             avatarStartCropBtn : $("#avatar-start-crop-btn"),
             regional : $("#label")[0],
@@ -709,6 +712,8 @@
                 BaseInfoDom.baseInfoTable.find('#user_name').text(userInfo['user_name']);
                 BaseInfoDom.baseInfoTable.find('#user_nickname').text(userInfo['user_nickname']);
                 BaseInfoDom.baseInfoTable.find('#user_birthday').text(userInfo['user_birthday']);
+
+                dom.avatarContainer.find('#avatar-container-username').text(userInfo['user_name']);
                 if(userInfo['user_avatar'] != ""){
                     dom.avatarContent.find('.avatar-mid').attr("src", userInfo['user_avatar']);
                 }else{
@@ -905,7 +910,7 @@
 
         var selfProfileDom = {
             selfProfileFrom : $('.self-profile-form')
-        }
+        };
 
         var self_profile = {
             init : function(){
