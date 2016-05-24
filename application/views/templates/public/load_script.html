@@ -26,6 +26,7 @@
             messageLoadFn: function(){
                 $.ajax({
                     type: 'GET',
+                    async : false,
                     url: '{{php}}echo base_url(){{/php}}api/user/UserInfo/getUserMessage',
                     dataType: 'json',
                     success: function(data){

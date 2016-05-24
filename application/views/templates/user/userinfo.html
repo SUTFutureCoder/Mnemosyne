@@ -10,7 +10,7 @@
             background-color: black;
             color: white;
             font-family: Roboto, sans-serif;
-            background-image: url(http://wf.uisdc.com/cn/resources/samples/getting-started/your-first-multi-screen-site/background-blur.jpg);
+            background-image: url({{php}}echo base_url();{{/php}}static/img/public/background-blur.jpg);
             background-size: cover;
         }
         #headline h1 {
@@ -133,11 +133,14 @@
                 clear: both;
             }
             #alumni h2{
-                margin-top: 0;
+                margin-top: 0 auto;
                 font-size: 60px
             }
             #alumni #alumni-content{
                 text-align: center;
+                position: relative;
+                margin : 0 auto;
+                width: 240px;
             }
             #alumni #alumni-content .alumni-item{
                 float:left;
@@ -248,9 +251,9 @@
         <h2>Alumni</h2>
         <p>创建, 浏览, 修改删除同学录</p>
         <div id="alumni-content">
+            <!--
             <div class="alumni-item">
                 <div class="alumni-item-img">
-                    <!--<img src="http://wf.uisdc.com/cn/resources/samples/getting-started/your-first-multi-screen-site/peterlubbers.png">-->
                     <img src="{{php}}echo base_url();{{/php}}static/img/public/alumni_cover1.png" title="Alumni"/>
                 </div>
                 <div class="alumni-item-footer">
@@ -270,10 +273,10 @@
                     </div>
                 </div>
             </div>
-
+            -->
+            <!--
             <div class="alumni-item">
                 <div class="alumni-item-img">
-                    <!--<img src="http://wf.uisdc.com/cn/resources/samples/getting-started/your-first-multi-screen-site/peterlubbers.png">-->
                     <img src="{{php}}echo base_url();{{/php}}static/img/public/alumni_cover1.png"/>
                 </div>
                 <div class="alumni-item-footer">
@@ -293,6 +296,7 @@
                     </div>
                 </div>
             </div>
+            -->
 
             <div class="alumni-item">
                 <div class="alumni-item-img">
@@ -330,20 +334,23 @@
             userInfoTable : $('#userinfo-table'),
             alumniModal   : $('#update-alumni-modal'),
             alumniForm    : $('#alumni-form'),
-            messagePopover: $('.message_popover')
+            messagePopover: $('.message_popover'),
+            alumniContent : $('#alumni-content')
         };
 
         var AlumniInfoReg = {
             init: function () {
                 this.loadUserInfoFn();
-                //this.loadPopoverFn();
                 this.alumniAddRegFn();
                 //this.messageLoadFn(); 
+                this.loadAlumniInfo();
+                
             },
 
             loadUserInfoFn: function () {
                 $.ajax({
                     type: 'GET',
+                    async : false,
                     url: '{{php}}echo base_url(){{/php}}api/account/account/loadUserAlumniInfo',
                     dataType: 'json',
                     success: function(data){
@@ -362,9 +369,6 @@
                         alert('操作失败');
                     }
                 });
-            },
-            loadPopoverFn: function(){
-                dom.messagePopover.popover();
             },
             messageLoadFn: function(){
                 dom.messagePopover.on('show.bs.popover', function () {
@@ -438,6 +442,64 @@
                         alert('操作失败');
                     }
                 });
+            },
+
+            loadAlumniInfo : function(){
+                $.ajax({
+                    type: 'GET',
+                    async : false,
+                    url: '{{php}}echo base_url(){{/php}}api/user/alumni/getAlumni',
+                    dataType: 'json',
+                    success: function(data){
+                        if (data['status'] == 0){
+                            var alumni = data['data'];
+                            if(alumni.length == 1)
+                            {
+                                dom.alumniContent.css("width", "520px");
+                            }else if(alumni.length > 1){
+                                dom.alumniContent.css("width", "60%")
+                            }
+                            var html = AlumniInfoReg.generateAlumniItemHtml(alumni);
+                            dom.alumniContent.prepend(html);
+                        } else {
+                            alert(data['description']);
+                        }
+                    },
+                    error: function(data){
+                        console.log('加载同学录失败');
+                    }
+                });
+
+            },
+
+            generateAlumniItemHtml : function(alumni){
+                var html = "";
+                for (var count = 0; count < alumni.length; count++)
+                {
+                    html += '<div class="alumni-item" id="' + alumni[count]['id'] + '">' + 
+                                    '<div class="alumni-item-img">' + 
+                                        '<img src="{{php}}echo base_url();{{/php}}static/img/public/alumni_cover1.png"/>' + 
+                                    '</div>' + 
+                                    '<div class="alumni-item-footer">' + 
+                                        '<div class="alumni-item-decribe">' + 
+                                            '<p>' + alumni[count]['title'] +  '</p>' + 
+                                        '</div>' + 
+                                        '<div class="alumni-item-operation">' + 
+                                            '<button type="button" class="btn btn-default" aria-label="Left Align">' + 
+                                                '<span class="glyphicon glyphicon-list-alt" aria-hidden="true">浏览</span>' + 
+                                            '</button>' + 
+                                            '<button type="button" class="btn btn-default" aria-label="Left Align">' + 
+                                                '<span class="glyphicon glyphicon-edit" aria-hidden="true">编辑</span>' + 
+                                            '</button>' + 
+                                            '<button type="button" class="btn btn-default" aria-label="Left Align">' + 
+                                                '<span class="glyphicon glyphicon-trash" aria-hidden="true">删除</span>' + 
+                                            '</button>' + 
+                                        '</div>' + 
+                                '</div>' + 
+                            '</div>';
+                }
+                return html
+            
             }
 
         };

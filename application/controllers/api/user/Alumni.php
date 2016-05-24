@@ -93,6 +93,14 @@ class Alumni extends CI_Controller{
         $this->response->jsonSuccess();
 
     }
+
+    public function getAlumni(){
+        checkLogin('api');
+        $this->load->model("AlumniModels");
+        $userId = $this->session->user_id;
+        $userAlumni = $this->AlumniModels->getAlumniByUserId($userId);
+        $this->response->jsonSuccess($userAlumni);
+    }
     public function getUserAlumniInfo(){
         checkLogin('api');
         $userId = $this->session->user_id;

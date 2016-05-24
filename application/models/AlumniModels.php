@@ -95,4 +95,10 @@ class AlumniModels extends CI_Model{
         return $alumniUpdate['run_status'];
     }
 
+    public function getAlumniByUserId($userId){
+        $this->db->where("user_id", $userId);
+        $query = $this->db->get(self::$tableName);
+        return $query->result_array();
+    }
+
 }
