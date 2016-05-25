@@ -324,4 +324,4 @@ CREATE TABLE IF NOT EXISTS `info_confirm` (
   KEY `user_id` (`user_id`),
   KEY `IDX_to_user` (`to_user`)
 
-)
+)ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='';
