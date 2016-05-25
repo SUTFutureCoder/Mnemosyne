@@ -311,3 +311,17 @@ CREATE TABLE IF NOT EXISTS `message` (
   KEY `user_id` (`user_id`),
   KEY `IDX_to_user` (`to_user`)
 )ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='';
+
+CREATE TABLE IF NOT EXISTS `info_confirm` (
+  `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '唯一id',
+  `user_id` BIGINT(20) UNSIGNED NOT NULL COMMENT '用户id',
+  `to_user` BIGINT(20) UNSIGNED NOT NULL COMMENT '同学录送达用户id',
+  `type` tinyint(3) NOT NULL COMMENT '消息类型 0 为同学录填写 1 为好友',
+  `status`  tinyint(4) NOT NULL DEFAULT 0 COMMENT '消息是否读取 0 为未读取 1 为同意 2为拒绝',
+  `create_time` int(10) unsigned NOT NULL COMMENT '创建时间',
+  `update_time`int(10) NOT NULL COMMENT '修改时间',
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`),
+  KEY `IDX_to_user` (`to_user`)
+
+)
