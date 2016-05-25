@@ -9,3 +9,11 @@
     height : 600px;
 }
 
+.search_friends {
+    margin: 0 0 20px 0;
+}
+
+.friends_recomend .friend_recomend_list .recomend-friend-info{
+    margin-top: 15px;
+    font-size: 15px;
+}

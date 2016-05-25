@@ -1,1 +1,48 @@
-<h1>my_friend</h1>
+<div class="content-mid myfriends">
+    <div class="container col-xs-12">
+        <div class="search_friends">
+            <div class="search_friends_form">
+                <form class="form-inline">
+                      <div class="form-group">
+                        <input type="text" class="form-control" id="search_friend_input" placeholder="邮箱/手机号">
+                      </div>
+                      <button type="button" class="btn btn-default btn-info">搜索</button>
+                </form>
+            </div><!--search_friends_form-->
+        </div><!--search_friends-->
+    </div><!--container-->
+
+    <div class="container col-xs-12">
+        <div class="friends_recomend">
+            <div class="panel panel-default">
+                <div class="panel-heading">好友推荐</div>
+                <div class="panel-body">
+
+                    <div class="friend_recomend_list">
+
+                        <div class="friend_recomend_single">
+                            <div class="header-img-sm col-xs-4 col-md-2">
+                                <img width="100px" src="{{php}}echo base_url();{{/php}}static/img/public/default-avatar.jpg">
+                            </div>
+
+                            <div class="recomend-friend-info col-xs-8 col-md-8">
+                                <div class="user_nickname">bricks</div>
+                                <div class="user_name">方旭</div>
+                                <div class="school">沈阳工业大学</div>
+                            </div>
+
+                            <div class="control-btn">
+                                <div class="control-btn">
+                                    <button type="button" class="btn btn-info">添加好友</button>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div><!--friend_recomend_list-->
+                </div><!--panel-body-->
+            </div><!--panel panel-primary-->
+        </div><!-- friends_recomend!-->
+    </div><!-- container col-xs-12-->
+</div><!--content-mid myfriends-->
+
