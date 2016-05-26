@@ -5,10 +5,12 @@
             friendsRecomend : $(".friends_recomend"),
             searchFriendModal : $("#search-friend-modal"),
             addFriendButton : $(".add_friend_button"),
+            friendRecomendList : $(".friend_recomend_list"),
         };
         var addFriends = {
             init : function(){
                 this.searchFriends();
+                this.loadFriendRecomend();
             },
             searchFriends : function(){
                 dom.searchFriendsForm.find("#search_friend_btn").on('click', function(){
@@ -62,6 +64,31 @@
                             console.log(data);
                             alert("添加好友请求已发送");
                             dom.searchFriendModal.modal('hide');
+                        }else{
+                            alert(data['description']);
+                        }
+                    },
+                    error: function (data) {
+                        console.log(data);
+                        alert('操作失败');
+                    }
+                });
+            },
+
+            loadFriendRecomend : function (){
+                $.ajax({
+                    type: 'GET',
+                    url: '{{php}}echo base_url(){{/php}}api/friends/Friends/friendRecommend',
+                    dataType: 'json',
+                    success: function (data) {
+                        if(data['status'] == 0){
+                            var recomendInfoList = data['data']['recommendInfoList'];
+                            var html = "";
+                            for (var i = 0; i < recomendInfoList.length; i++){
+                                html += addFriends.generateFriendSingleItem(recomendInfoList[i]);
+                            }
+                            dom.friendRecomendList.empty();
+                            dom.friendRecomendList.append(html);
                         }else{
                             alert(data['description']);
                         }

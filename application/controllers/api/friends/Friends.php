@@ -55,4 +55,16 @@ class Friends extends CI_Controller{
 
     }
 
+    public function friendRecommend(){
+        checkLogin("api");
+        $userId = $this->session->user_id;
+        $this->load->model('SchoolClassUserMapModels', 'scum');
+        $this->load->model('UserModels', 'user');
+        $recommendIdList =  $this->scum->getFriendRecordList($userId);
+        $recommendIdList = array_column($recommendIdList, 'user_unique_id');
+        $recommendInfoList = $this->user->getUserBasicInfoList($recommendIdList);
+        $this->response->jsonSuccess(array(
+            'recommendInfoList' => $recommendInfoList,
+        ));
+    } 
 }
