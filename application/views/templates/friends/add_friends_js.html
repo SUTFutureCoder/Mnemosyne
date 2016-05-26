@@ -1,0 +1,87 @@
+<script>
+    (function(){
+        var dom = {
+            searchFriendsForm : $(".search_friends_form"),
+            friendsRecomend : $(".friends_recomend"),
+            searchFriendModal : $("#search-friend-modal"),
+            addFriendButton : $(".add_friend_button"),
+        };
+        var addFriends = {
+            init : function(){
+                this.searchFriends();
+            },
+            searchFriends : function(){
+                dom.searchFriendsForm.find("#search_friend_btn").on('click', function(){
+                    var postData = {
+                        'login_name' : dom.searchFriendsForm.find('#search_friend_input').val()
+                    };
+                    $.ajax({
+                        type: 'POST',
+                        url: '{{php}}echo base_url(){{/php}}api/user/userInfo/getUserInfoByLoginName',
+                        data: postData,
+                        dataType: 'json',
+                        success: function (data) {
+                            if (data['status'] == 0){
+                                if(data['data']['userInfo'] == null){
+                                    alert("没有此用户");
+                                }else{
+                                    dom.searchFriendModal.modal('show'); 
+                                    console.log(data['data']['userInfo']);
+                                    var html = addFriends.generateFriendSingleItem(data['data']['userInfo']);
+                                    dom.searchFriendModal.find(".row").empty();
+                                    dom.searchFriendModal.find(".row").append(html);
+                                    var btn = dom.searchFriendModal.find(".add_friend_button");
+                                    btn.on('click', function(){
+                                        var friend_add_user_id = this.getAttribute("add_friend_id");
+                                        addFriends.addFriend(friend_add_user_id);
+                                    });
+                                }
+                            } else{
+                                alert(data['description']);
+                            }
+                        },
+                        error: function (data) {
+                            console.log(data);
+                            alert('操作失败');
+                        }
+                    });
+                });
+            },
+
+            addFriend : function(friend_add_user_id){
+                $.ajax({
+                    type: 'POST',
+                    url: '{{php}}echo base_url(){{/php}}api/user/userInfo/getUserMessageByLoginName',
+                    data: postData,
+                    dataType: 'json',
+                    success: function (data) {
+                        console.log(data);
+                    },
+                    error: function (data) {
+                        console.log(data);
+                        alert('操作失败');
+                    }
+                });
+            },
+            
+            generateFriendSingleItem : function(userInfo){
+                var html = "";
+                html += '<div class="friend_recomend_single col-xs-12">' +
+                            '<div class="header-img-sm col-xs-4 col-md-2">' + 
+                                '<img src="{{php}}echo base_url();{{/php}}static/img/public/default-avatar.jpg">' + 
+                            '</div>' + 
+                            '<div class="recomend-friend-info col-xs-8 col-md-8">' + 
+                                '<div class="user_nickname">' + userInfo['user_nickname'] +  '</div>' + 
+                                '<div class="user_name">' + userInfo['user_name'] + '</div>' + 
+                                '<div class="user_school">沈阳工业大学</div>' + 
+                            '</div>' + 
+                            '<div class="control-btn">' + 
+                                '<button type="button" add_friend_id = "' + userInfo['user_id'] + '" class="add_friend_button btn btn-info">添加好友</button>' +
+                            '</div>'+ 
+                        '</div>';
+                return html
+            }
+        };
+        addFriends.init();
+    })();
+</script>

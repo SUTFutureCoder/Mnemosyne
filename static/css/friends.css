@@ -12,8 +12,19 @@
 .search_friends {
     margin: 0 0 20px 0;
 }
+.friends_recomend .friend_recomend_single{
+    border-bottom:1px solid #ddd;
+}
 
-.friends_recomend .friend_recomend_list .recomend-friend-info{
+.friend_recomend_single .recomend-friend-info{
     margin-top: 15px;
     font-size: 15px;
+}
+
+.friend_recomend_single .header-img-sm img{
+    width:100px;
+}
+
+.friend_recomend_single .control-btn{
+    margin-top: 20px;
 }

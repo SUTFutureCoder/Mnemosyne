@@ -15,6 +15,7 @@ class UserInfo extends CI_Controller{
         $this->load->helper('login_helper');
         $this->load->library('util/Response');
         $this->load->library('session');
+        $this->load->library('util/Validator');
     }
 
     /**
@@ -130,6 +131,22 @@ class UserInfo extends CI_Controller{
         $this->response->jsonSuccess(array(
             'message' => $message,
         ));
+    }
+
+    public function getUserInfoByLoginName(){
+        checkLogin();
+        $loginName  =  trim($this->input->post('login_name', true));
+        if (!(Validator::isNotEmpty($loginName,   '您的手机或邮箱不能为空')
+            && (Validator::isEmail($loginName, '请输入合法的邮箱地址或手机号')
+            || Validator::isMobile($loginName, '请输入合法的邮箱地址或手机号')))){
+            $this->response->jsonFail(Response::CODE_PARAMS_WRONG, Validator::getMessage());
+        }
+        $this->load->model('UserModels');
+        $userInfo = $this->UserModels->getUserInfoByLoginName($loginName);
+        $this->response->jsonSuccess(array(
+            'userInfo' => $userInfo,
+        ));
+
     }
 
 }
