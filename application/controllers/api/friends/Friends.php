@@ -16,71 +16,29 @@ class Friends extends CI_Controller{
         $this->load->library('util/Response');
         $this->load->library('session');
         $this->load->library('util/Validator');
+        $this->load->model('InfoConfirmModels', 'infoConfirm');
     }
 
     public function addFriends(){
         checkLogin("api");
         $userId = $this->session->user_id;
-        $alumniId     = trim($this->input->post('alumni_id',    true));
-        $title        = trim($this->input->post('title',        true));
-        $cover        = trim($this->input->post('cover',        true));
+        $userName = $this->session->user_name;
         $send_to      = trim($this->input->post('send_to',      true));
-
-    }
-
-    public function loadUserInfo(){
-        checkLogin("api");
-        $userId = $this->session->user_id;
-        $this->load->model('UserModels', 'um');
-        $userInfo = $this->um->getUserBasicInfo($userId);
-        $userInfoRes = $userInfo;
-        if($_POST){
-            $userInfoRes = Array();
-            $info = $this->input->post('info', true);
-            $infoArr = array_unique(explode(',', $info));
-            foreach ($infoArr as $item){
-                if(isset($userInfo[$item])){
-                    $userInfoRes[$item] = $userInfo[$item]; 
-                }
-            }
-        }
-        $this->response->jsonSuccess(array(
-            'userinfo' => $userInfoRes,
-        ));
-    }
-
-    public function getUserSchoolAndClass(){
-        checkLogin();
-        $this->load->model('SchoolClassUserMapModels', 'scum');
-        $userId= $this->session->user_id;
-        $SchoolAndClassInfo = $this->scum->getUserBindList($userId);
-        $this->response->jsonSuccess(
-            $SchoolAndClassInfo
-        );
-    }
-
-    public function getUserMessage(){
-        $userId = $this->session->user_id;
-        $this->load->model('MessageModels', 'message');
-        $message = $this->message->getMessageByUserId($userId);
-        $this->response->jsonSuccess(array(
-            'message' => $message,
-        ));
-    }
-
-    public function getUserMessageByLoginName(){
-        checkLogin();
-        $loginName  =  trim($this->input->post('login_name', true));
-        if (!(Validator::isNotEmpty($loginName,   '您的手机或邮箱不能为空')
-            && (Validator::isEmail($loginName, '请输入合法的邮箱地址或手机号')
-            || Validator::isMobile($loginName, '请输入合法的邮箱地址或手机号')))){
+        if(!Validator::isNotEmpty($send_to, "您要添加的好友id不能为空")) {
             $this->response->jsonFail(Response::CODE_PARAMS_WRONG, Validator::getMessage());
         }
-        $this->load->model('UserModels');
-        $userInfo = $this->UserModels->getUserInfoByLoginName($loginName);
-        $this->response->jsonSuccess(array(
-            'userInfo' => $userInfo,
-        ));
+        $addInfoConfirm = $this->infoConfirm->addInfoConfirm($userId, $send_to,
+            CoreConst::INFO_CONFRIM_STATUS_UNREAD, CoreConst::FRIEND_MESSAGE_CONFIRM);
+
+        $addMessageStatus  = $this->message->addMessage($userId, $send_to,
+            $type    = CoreConst::ADD_FRIENDS_MES,
+            $title   = '好友添加',
+            $message = $userName . ' 请求添加为好友'
+        );
+        if($addInfoConfirm || $addMessageStatus){
+            $this->response->jsonFail(Response::CODE_SERVER_ERROR, '抱歉，添加好友失败');
+        }
+        $this->response->jsonSuccess();
 
     }
 

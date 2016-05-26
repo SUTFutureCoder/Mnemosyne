@@ -44,8 +44,10 @@ class CoreConst{
     );
 
     const AlUMNI_FILL_IN_MES = 0;
+    const ADD_FRIENDS_MES = 1;
     public static $messageTyep = array(
         self::AlUMNI_FILL_IN_MES,
+        self::ADD_FRIENDS_MES,
     );
 
     //Mnemosyne核心参数
@@ -79,6 +81,14 @@ class CoreConst{
         self::MODULE_EMAIL,
         self::MODULE_BOS,
     );
+
+    //消息确认模块
+    const AlUMNI_MESSAGE_CONFIRM = 0;
+    const FRIEND_MESSAGE_CONFIRM = 1;
+
+    const INFO_CONFRIM_STATUS_UNREAD = 0;
+    const INFO_CONFRIM_STATUS_AGREE = 1;
+    const INFO_CONFRIM_STATUS_REFUSE = 2;
 
     //log是否打开
     const MNEMOSYNE_LOG = 1;

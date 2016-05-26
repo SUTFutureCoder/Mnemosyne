@@ -49,13 +49,21 @@
             },
 
             addFriend : function(friend_add_user_id){
+                var postData = {
+                    'send_to': friend_add_user_id
+                };
                 $.ajax({
                     type: 'POST',
                     url: '{{php}}echo base_url(){{/php}}api/user/userInfo/getUserMessageByLoginName',
                     data: postData,
                     dataType: 'json',
                     success: function (data) {
-                        console.log(data);
+                        if(data['status'] == 0){
+                            alert("添加好友请求已发送");
+                            dom.searchFriendModal.modal('hide');
+                        }else{
+                            alert(data['des']);
+                        }
                     },
                     error: function (data) {
                         console.log(data);
