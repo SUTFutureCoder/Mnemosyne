@@ -53,5 +53,11 @@ class InfoConfirmModels extends CI_Model
         return $row;
     }
 
-
+    public function checkInfoIsExist($userId, $toUser, $type, $status = 0){
+        $this->db->where('user_id', $userId);
+        $this->db->where('to_user', $toUser);
+        $this->db->where('type', $type);
+        $this->db->where('status', $status);
+        return $this->db->count_all_results(self::$tableName);
+    }
 }
