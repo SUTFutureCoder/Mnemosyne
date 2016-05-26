@@ -54,7 +54,7 @@
                 };
                 $.ajax({
                     type: 'POST',
-                    url: '{{php}}echo base_url(){{/php}}api/user/userInfo/getUserMessageByLoginName',
+                    url: '{{php}}echo base_url(){{/php}}api/friends/Friends/addFriends',
                     data: postData,
                     dataType: 'json',
                     success: function (data) {
