@@ -62,7 +62,7 @@ class Friends extends CI_Controller{
         $this->load->model('UserModels', 'user');
         $recommendIdList =  $this->scum->getFriendRecordList($userId);
         $recommendIdList = array_column($recommendIdList, 'user_unique_id');
-        $recommendInfoList = $this->user->getUserBasicInfoList($recommendIdList);
+        $recommendInfoList = $this->user->getUserFullInfoList($recommendIdList);
         $this->response->jsonSuccess(array(
             'recommendInfoList' => $recommendInfoList,
         ));

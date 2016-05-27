@@ -100,6 +100,22 @@ class UserModels extends CI_Model{
         return $result;
     }
 
+    /**
+     * 获取用户基本信息
+     *
+     * @param $userIdList
+     * @return array
+     */
+    public function getUserFullInfoList($userIdList){
+        if(empty($userIdList))
+        {
+            return array();
+        }
+        $this->db->where_in('user_id', $userIdList);
+        $query  = $this->db->get(self::$tableName);
+        $result = $query->result_array();
+        return $result;
+    }
 
 
     /**

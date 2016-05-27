@@ -79,6 +79,7 @@
                 $.ajax({
                     type: 'GET',
                     url: '{{php}}echo base_url(){{/php}}api/friends/Friends/friendRecommend',
+                    async : false,
                     dataType: 'json',
                     success: function (data) {
                         if(data['status'] == 0){
@@ -89,6 +90,7 @@
                             }
                             dom.friendRecomendList.empty();
                             dom.friendRecomendList.append(html);
+                            addFriends.addRecomendFriend();
                         }else{
                             alert(data['description']);
                         }
@@ -100,6 +102,13 @@
                 });
             },
             
+            addRecomendFriend : function(){
+                var addFriendBtn = dom.friendRecomendList.find('.add_friend_button');
+                addFriendBtn.on('click', function(){
+                    var friend_add_user_id = this.getAttribute("add_friend_id");
+                    addFriends.addFriend(friend_add_user_id);
+                });
+            },
             generateFriendSingleItem : function(userInfo){
                 var html = "";
                 html += '<div class="friend_recomend_single col-xs-12">' +
