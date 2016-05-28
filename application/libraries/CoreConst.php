@@ -96,6 +96,12 @@ class CoreConst{
     const USER_RELATION_TYPE_AMBIGUOUS = 1;
     const USER_RELATION_TYPE_LOVERS = 2;
 
+    public static $userFriendTypeList = array(
+        self::USER_RELATION_TYPE_FRIEND,
+        self::USER_RELATION_TYPE_AMBIGUOUS,
+        self::USER_RELATION_TYPE_LOVERS
+    );
+
 
     //log是否打开
     const MNEMOSYNE_LOG = 1;
