@@ -90,6 +90,13 @@ class CoreConst{
     const INFO_CONFRIM_STATUS_AGREE = 1;
     const INFO_CONFRIM_STATUS_REFUSE = 2;
 
+    //好友模块
+    const USER_RELATION_TYPE_BLACK_LIST = -1;
+    const USER_RELATION_TYPE_FRIEND = 0;
+    const USER_RELATION_TYPE_AMBIGUOUS = 1;
+    const USER_RELATION_TYPE_LOVERS = 2;
+
+
     //log是否打开
     const MNEMOSYNE_LOG = 1;
 
