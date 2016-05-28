@@ -53,11 +53,49 @@ class InfoConfirmModels extends CI_Model
         return $row;
     }
 
+    public function getUserIdListByToUserId($userId, $status = 0, $pageSize = 5, $page = 0){
+        $offset = $pageSize * $page;
+        $this->db->select('user_id');
+        $this->db->where('to_user', $userId);
+        $row = $this->db->get(self::$tableName, $pageSize, $offset)->result_array();
+        return $row;
+    }
+
+    public function getUserFullInfoListJoinInUser($userId, $type, $infoConfirmStatus = CoreConst::INFO_CONFRIM_STATUS_UNREAD){
+        $this->db->select('info_confirm.id, user.user_name, user.user_avatar, user.user_nickname, user.user_id');
+        $this->db->from('info_confirm');
+        $this->db->where('info_confirm.to_user', $userId);
+        $this->db->where('info_confirm.type', $type);
+        $this->db->where('info_confirm.status', $infoConfirmStatus);
+        $this->db->join('user', 'info_confirm.user_id = user.user_id' );
+        $result = $this->db->get()->result_array(); 
+        return $result;
+    }
+
     public function checkInfoIsExist($userId, $toUser, $type, $status = 0){
         $this->db->where('user_id', $userId);
         $this->db->where('to_user', $toUser);
         $this->db->where('type', $type);
         $this->db->where('status', $status);
         return $this->db->count_all_results(self::$tableName);
+    }
+    public function updateInfoConfrimStatus($userId, $id, $status){
+        $this->db->trans_start();
+        $arrUpdateConds = array();
+        $arrUpdateConds['status'] = $status;
+        $this->db->where('id', $id);
+        $this->db->update(self::$tableName, $arrUpdateConds);
+
+        //打log
+        $arrUpdateConds['affected_rows'] = $this->db->affected_rows();
+
+        $this->db->trans_complete();
+        if (!$this->db->trans_status()){
+            $arrUpdateConds['run_status'] = 0;
+        } else {
+            $arrUpdateConds['run_status'] = 1;
+        }
+        $this->UserLogModels->addUserLog($userId, $arrUpdateConds, self::$tableName, __METHOD__);
+        return $arrUpdateConds['run_status'];
     }
 }

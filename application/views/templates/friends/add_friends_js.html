@@ -111,9 +111,12 @@
             },
             generateFriendSingleItem : function(userInfo){
                 var html = "";
+                if(userInfo['user_avatar']  == ""){
+                    userInfo['user_avatar'] = "{{php}}echo base_url();{{/php}}static/img/public/default-avatar.jpg";
+                }
                 html += '<div class="friend_recomend_single col-xs-12">' +
                             '<div class="header-img-sm col-xs-4 col-md-2">' + 
-                                '<img src="{{php}}echo base_url();{{/php}}static/img/public/default-avatar.jpg">' + 
+                                '<img src="' + userInfo['user_avatar'] + '">' + 
                             '</div>' + 
                             '<div class="recomend-friend-info col-xs-8 col-md-8">' + 
                                 '<div class="user_nickname">' + userInfo['user_nickname'] +  '</div>' + 

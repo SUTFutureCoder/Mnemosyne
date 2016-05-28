@@ -18,6 +18,7 @@ class Friends extends CI_Controller{
         $this->load->library('util/Validator');
         $this->load->model('InfoConfirmModels', 'infoConfirm');
         $this->load->model("MessageModels", 'message');
+        $this->load->model('UserRelationModels', 'UserRelation');        
     }
 
 
@@ -34,12 +35,12 @@ class Friends extends CI_Controller{
              $this->response->jsonFail(Response::CODE_PARAMS_WRONG, "您不能添加自己为好友");
         }
         $isInfoConfirmExist = $this->infoConfirm->checkInfoIsExist($userId, $send_to,
-                                                CoreConst::INFO_CONFRIM_STATUS_UNREAD, CoreConst::FRIEND_MESSAGE_CONFIRM);
+                                                CoreConst::FRIEND_MESSAGE_CONFIRM, CoreConst::INFO_CONFRIM_STATUS_UNREAD);
         if($isInfoConfirmExist > 0){
             $this->response->jsonFail(Response::CODE_PARAMS_WRONG, "您的好友请求已经发送过");
         }
         $addInfoConfirm = $this->infoConfirm->addInfoConfirm($userId, $send_to,
-            CoreConst::INFO_CONFRIM_STATUS_UNREAD, CoreConst::FRIEND_MESSAGE_CONFIRM);
+            CoreConst::FRIEND_MESSAGE_CONFIRM, CoreConst::INFO_CONFRIM_STATUS_UNREAD);
         $addMessageStatus = 0;
         if($addInfoConfirm){
             $addMessageStatus  = $this->message->addMessage($userId, $send_to,
@@ -51,20 +52,85 @@ class Friends extends CI_Controller{
         if(!$addInfoConfirm || !$addMessageStatus){
             $this->response->jsonFail(Response::CODE_SERVER_ERROR, '抱歉，添加好友消息发送失败');
         }
-        $this->response->jsonSuccess(array("test" => $isInfoConfirmExist));
+        $this->response->jsonSuccess();
 
     }
-
+    //TODO 添加页码
     public function friendRecommend(){
         checkLogin("api");
         $userId = $this->session->user_id;
         $this->load->model('SchoolClassUserMapModels', 'scum');
         $this->load->model('UserModels', 'user');
-        $recommendIdList =  $this->scum->getFriendRecordList($userId);
+        $userKnown = $this->UserRelation->getUserFriendIdList($userId);
+        $userKnown = array_column($userKnown, 'user_id');
+        $recommendIdList =  $this->scum->getFriendRecordList($userId, $userKnown);
         $recommendIdList = array_column($recommendIdList, 'user_unique_id');
         $recommendInfoList = $this->user->getUserFullInfoList($recommendIdList);
         $this->response->jsonSuccess(array(
             'recommendInfoList' => $recommendInfoList,
         ));
     } 
+    //TODO 添加页码 
+    public function friendRequestList(){
+        checkLogin("api");
+        $userId = $this->session->user_id;
+        $userList = $this->infoConfirm->getUserFullInfoListJoinInUser($userId, CoreConst::FRIEND_MESSAGE_CONFIRM);
+        $this->response->jsonSuccess($userList);
+
+    }
+
+    public function friendRequestResponse(){
+        checkLogin("api");
+        $userId = $this->session->user_id;
+        $request_friend_id = trim($this->input->post('request_friend_id'));
+        $infoConfirmId = trim($this->input->post('info_confirm_id'));
+        $chosen = trim($this->input->post('chosen')); 
+        $updateInfoConfrimStatus = 0;
+        if($chosen === 'accept'){
+            $chosen = CoreConst::INFO_CONFRIM_STATUS_AGREE;
+        }else if($chosen === 'refuse'){
+            $chosen = CoreConst::INFO_CONFRIM_STATUS_REFUSE;
+            $updateInfoConfrimStatus = $this->infoConfirm->updateInfoConfrimStatus($userId, $infoConfirmId, $chosen);
+            if(!$updateInfoConfrimStatus){
+                $this->response->jsonFail(Response::CODE_SERVER_ERROR, '抱歉, 信息确认数据库操作失败');                
+            }
+            $this->response->jsonSuccess();
+        }else{
+            $this->response->jsonFail(Response::CODE_PARAMS_WRONG, "请选择正确的操作选项");
+        }
+        $updateInfoConfrimStatus = $this->infoConfirm->updateInfoConfrimStatus($userId, $infoConfirmId, CoreConst::INFO_CONFRIM_STATUS_AGREE);
+        if($this->UserRelation->isRelationExist($userId, $request_friend_id)){
+            $this->response->jsonFail(Response::CODE_PARAMS_WRONG, "你们已经是好友了");
+        }
+
+        if($updateInfoConfrimStatus){
+            $addFriendStatus = $this->UserRelation->addUserRelation($userId, $request_friend_id, CoreConst::USER_RELATION_TYPE_FRIEND);
+            $addFriendStatusAnother = $this->UserRelation->addUserRelation($request_friend_id, $userId, CoreConst::USER_RELATION_TYPE_FRIEND);
+            if(!$addFriendStatus || !$addFriendStatusAnother){
+                $this->response->jsonFail(Response::CODE_SERVER_ERROR, '抱歉, 更新好友数据库失败');
+            }
+        }else{
+            $this->response->jsonFail(Response::CODE_SERVER_ERROR, '抱歉, 更新确认信息失败');
+        }
+        $this->response->jsonSuccess();
+    }
+
+    public function getFriendInfoList(){
+        checkLogin('api');
+        $userId = $this->session->user_id;
+        $userInfoList = $this->UserRelation->getUserFriendInfoJoinInUser($userId);
+        $this->response->jsonSuccess($userInfoList);
+    }
+
+    public function deleteFriend(){
+        checkLogin('api');
+        $userId = $this->session->user_id;
+        $friendId = $this->input->post('friend_id', true);
+        $deleteStatus = $this->UserRelation->deleteRelation($userId, $friendId);
+        $deleteStatusAnother = $this->UserRelation->deleteRelation($friendId, $userId);
+        if(!$deleteStatus || !$deleteStatusAnother){
+            $this->response->jsonFail(Response::CODE_SERVER_ERROR, '抱歉, 执行数据库删除失败');
+        }
+        $this->response->jsonSuccess();
+    }
 }
