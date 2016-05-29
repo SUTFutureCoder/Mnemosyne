@@ -32,12 +32,15 @@
                     success: function(data){
                         if (data['status'] == 0){
                             var messageList = data['data']['message'];
-                            var messagePopover = "<div class='message_unread container'>";
+                            console.log(messageList);
+                            var messagePopover = '<div class="message_unread container">';
                             for(var i = 0; i < messageList.length; i++)
                             {
-                                messagePopover += "<p>" + messageList[i]['message'] +"</p>";
+                                messagePopover += '<p><a href="{{php}}echo base_url();{{/php}}Message/MessageResove' + 
+                                                        '?message_type=' + messageList[i]['type'] + '&message_id=' + messageList[i]['id'] +                                                          '" >' + messageList[i]['message'] + '</a></p>';
                             }
-                            messagePopover += "</div>";
+                            messagePopover += '</div>';
+                            console.log(messagePopover);
                             dom.messagePopover.attr('data-content', messagePopover);
                         } else {
                             dom.userInfoTable.find('#user_name').html();
@@ -45,7 +48,8 @@
                         }
                     },
                     error: function(data){
-                        alert('操作失败');
+                        console.log(data);
+                        alert('加载用户消息失败');
                     }
                 });
             },
