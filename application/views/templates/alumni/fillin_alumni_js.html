@@ -1,0 +1,58 @@
+<script>
+    (function(){
+        var dom = {
+            alumniNeedToFillIn : $("#alumni_need_to_fill_in"),
+        };
+        var fillInAlumni = {
+            init : function(){
+                this.getAlumniNeedToFillIn();
+            },
+            getAlumniNeedToFillIn : function(){
+                var postData = {
+                };
+                $.ajax({
+                    type: 'GET',
+                    url: '{{php}}echo base_url(){{/php}}api/user/alumni/getAlumniNeedToFillIn',
+                    data: postData,
+                    dataType: 'json',
+                    success: function (data) {
+                        if(data['status'] == 0){
+                            var userInfoList = data['data']['userInfoList'];
+                            var html = "";
+                            for(var i = 0; i < userInfoList.length; i++){
+                                html += fillInAlumni.generateUserSingleItem(userInfoList[i]);
+                            }
+                            dom.alumniNeedToFillIn.empty();
+                            dom.alumniNeedToFillIn.append(html);
+                            //friend.deleteFriendSubmit(dom.friendList.find(".delete_friend_button"));
+                        }else{
+                            alert(data['description']);
+                        }
+                    },
+                    error: function (data) {
+                        console.log(data);
+                        alert('操作失败');
+                    }
+                });
+            },
+            generateUserSingleItem : function(userInfo){
+                var html = "";
+                html += '<div class="user_single col-xs-12">' +
+                            '<div class="header-img-sm col-xs-4 col-md-2">' + 
+                                '<img src="' + userInfo['user_avatar'] + '">' + 
+                            '</div>' + 
+                            '<div class="request-info col-xs-8 col-md-8">' + 
+                                '<div class="user_nickname">' + userInfo['user_nickname'] +  '</div>' + 
+                                '<div class="user_name">' + userInfo['user_name'] + '</div>' + 
+                                '<div class="user_school">沈阳工业大学</div>' + 
+                            '</div>' + 
+                            '<div class="control-btn">' + 
+                                '<button type="button" user_id = "' + userInfo['user_id'] + '" class="btn btn-info">相对TA说</button>' +
+                            '</div>'+ 
+                        '</div>';
+                return html
+            },
+        };
+        fillInAlumni.init();
+    })();
+</script>

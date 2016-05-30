@@ -8,6 +8,11 @@
  */
 class Alumni extends CI_Controller{
 
+    private static $ALumniConst = array(
+        "alumni_send_to_classmate" => '0',
+        "alumni_send_to_friends" => '1'
+    );
+
     public function __construct(){
         parent::__construct();
         $this->load->helper('login_helper');
@@ -22,6 +27,7 @@ class Alumni extends CI_Controller{
         $this->load->model("SchoolClassUserMapModels", 'scu');
         $this->load->model("AlumniPageModels", "alumniPage");
         $this->load->model("MessageModels", 'message');
+        $this->load->model("UserRelationModels", "UserRelation");
 
         $userId   = $this->session->user_id;
         $userName = $this->session->user_name;
@@ -48,12 +54,17 @@ class Alumni extends CI_Controller{
         }
 
         if($alumniId === '-1') {
-            $addStatus = $this->alumni->addAlumni($userId, $title, $cover);
+            $addRes = $this->alumni->addAlumni($userId, $title, $cover);
+            $addStatus = $addRes['run_status'];
             if($addStatus !== false)
             {
-                $alumniId   = $addStatus;
-                $userIdList = $this->scu->getClassmate($userId);
-//                $this->response->jsonFail(Response::CODE_SERVER_ERROR, print_r($userIdList, true));
+                $alumniId   = $addRes['id'];
+                $userIdList = array();
+                if($send_to  === self::$ALumniConst['alumni_send_to_friends']){
+                    $userIdList = $this->UserRelation->getUserFriendIdList($userId);
+                }else if($send_to  === self::$ALumniConst['alumni_send_to_classmate']){
+                    $userIdList = $this->scu->getClassmate($userId);
+                }
                 foreach($userIdList as $userIdtmp){
                     $addAlumniStatus   =  $this->alumniPage->addAlumniPage($alumniId, $userId, $userIdtmp['user_id']);
                     $addMessageStatus  = $this->message->addMessage(    $userId, $userIdtmp['user_id'],
@@ -106,6 +117,27 @@ class Alumni extends CI_Controller{
         $userId = $this->session->user_id;
         $userAlumniInfo = $this->uam->getUserAlumniInfo($userId);
         $this->response->jsonSuccess($userAlumniInfo);
+    }
+
+    public function fillInAlumniPage(){
+        checkLogin('api');
+        $userId = $this->session->user_id;
+        $this->load->model("AlumniPageModels", "alumniPage");
+        //$this->alumniPage->updateAlumniPage($userId, 1, array('status' => 1));
+    }
+
+    public function getAlumniNeedToFillIn(){
+        checkLogin('api');
+        $userId = $this->session->user_id;
+        $this->load->model("AlumniPageModels", "alumniPage");
+        $pageNum = $this->input->get('page_num');
+        $pageSize = $this->input->get('page_size');
+        $getUserInfoList = $this->alumniPage->getSendToUserInfoJoinUser($userId, $pageSize, $pageNum);
+        $totalNum = $this->alumniPage->getResultCount(array('to_user' => $userId));
+        $this->response->jsonSuccess(array(
+            "userInfoList" => $getUserInfoList,
+            "totalNum" => $totalNum
+        ));
     }
 
 }

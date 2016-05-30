@@ -184,8 +184,9 @@
                     <div class="form-group">
                         <label for="alumni-form-cover">发给谁</label>
                         <select class="form-control" id="alumni-form-send_to">
-                            <option>同学</option>
-                            <option>好友</option>
+                            <option value="0">同学</option>
+                            <option value="1">好友</option>
+                            <option value="2">暂不选择</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -457,7 +458,7 @@
                             {
                                 dom.alumniContent.css("width", "520px");
                             }else if(alumni.length > 1){
-                                dom.alumniContent.css("width", "60%")
+                                dom.alumniContent.css("width", "100%")
                             }
                             var html = AlumniInfoReg.generateAlumniItemHtml(alumni);
                             dom.alumniContent.prepend(html);
@@ -466,6 +467,7 @@
                         }
                     },
                     error: function(data){
+                        console.log(data);
                         console.log('加载同学录失败');
                     }
                 });

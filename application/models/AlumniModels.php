@@ -22,7 +22,7 @@ class AlumniModels extends CI_Model{
      * @param $userId
      * @param $title
      * @param $cover 封面模板
-     * @return bool
+     * @return array
      */
     public function addAlumni($userId, $title = '', $cover = 0){
         $this->db->trans_start();
@@ -53,7 +53,9 @@ class AlumniModels extends CI_Model{
             $logContent['run_status'] = 1;
         }
         $this->UserLogModels->addUserLog($userId, $logContent, self::$tableName, __METHOD__);
-        return $logContent['run_status'];
+        $res['run_status'] = $logContent['run_status'];
+        $res['id'] = $id;
+        return $res;
 
     }
 
