@@ -103,4 +103,12 @@ class AlumniModels extends CI_Model{
         return $query->result_array();
     }
 
+    
+    public function getUserAlumniInfoByAlumniId($alumniId){
+        $this->db->where('id', $alumniId);
+        $query  = $this->db->get(self::$tableName);
+        $result = $query->result_array();
+        return $result;
+    }
+
 }
