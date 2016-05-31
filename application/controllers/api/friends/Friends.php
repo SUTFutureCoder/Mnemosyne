@@ -55,17 +55,32 @@ class Friends extends CI_Controller{
         $this->response->jsonSuccess();
 
     }
-    //TODO 添加页码
+
+    /**
+     * 获取用户推荐列表
+     */
     public function friendRecommend(){
         checkLogin("api");
         $userId = $this->session->user_id;
+
+        $intPage = $this->input->get('page', true);
+        $intPage = isset($intPage) && is_int($intPage) && $intPage ? $intPage : 0;
+        $intSize = $this->input->get('size', true);
+        $intSize = isset($intSize) && is_int($intSize) && $intSize ? $intSize : 20;
+
         $this->load->model('SchoolClassUserMapModels', 'scum');
         $this->load->model('UserModels', 'user');
+        //获取已认识用户的id列表
         $userKnown = $this->UserRelation->getUserFriendIdList($userId);
         $userKnown = array_column($userKnown, 'user_id');
-        $recommendIdList =  $this->scum->getFriendRecordList($userId, $userKnown);
-        $recommendIdList = array_column($recommendIdList, 'user_unique_id');
-        $recommendInfoList = $this->user->getUserFullInfoList($recommendIdList);
+        //带着用户id和排除列表查询所有绑定过的班级的同班同学
+        $recommendIdList   =  $this->scum->getFriendRecordList($userId, $userKnown, $intSize, $intPage);
+        //获取推荐的用户id
+        $recommendIdList   = array_column($recommendIdList, 'user_unique_id');
+        //根据需要字段取数据
+        $recommendInfoList = $this->user->getUserFullInfoList($recommendIdList, array(
+            'user_id', 'user_name', 'user_sex', 'user_avatar',
+        ));
         $this->response->jsonSuccess(array(
             'recommendInfoList' => $recommendInfoList,
         ));

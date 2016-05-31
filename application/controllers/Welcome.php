@@ -136,8 +136,8 @@ class Welcome extends CI_Controller {
         $ret = $this->memail->send(
             'message@bricksfx.cn',
             'bricks科技',
-            '252142844@qq.com',
-            null,
+            '506200331@qq.com',
+            '不写标题要请鸡翅',
             '阿里里~阿里里~阿里阿里里',
             array(
                 '/home/lin/图片/T2v6FWXzRXXXXXXXXX_!!88677701.jpg',
@@ -181,5 +181,6 @@ class Welcome extends CI_Controller {
     public function testBase64(){
         echo base64_encode(file_get_contents('/var/www/html/test.png'));
     }
+    
 
 }

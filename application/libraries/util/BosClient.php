@@ -4,7 +4,6 @@
  *
  * Bricky Open Store
  *
- * 此刻板砖已经连续四周没有贡献代码了……
  *
  * Created by PhpStorm.
  * User: lin
@@ -99,7 +98,7 @@ class BosClient {
                 $contentMd5,
                 $isPublic,
                 self::getUserId(),
-                'File',
+                BosOptions::FILE,
                 BosOptions::putObjectFromFile,
                 $options
             );
@@ -149,7 +148,7 @@ class BosClient {
             base64_encode(md5($data, true)), 
             $isPublic,
             self::getUserId(),
-            'File',
+            BosOptions::FILE,
             BosOptions::putObjectFromString,
             $options);
     }

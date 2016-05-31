@@ -8,7 +8,7 @@
  * Time: 下午11:26
  */
 class UserModels extends CI_Model{
-    private static $tableName = 'user';
+    private static $tableName   = 'user';
 
     public function __construct(){
         parent::__construct();
@@ -72,10 +72,19 @@ class UserModels extends CI_Model{
     /**
      * 获取用户基本信息
      *
+     *  注意脱敏！！！
+     *
+     *  注意仅获取需要的字段！！！
+     *
      * @param $userId
+     * @param $selectColumn
      * @return array
      */
-    public function getUserBasicInfo($userId){
+    public function getUserBasicInfo($userId, $selectColumn = null){
+        if (null !== $selectColumn && is_array($selectColumn)){
+            $this->db->select($selectColumn);
+        }
+
         $this->db->where('user_id', $userId);
         $query  = $this->db->get(self::$tableName);
         $result = $query->row_array();
@@ -101,16 +110,26 @@ class UserModels extends CI_Model{
     }
 
     /**
-     * 获取用户基本信息
+     * 根据用户uuid获取用户全部基本信息
+     *
+     *  注意脱敏！！！
+     *
+     *  注意仅获取需要的字段！！！
      *
      * @param $userIdList
+     * @param $selectColumn
      * @return array
      */
-    public function getUserFullInfoList($userIdList){
+    public function getUserFullInfoList($userIdList, $selectColumn = array()){
         if(empty($userIdList))
         {
             return array();
         }
+
+        if (null !== $selectColumn && is_array($selectColumn)){
+            $this->db->select($selectColumn);
+        }
+
         $this->db->where_in('user_id', $userIdList);
         $query  = $this->db->get(self::$tableName);
         $result = $query->result_array();

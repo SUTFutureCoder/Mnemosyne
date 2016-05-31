@@ -54,7 +54,6 @@
                             </div>
                         </div>
                         <div class="friend-info-list">
-                       	    {{section name=foo start=10 loop=20 step=1}} 
                             <div class="friend-info-list-content">
                                 <div class="friend-info-list-content-single">
                                     <div class="friend-info-list-content-single-head">
@@ -65,9 +64,8 @@
                                     </div>
                                 </div>
                             </div>
-			                {{/section}}
                             <div class="friend-info-list-content-footer">
-                                <button class="btn btn-success btn-block" id="friend-skip" type="button">跳过并翻开同学录</button>
+                                <button class="btn btn-success btn-block" id="friend-confirm" type="button">确认并翻开同学录</button>
                             </div>
 
                         </div>
@@ -212,8 +210,6 @@
                         dataType: 'json',
                         success: function(data){
                             if (data['status'] == 0){
-                                //填入到背景中
-
                                 formData.toggle();
                                 initReg.userChooseFriend();
                             } else {
@@ -237,8 +233,31 @@
                         {speed: 'fast', easing: 'swing'}
                 );
 
+                //ajax填充信息
+                $.ajax({
+                    type: 'GET',
+                    url: '{{php}}echo base_url(){{/php}}api/friends/Friends/friendRecommend',
+//                    data: ,
+                    dataType: 'json',
+                    success: function(data){
+                        //解析data
+
+                        //填入dom中
+
+                        JSON.parse();
+                    },
+                    error: function(data){
+                        console.log(data);
+                        alert('获取推荐好友失败');
+                    }
+                });
+
                 //当跳过时重新加载页面
-                dom.initInfoModal.find('#friend-skip').on('click', function(){
+                dom.initInfoModal.find('#friend-confirm').on('click', function(){
+                    //确定选中数量，如有选中则发请求后刷新，否则直接刷新
+
+
+
                     window.location.href=window.location.href;
                 });
                 var formData = dom.initInfoModal.find('#complete-info-modal-choose-friend');

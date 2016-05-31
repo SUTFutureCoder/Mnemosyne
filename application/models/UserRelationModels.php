@@ -58,7 +58,7 @@ class UserRelationModels extends CI_Model{
         $this->db->select('user_relate user_id');
         $this->db->where('user_id', $userId);
         $this->db->where_in('type ', CoreConst::$userFriendTypeList);
-        $query = $this->db->get(self::$tableName);
+        $query  = $this->db->get(self::$tableName);
         $result = $query->result_array();
         return $result;
     }

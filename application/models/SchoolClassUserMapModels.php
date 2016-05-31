@@ -123,11 +123,12 @@ class SchoolClassUserMapModels extends CI_Model{
             return array();
         }
         $offset = $pageSize * $page;
+        //已存在好友列表填入自己
         array_push($userKnown, $userId);
-        $this->db->select('user_unique_id', $offset, $pageSize);
+        $this->db->select('user_unique_id');
         $this->db->where_not_in('user_unique_id', $userKnown);
-        $this->db->where_in('class_unique_id', $classIdList);
-        $res = $this->db->get(self::$tableName);
+        $this->db->where_in('class_unique_id',  $classIdList);
+        $res = $this->db->get(self::$tableName, $pageSize, $offset);
         return $res->result_array();
     }
 

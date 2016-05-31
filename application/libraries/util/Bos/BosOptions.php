@@ -19,8 +19,9 @@ class BosOptions
     const CONFIG         = 'config';
 
     //函数对应远程关系
+    const FILE           = 'File';
+    const BUCKET         = 'Bucket';
+
     const putObjectFromFile   = 'saveFileStream';
     const putObjectFromString = 'saveStringStream';
-
-
 }
