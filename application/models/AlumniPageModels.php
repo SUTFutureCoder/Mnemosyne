@@ -67,7 +67,7 @@ class AlumniPageModels extends CI_Model{
 
     }
 
-    public function updateAlumniPage($userId, $alumniId, $updateArr){
+    public function updateAlumniPage($userId, $alumniPageId, $updateArr){
         $arrUpdateConds = array();
         foreach(self::$tableColumn  as $column){
             if(isset($updateArr[$column]) && !empty($updateArr[$column]) ){
@@ -76,7 +76,7 @@ class AlumniPageModels extends CI_Model{
         }
         $this->db->trans_start();
 
-        $this->db->where('alumni_id', $alumniId);
+        $this->db->where('id', $alumniPageId);
         $this->db->update(self::$tableName, $arrUpdateConds);
 
         //打log
@@ -94,12 +94,12 @@ class AlumniPageModels extends CI_Model{
     }
 
     public function getSendToUserInfoJoinUser($userId, $pageSize = false, $page = 0){
-        $this->db->select('alumni_page.id, user.user_name, user.user_avatar, user.user_nickname, user.user_id');
+        $this->db->select('alumni_page.id, user.user_name, user.user_avatar, user.user_nickname, user.user_id, alumni_page.status');
         $this->db->from('alumni_page');
         $this->db->where('alumni_page.to_user', $userId);
         $this->db->join('user', 'alumni_page.user_id = user.user_id' );
-        $this->db->order_by('status', 'desc');
-        $this->db->order_by('alumni_page.update_time', 'acs');
+        $this->db->order_by('status', 'asc');
+        $this->db->order_by('alumni_page.update_time', 'desc');
         if(isset($pageSize)){
             $this->db->limit($pageSize, $page*$pageSize);
         }
