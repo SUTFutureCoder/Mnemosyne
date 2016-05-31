@@ -7,7 +7,7 @@
  */
 class Message extends CI_Controller{
     private static $redirectURI = array(
-        0 => "",
+        0 => "Alumni/fillInAlumni",
         1 => "/Friends/friendsRequest"
     );
     public function __construct(){
