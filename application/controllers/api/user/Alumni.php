@@ -123,7 +123,18 @@ class Alumni extends CI_Controller{
         checkLogin('api');
         $userId = $this->session->user_id;
         $this->load->model("AlumniPageModels", "alumniPage");
-        //$this->alumniPage->updateAlumniPage($userId, 1, array('status' => 1));
+        $alumniPageId = trim($this->input->post('alumni_page_id', true));
+        $message = trim($this->input->post('message', true));
+        if (!(Validator::isNotEmpty($alumniPageId,   '您的同学录pageid不能为空,目测不是系统问题，就是你在试探')
+             && Validator::isNotEmpty($message,  '您的消息不能为空'))){
+            $this->response->jsonFail(Response::CODE_PARAMS_WRONG, Validator::getMessage());
+        }
+        $updateAlumniPageStatus = $this->alumniPage->updateAlumniPage($userId, $alumniPageId, array('status' => 1,
+                                                                                                    'message' => $message));
+        if(!$updateAlumniPageStatus){
+            $this->response->jsonFail(Response::CODE_SERVER_ERROR, '抱歉，留言失败');
+        }
+        $this->response->jsonSuccess();
     }
 
     public function getAlumniNeedToFillIn(){
