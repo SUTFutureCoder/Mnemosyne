@@ -181,7 +181,7 @@
                             <option value="0">随意选,反正现在只有一个封面....</option>
                         </select>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group alumni-form-send-to-div">
                         <label for="alumni-form-cover">发给谁</label>
                         <select class="form-control" id="alumni-form-send_to">
                             <option value="0">同学</option>
@@ -191,17 +191,24 @@
                     </div>
                     <div class="form-group">
                         <label for="alumni-form-send_to_plus">还想让谁填</label>
+                        <span>
+                        <input type="text" class="form-control" id="alumni-form-send_to_plus_to_user"
+                               placeholder="写上Ta的邮箱/手机号">
                         <input type="text" class="form-control" id="alumni-form-send_to_plus"
-                               placeholder="写上他/她的真实姓名(此功能尚不支持)" disabled>
+                               placeholder="写上Ta的邮箱/手机号">
+                        <br/>
+                        <button style="float:right" id="search-user-btn" type="button" class="btn btn-primary">搜索</button>
+                        </span>
+
                     </div>
                     <div class="alumni-form-already-chosen-user">
                         <label>已经选了</label>
-                        <p>板砖, 林星辰(此功能尚不支持)</p>
+                        <p id="alumni-already-chosen-user"></p>
                     </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                <button id="submit-update-alumni" type="button" class="btn btn-primary">创建</button>
+                <button id="submit-update-alumni" type="button" class="btn btn-primary">提交</button>
             </div>
             </form>
         </div>
@@ -252,54 +259,8 @@
         <h2>Alumni</h2>
         <p>创建, 浏览, 修改删除同学录</p>
         <div id="alumni-content">
-            <!--
-            <div class="alumni-item">
-                <div class="alumni-item-img">
-                    <img src="{{php}}echo base_url();{{/php}}static/img/public/alumni_cover1.png" title="Alumni"/>
-                </div>
-                <div class="alumni-item-footer">
-                    <div class="alumni-item-decribe">
-                        <p>计算机1203</p>
-                    </div>
-                    <div class="alumni-item-operation">
-                        <button type="button" class="btn btn-default" aria-label="Left Align">
-                            <span class="glyphicon glyphicon-list-alt" aria-hidden="true">浏览</span>
-                        </button>
-                        <button type="button" class="btn btn-default" aria-label="Left Align">
-                            <span class="glyphicon glyphicon-edit" aria-hidden="true">编辑</span>
-                        </button>
-                        <button type="button" class="btn btn-default" aria-label="Left Align">
-                            <span class="glyphicon glyphicon-trash" aria-hidden="true">删除</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-            -->
-            <!--
-            <div class="alumni-item">
-                <div class="alumni-item-img">
-                    <img src="{{php}}echo base_url();{{/php}}static/img/public/alumni_cover1.png"/>
-                </div>
-                <div class="alumni-item-footer">
-                    <div class="alumni-item-decribe">
-                        <p>计算机1203</p>
-                    </div>
-                    <div class="alumni-item-operation">
-                        <button type="button" class="btn btn-default" aria-label="Left Align">
-                            <span class="glyphicon glyphicon-list-alt" aria-hidden="true">浏览</span>
-                        </button>
-                        <button type="button" class="btn btn-default" aria-label="Left Align">
-                            <span class="glyphicon glyphicon-edit" aria-hidden="true">编辑</span>
-                        </button>
-                        <button type="button" class="btn btn-default" aria-label="Left Align">
-                            <span class="glyphicon glyphicon-trash" aria-hidden="true">删除</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-            -->
 
-            <div class="alumni-item">
+            <div class="alumni-item" id="add_alumni_item">
                 <div class="alumni-item-img">
                     <img src="{{php}}echo base_url();{{/php}}static/img/public/alumni_add02.png"/>
                 </div>
@@ -308,7 +269,7 @@
                         <p>添加同学录</p>
                     </div>
                     <div class="alumni-item-operation">
-                        <button type="button" class="btn btn-default" aria-label="Left Align" data-toggle="modal" data-target="#update-alumni-modal">
+                        <button type="button" id="add_alumni_btn" alumni_id="-1" class="btn btn-default" aria-label="Left Align">
                             <span class="glyphicon glyphicon-edit" aria-hidden="true">添加</span>
                         </button>
                     </div>
@@ -336,15 +297,58 @@
             alumniModal   : $('#update-alumni-modal'),
             alumniForm    : $('#alumni-form'),
             messagePopover: $('.message_popover'),
-            alumniContent : $('#alumni-content')
+            alumniContent : $('#alumni-content'),
+            updateAlumniModal : $('#update-alumni-modal'),
+            addAlumniItem : $('#add_alumni_item'),
+            alumniItem : $('.alumni-item'),
         };
 
         var AlumniInfoReg = {
             init: function () {
                 this.loadUserInfoFn();
                 this.alumniAddRegFn();
-                //this.messageLoadFn(); 
                 this.loadAlumniInfo();
+                this.showModalFn();
+                
+            },
+
+            showModalFn : function(){
+                dom.addAlumniItem.find('#add_alumni_btn').on('click', function(){
+                    var alumniId = this.getAttribute('alumni_id');    
+                    dom.alumniForm.find('#alumni-form-alumni_id').val(alumniId);
+                    dom.alumniForm.find('.alumni-form-send-to-div').show();
+                    dom.updateAlumniModal.modal('show');
+                });
+                dom.alumniContent.find('.edit_alumni_btn').on('click', function(){
+                    var alumniId = this.getAttribute('alumni_id');
+                    dom.alumniForm.find('#alumni-form-alumni_id').val(alumniId);
+                    dom.alumniForm.find('.alumni-form-send-to-div').hide();
+                    dom.updateAlumniModal.modal('show');
+                    AlumniInfoReg.loadAlumniInfoById(alumniId);
+                });
+                
+            },
+            loadAlumniInfoById : function(alumniId){
+                var postData = {
+                    'alumni_id' : alumniId
+                };
+                $.ajax({
+                    type: 'POST',
+                    url: '{{php}}echo base_url(){{/php}}api/user/alumni/getAlumniInfoById',
+                    data: postData,
+                    dataType: 'json',
+                    success: function(data){
+                        if (data['status'] == 0){
+                            var alumniInfo = data['data'][0];
+                            dom.alumniModal.find('#alumni-form-title').val(alumniInfo['title']);
+                        } else {
+                            alert(data['description']);
+                        }
+                    },
+                    error: function(data){
+                        alert('操作失败');
+                    }
+                });
                 
             },
 
@@ -391,6 +395,7 @@
                                 dom.userInfoTable.find('#user_name').html();
                                 alert(data['description']);
                             }
+
                         },
                         error: function(data){
                             alert('操作失败');
@@ -462,13 +467,17 @@
                             }
                             var html = AlumniInfoReg.generateAlumniItemHtml(alumni);
                             dom.alumniContent.prepend(html);
+
+                            dom.alumniItem.find('.edit_alumni_btn').on('click', function(){
+                                alert("test");
+                            });
                         } else {
                             alert(data['description']);
                         }
                     },
                     error: function(data){
                         console.log(data);
-                        console.log('加载同学录失败');
+                        alert('加载同学录失败');
                     }
                 });
 
@@ -478,7 +487,7 @@
                 var html = "";
                 for (var count = 0; count < alumni.length; count++)
                 {
-                    html += '<div class="alumni-item" id="' + alumni[count]['id'] + '">' + 
+                    html += '<div class="alumni-item">' + 
                                     '<div class="alumni-item-img">' + 
                                         '<img src="{{php}}echo base_url();{{/php}}static/img/public/alumni_cover1.png"/>' + 
                                     '</div>' + 
@@ -487,13 +496,13 @@
                                             '<p>' + alumni[count]['title'] +  '</p>' + 
                                         '</div>' + 
                                         '<div class="alumni-item-operation">' + 
-                                            '<button type="button" class="btn btn-default" aria-label="Left Align">' + 
+                                            '<button type="button" alumni_id = "' + alumni[count]['id']+ '" class="overview_alumni_btn btn btn-default" aria-label="Left Align">' + 
                                                 '<span class="glyphicon glyphicon-list-alt" aria-hidden="true">浏览</span>' + 
                                             '</button>' + 
-                                            '<button type="button" class="btn btn-default" aria-label="Left Align">' + 
+                                            '<button type="button" alumni_id = "' + alumni[count]['id']+ '" class="edit_alumni_btn btn btn-default" aria-label="Left Align">' + 
                                                 '<span class="glyphicon glyphicon-edit" aria-hidden="true">编辑</span>' + 
                                             '</button>' + 
-                                            '<button type="button" class="btn btn-default" aria-label="Left Align">' + 
+                                            '<button type="button" alumni_id = "' + alumni[count]['id']+ '" class="delete_alumni_btn btn btn-default" aria-label="Left Align">' + 
                                                 '<span class="glyphicon glyphicon-trash" aria-hidden="true">删除</span>' + 
                                             '</button>' + 
                                         '</div>' + 

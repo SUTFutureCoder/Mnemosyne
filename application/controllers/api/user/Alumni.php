@@ -150,5 +150,23 @@ class Alumni extends CI_Controller{
             "totalNum" => $totalNum
         ));
     }
+    public function getAlumniInfoById(){
+        checkLogin('api');
+        $userId = $this->session->user_id;
+        $alumniId = $this->input->post('alumni_id', true);
+        $this->load->model("AlumniModels", 'alumni');
+        if(!Validator::isNotEmpty($alumniId, "你的alumniId为空,目测是hack行为")){
+            $this->response->jsonFail(Response::CODE_PARAMS_WRONG, Validator::getMessage());
+        }
+        //根据提交的alumni id获取用户信息
+        $alumniInfo = $this->alumni->getUserAlumniInfoByAlumniId($alumniId);
+        if(isset($alumniInfo['user_id']) && $alumniInfo['user_id'] != $userId){
+            $this->response->jsonFail(Response::CODE_PARAMS_WRONG, "不能查看不属于此用户的alumni");
+        }
+        $this->response->jsonSuccess(
+            $alumniInfo
+        );
+    }
+    
 
 }
