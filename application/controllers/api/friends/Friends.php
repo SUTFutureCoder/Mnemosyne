@@ -23,19 +23,75 @@ class Friends extends CI_Controller{
 
 
     //TODO 是否为好友的验证
+    /**
+     * 板砖大作,添加[单个]好友
+     *
+     * 话说为啥要加s?
+     */
     public function addFriends(){
         checkLogin("api");
-        $userId = $this->session->user_id;
+        $userId   = $this->session->user_id;
         $userName = $this->session->user_name;
-        $send_to      = trim($this->input->post('send_to',      true));
+        $send_to  = trim($this->input->post('send_to',      true));
         if(!Validator::isNotEmpty($send_to, "您要添加的好友id不能为空")) {
             $this->response->jsonFail(Response::CODE_PARAMS_WRONG, Validator::getMessage());
         }
+
         if($userId == $send_to){
              $this->response->jsonFail(Response::CODE_PARAMS_WRONG, "您不能添加自己为好友");
         }
+
+        $friendConfirmMessageRet = $this->sendFriendConfirmMessage($userId, $userName, $send_to);
+        if(!$friendConfirmMessageRet){
+            $this->response->jsonFail(Response::CODE_SERVER_ERROR, '抱歉，添加好友消息发送失败');
+        }
+        $this->response->jsonSuccess();
+    }
+
+    /*
+     * 通过列表批量添加好友
+     */
+    public function addFriendsByList(){
+        checkLogin("api");
+        $userId   = $this->session->user_id;
+        $userName = $this->session->user_name;
+        $arrSendList = $this->input->post('send_list', true);
+
+        if (!Validator::isArray($arrSendList, '您要添加的好友列表异常')){
+            $this->response->jsonFail(Response::CODE_PARAMS_WRONG, Validator::getMessage());
+        }
+
+
+        foreach ($arrSendList as $send_to){
+            if(!Validator::isNotEmpty($send_to, "您要添加的好友id不能为空")) {
+                $this->response->jsonFail(Response::CODE_PARAMS_WRONG, Validator::getMessage());
+            }
+
+            if($userId == $send_to){
+                $this->response->jsonFail(Response::CODE_PARAMS_WRONG, "您不能添加自己为好友");
+            }
+
+            $friendConfirmMessageRet = $this->sendFriendConfirmMessage($userId, $userName, $send_to);
+            if(!$friendConfirmMessageRet){
+                $this->response->jsonFail(Response::CODE_SERVER_ERROR, '抱歉，添加好友消息发送失败');
+            }
+        }
+
+        $this->response->jsonSuccess();
+    }
+
+    /**
+     *
+     * 抽象出来的向好友发送申请方法
+     *
+     * @param $userId
+     * @param $userName
+     * @param $send_to
+     * @return bool
+     */
+    private function sendFriendConfirmMessage($userId, $userName, $send_to){
         $isInfoConfirmExist = $this->infoConfirm->checkInfoIsExist($userId, $send_to,
-                                                CoreConst::FRIEND_MESSAGE_CONFIRM, CoreConst::INFO_CONFRIM_STATUS_UNREAD);
+            CoreConst::FRIEND_MESSAGE_CONFIRM, CoreConst::INFO_CONFRIM_STATUS_UNREAD);
         if($isInfoConfirmExist > 0){
             $this->response->jsonFail(Response::CODE_PARAMS_WRONG, "您的好友请求已经发送过");
         }
@@ -49,11 +105,8 @@ class Friends extends CI_Controller{
                 $message = $userName . ' 请求添加为好友'
             );
         }
-        if(!$addInfoConfirm || !$addMessageStatus){
-            $this->response->jsonFail(Response::CODE_SERVER_ERROR, '抱歉，添加好友消息发送失败');
-        }
-        $this->response->jsonSuccess();
-
+        //添加好友信息失败
+        return ($addInfoConfirm && $addMessageStatus);
     }
 
     /**

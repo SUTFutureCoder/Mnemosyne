@@ -89,8 +89,10 @@
             userSex         : '',
             userClassId     : '',
             userStudentId   : '',
-            userSUTFastBind : 0,
+            userSUTFastBind : 0
         };
+
+        var arrFriendsChoosed = [];
 
         var initReg = {
 
@@ -245,7 +247,7 @@
                             var strDom = '<div class="friend-info-list-content">' +
                                     '<div class="friend-info-list-content-single">' +
                                     '<div class="friend-info-list-content-single-head">' +
-                                    '<img src="' + data['data']['recommendInfoList'][friends]['user_avatar'] + '"/></div>' +
+                                    '<img data-choosed="0" data-user-id="' + data['data']['recommendInfoList'][friends]['user_id'] + '" src="' + data['data']['recommendInfoList'][friends]['user_avatar'] + '"/></div>' +
                                     '<div class="friend-info-list-content-single-desc"><p>' + data['data']['recommendInfoList'][friends]['user_name'] + '</p></div></div></div>';
 
                             friendInfoList.prepend(strDom);
@@ -257,13 +259,52 @@
                     }
                 });
 
+                //绑定选中事件
+                dom.chooseFriendModal.on('click', '.friend-info-list-content-single-head img', function (){
+                    //判断之前是否选择
+                    var friendChoosed = $(this).attr('data-choosed');
+                    var friendUserId  = $(this).attr('data-user-id');
+                    if ('0' == friendChoosed){
+                        //添加选中框并添加到数组中
+                        $(this).css('border', '2px solid #0000ff');
+                        $(this).attr('data-choosed', '1');
+                        arrFriendsChoosed.push(friendUserId);
+                    } else {
+                        //取消选中框并从数组中移除
+                        $(this).css('border', '');
+                        var intIndexOfList = arrFriendsChoosed.indexOf(friendUserId);
+                        //移除数组
+                        arrFriendsChoosed.splice(intIndexOfList, 1);
+                        $(this).attr('data-choosed', '0');
+                    }
+                });
+
                 //当跳过时重新加载页面
                 dom.chooseFriendModal.find('#friend-confirm').on('click', function(){
                     //确定选中数量，如有选中则发请求后刷新，否则直接刷新
-
-
-
-                    window.location.href=window.location.href;
+                    if (arrFriendsChoosed.length){
+                        $.ajax({
+                            type: 'POST',
+                            url:  '{{php}}echo base_url(){{/php}}api/friends/Friends/addFriendsByList',
+                            data: {
+                                'send_list': arrFriendsChoosed
+                            },
+                            dataType: 'json',
+                            success: function(data){
+                                if (0 != data['status']){
+                                    alert(data['description']);
+                                    return 0;
+                                }
+                                window.location.href=window.location.href;
+                            },
+                            error: function(data){
+                                console.log(data);
+                                alert('获取推荐好友失败');
+                            }
+                        });
+                    } else {
+                        window.location.href=window.location.href;
+                    }
                 });
                 var formData = dom.chooseFriendModal;
                 formData.toggle();
