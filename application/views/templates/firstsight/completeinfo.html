@@ -54,16 +54,7 @@
                             </div>
                         </div>
                         <div class="friend-info-list">
-                            <div class="friend-info-list-content">
-                                <div class="friend-info-list-content-single">
-                                    <div class="friend-info-list-content-single-head">
-                                        <img src='http://hdn.xnimg.cn/photos/hdn521/20160114/1640/h_main_McbN_51d70003a5dc1986.jpg'/> 
-                                    </div>
-                                    <div class="friend-info-list-content-single-desc">
-                                        <p>方旭</p>
-                                    </div>
-                                </div>
-                            </div>
+
                             <div class="friend-info-list-content-footer">
                                 <button class="btn btn-success btn-block" id="friend-confirm" type="button">确认并翻开同学录</button>
                             </div>
@@ -86,7 +77,9 @@
         var userToken = store.get('token');
 
         var dom = {
-            initInfoModal  : $('#complete-info-modal')
+            initInfoModal     : $('#complete-info-modal'),
+            basicInfoModal    : $('#complete-info-modal-basic-info'),
+            chooseFriendModal : $('#complete-info-modal-choose-friend')
         };
 
         var initVar = {
@@ -129,15 +122,15 @@
             },
 
             testInitModal: function(){
-                var formData = dom.initInfoModal.find('#complete-info-modal-basic-info');
+                var formData = dom.basicInfoModal;
                 formData.toggle();
-                var userRecommend = dom.initInfoModal.find('#complete-info-modal-choose-friend');
+                var userRecommend = dom.chooseFriendModal;
                 userRecommend.toggle();
             },
 
             userInfoInit: function(){
                 //分布记录，最后一起提交
-                var formData = dom.initInfoModal.find('#complete-info-modal-basic-info');
+                var formData = dom.basicInfoModal;
                 formData.on('click', '#basic-info-form-user-info-confirm', function(){
                     //检查值
                     initVar.userName = formData.find('#basic-info-form-name').val();
@@ -236,15 +229,27 @@
                 //ajax填充信息
                 $.ajax({
                     type: 'GET',
-                    url: '{{php}}echo base_url(){{/php}}api/friends/Friends/friendRecommend',
+                    url:  '{{php}}echo base_url(){{/php}}api/friends/Friends/friendRecommend',
 //                    data: ,
                     dataType: 'json',
                     success: function(data){
+                        console.log(data);
                         //解析data
+                        if (0 != data['status']){
+                            return 0;
+                        }
 
                         //填入dom中
+                        var friendInfoList = dom.chooseFriendModal.find('.friend-info-list');
+                        for (var friends in data['data']['recommendInfoList']){
+                            var strDom = '<div class="friend-info-list-content">' +
+                                    '<div class="friend-info-list-content-single">' +
+                                    '<div class="friend-info-list-content-single-head">' +
+                                    '<img src="' + data['data']['recommendInfoList'][friends]['user_avatar'] + '"/></div>' +
+                                    '<div class="friend-info-list-content-single-desc"><p>' + data['data']['recommendInfoList'][friends]['user_name'] + '</p></div></div></div>';
 
-                        JSON.parse();
+                            friendInfoList.prepend(strDom);
+                        }
                     },
                     error: function(data){
                         console.log(data);
@@ -253,14 +258,14 @@
                 });
 
                 //当跳过时重新加载页面
-                dom.initInfoModal.find('#friend-confirm').on('click', function(){
+                dom.chooseFriendModal.find('#friend-confirm').on('click', function(){
                     //确定选中数量，如有选中则发请求后刷新，否则直接刷新
 
 
 
                     window.location.href=window.location.href;
                 });
-                var formData = dom.initInfoModal.find('#complete-info-modal-choose-friend');
+                var formData = dom.chooseFriendModal;
                 formData.toggle();
 
 
