@@ -132,7 +132,7 @@ class Friends extends CI_Controller{
         $recommendIdList   = array_column($recommendIdList, 'user_unique_id');
         //根据需要字段取数据
         $recommendInfoList = $this->user->getUserFullInfoList($recommendIdList, array(
-            'user_id', 'user_name', 'user_sex', 'user_avatar',
+            'user_id', 'user_nickname', 'user_name', 'user_sex', 'user_avatar',
         ));
         $this->response->jsonSuccess(array(
             'recommendInfoList' => $recommendInfoList,

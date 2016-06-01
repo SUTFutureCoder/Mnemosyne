@@ -54,6 +54,9 @@
             },
             generateUserSingleItem : function(userInfo){
                 var html = "";
+                if(userInfo['user_avatar']  == ""){
+                    userInfo['user_avatar'] = "{{php}}echo base_url();{{/php}}static/img/public/default-avatar.jpg";
+                }
                 html += '<div class="user_single col-xs-12">' +
                             '<div class="header-img-sm col-xs-4 col-md-2">' + 
                                 '<img src="' + userInfo['user_avatar'] + '">' + 

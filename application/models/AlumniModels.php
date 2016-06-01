@@ -97,6 +97,21 @@ class AlumniModels extends CI_Model{
         return $alumniUpdate['run_status'];
     }
 
+    public function deleteAlumni($alumniId, $userId){
+        $alumniDelete = array('id' => $alumniId, 'user_id' => $userId);
+        
+        $this->db->trans_start();
+        $this->db->delete(self::$tableName, $alumniDelete); 
+        $alumniDelete['des'] = "delete Alumni column";
+        $this->db->trans_complete();
+        if (!$this->db->trans_status()){
+            $alumniDelete['run_status'] = 0;
+        } else {
+            $alumniDelete['run_status'] = 1;
+        }
+        $this->UserLogModels->addUserLog($userId, $alumniDelete, self::$tableName, __METHOD__);
+        return $alumniDelete['run_status'];
+    }
     public function getAlumniByUserId($userId){
         $this->db->where("user_id", $userId);
         $query = $this->db->get(self::$tableName);

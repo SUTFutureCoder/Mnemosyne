@@ -197,6 +197,23 @@ class Alumni extends CI_Controller{
             $alumniInfo
         );
     }
-    
+
+    public function deleteAlumni(){
+        checkLogin('api');
+        $userId = $this->session->user_id;
+        $alumniId = $this->input->post('alumni_id', true);
+        $this->load->model("AlumniModels", 'alumni');
+        $this->load->model("AlumniPageModels", "alumniPage");
+        $deleteAlumniPageStats = $this->alumniPage->deleteAlumniPage($alumniId, $userId);
+        if($deleteAlumniPageStats){
+            $deleteAlumniStatus = $this->alumni->deleteAlumni($alumniId, $userId);
+            if(!$deleteAlumniStatus){
+                $this->response->jsonFail(Response::CODE_SERVER_ERROR, '删除同学录失败');
+            }
+        }else{
+            $this->response->jsonFail(Response::CODE_SERVER_ERROR, '删除同学录页面失败');            
+        }
+        $this->response->jsonSuccess();
+    }
 
 }

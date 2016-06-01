@@ -305,6 +305,7 @@
                 this.loadAlumniInfo();
                 this.showModalFn();
                 this.searchUserFn();
+                this.deleteAlumni();
                 
             },
 
@@ -454,7 +455,34 @@
                     });
                 });
             },
-
+            
+            deleteAlumni : function(){
+                dom.alumniContent.find('.delete_alumni_btn').on('click', function(){
+                    var confirmDelete = confirm("确认删除");
+                    var alumniId = this.getAttribute('alumni_id');
+                    var postData = {
+                        'alumni_id' : alumniId,
+                    };
+                    $.ajax({
+                        type: 'POST',
+                        url: '{{php}}echo base_url(){{/php}}api/user/alumni/deleteAlumni',
+                        data: postData,
+                        dataType: 'json',
+                        success: function(data){
+                            console.log(data);
+                            if (data['status'] == 0){
+                                alert("删除成功");
+                            } else {
+                                alert(data['description']);
+                            }
+                        },
+                        error: function(data){
+                            console.log(data);
+                            alert('操作失败');
+                        }
+                    });
+                });
+            },
 
             alumniFormData: function(){
                 var alumniFormdata = dom.alumniForm;
