@@ -189,16 +189,11 @@
                             <option value="2">暂不选择</option>
                         </select>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group send_to_plus_div">
                         <label for="alumni-form-send_to_plus">还想让谁填</label>
-                        <span>
-                        <input type="text" class="form-control" id="alumni-form-send_to_plus_to_user"
-                               placeholder="写上Ta的邮箱/手机号">
-                        <input type="text" class="form-control" id="alumni-form-send_to_plus"
-                               placeholder="写上Ta的邮箱/手机号">
-                        <br/>
+                        <input type="text" class="form-control" id="alumni-form-send_to_plus_shown_to_user" placeholder="写上Ta的邮箱/手机号"/>
+                        <input type="text" class="form-control" id="alumni-form-send_to_plus"/>
                         <button style="float:right" id="search-user-btn" type="button" class="btn btn-primary">搜索</button>
-                        </span>
 
                     </div>
                     <div class="alumni-form-already-chosen-user">
@@ -306,9 +301,10 @@
         var AlumniInfoReg = {
             init: function () {
                 this.loadUserInfoFn();
-                this.alumniAddRegFn();
+                this.alumniUpdateRegFn();
                 this.loadAlumniInfo();
                 this.showModalFn();
+                this.searchUserFn();
                 
             },
 
@@ -317,12 +313,19 @@
                     var alumniId = this.getAttribute('alumni_id');    
                     dom.alumniForm.find('#alumni-form-alumni_id').val(alumniId);
                     dom.alumniForm.find('.alumni-form-send-to-div').show();
+                    dom.alumniForm.find('.send_to_plus_div').hide();
+                    dom.alumniForm.find('.alumni-form-already-chosen-user').hide();
                     dom.updateAlumniModal.modal('show');
                 });
                 dom.alumniContent.find('.edit_alumni_btn').on('click', function(){
                     var alumniId = this.getAttribute('alumni_id');
                     dom.alumniForm.find('#alumni-form-alumni_id').val(alumniId);
                     dom.alumniForm.find('.alumni-form-send-to-div').hide();
+                    dom.alumniForm.find('.send_to_plus_div').show();
+                    dom.alumniForm.find('#alumni-form-send_to_plus').hide();
+                    dom.alumniForm.find('.alumni-form-already-chosen-user').show();
+                    dom.alumniModal.find('.alumni-form-already-chosen-user p').text("");
+                    dom.alumniModal.find('#alumni-form-send_to_plus').val("");
                     dom.updateAlumniModal.modal('show');
                     AlumniInfoReg.loadAlumniInfoById(alumniId);
                 });
@@ -404,19 +407,54 @@
                 });
             },
 
-            alumniAddRegFn: function(){
-                dom.alumniForm.on('click', "#submit-update-alumni", function(){
+            alumniUpdateRegFn: function(){
+                dom.alumniForm.find("#submit-update-alumni").on('click', function(){
                     var alumniFormdata = dom.alumniForm;
-                    alumniFormdata.find('#alumni-form-alumni_id').val('-1');
                     var postData = AlumniInfoReg.alumniFormData();
                     AlumniInfoReg.submitAlumniInfo(postData);
                 })
 
             },
 
-            alumniUpdateRegFn: function(){
-
+            searchUserFn : function(){
+                var searchUserbtn = dom.alumniModal.find('#search-user-btn');
+                searchUserbtn.on('click', function(){
+                    searchUserbtn.html("搜索中.....");
+                    searchUserbtn.attr('disabled', 'disabled');
+                    var userLoginName = dom.alumniForm.find('#alumni-form-send_to_plus_shown_to_user').val();
+                    var postData = {
+                        'login_name' : userLoginName,
+                    };
+                    $.ajax({
+                        type: 'POST',
+                        url: '{{php}}echo base_url(){{/php}}api/user/UserInfo/getUserInfoByLoginName',
+                        data: postData,
+                        dataType: 'json',
+                        success: function(data){
+                            if (data['status'] == 0){
+                                if(data['data']['userInfo'] != null){
+                                    dom.alumniModal.find('.alumni-form-already-chosen-user p').append(data['data']['userInfo']['user_name'] + ',');
+                                    var sendToUserList = dom.alumniModal.find('#alumni-form-send_to_plus').val() + data['data']['userInfo']['user_id'] + ',';
+                                    dom.alumniModal.find('#alumni-form-send_to_plus').val(sendToUserList);
+                                    dom.alumniForm.find('#alumni-form-send_to_plus_shown_to_user').val("");
+                                }else{
+                                    alert("此用户不存在");                        
+                                }
+                            } else {
+                                alert(data['description']);
+                            }
+                            searchUserbtn.html("搜索");
+                            searchUserbtn.removeAttr('disabled', 'disabled');
+                        },
+                        error: function(data){
+                            alert('操作失败');
+                            searchUserbtn.html("搜索");
+                            searchUserbtn.removeAttr('disabled', 'disabled');
+                        }
+                    });
+                });
             },
+
 
             alumniFormData: function(){
                 var alumniFormdata = dom.alumniForm;
@@ -437,6 +475,7 @@
                     data: postData,
                     dataType: 'json',
                     success: function(data){
+                        console.log(data);
                         if (data['status'] == 0){
                             alert("添加成功");
                             dom.alumniModal.modal('hide');
@@ -445,6 +484,7 @@
                         }
                     },
                     error: function(data){
+                        console.log(data);
                         alert('操作失败');
                     }
                 });
@@ -468,9 +508,6 @@
                             var html = AlumniInfoReg.generateAlumniItemHtml(alumni);
                             dom.alumniContent.prepend(html);
 
-                            dom.alumniItem.find('.edit_alumni_btn').on('click', function(){
-                                alert("test");
-                            });
                         } else {
                             alert(data['description']);
                         }

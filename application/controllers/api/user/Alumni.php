@@ -78,7 +78,37 @@ class Alumni extends CI_Controller{
                 }
 
             }
+        }else{
+            $updateStatus = $this->alumni->updateAlumni($alumniId, $userId, $title, $cover);
+            if($updateStatus){
+                //用户提交的同学录追加填写
+                $sendToPlusIdList = explode(',',$send_to_plus);
+                //需要去除的列表，空值，用户自己
+                $userIdListNeesToRemove = array("", $userId);
+                //此同学录已经发送的名单
+                $userIdListAlreadySended = $this->alumniPage->getUserIdListByAlumniId($alumniId);
+                $userIdListAlreadySended = array_column($userIdListAlreadySended, 'to_user');
+                //需要去除的列表，空值，用户自己, 此同学录已经发送过的用户
+                $userIdListNeesToRemove =  array_merge($userIdListNeesToRemove, $userIdListAlreadySended);
+                //去掉需要去掉的用户，获得最终需要发送的
+                $sendToPlusIdList = array_diff($sendToPlusIdList, $userIdListNeesToRemove);
+            
+                foreach($sendToPlusIdList as $userIdtmp){
+                    $addAlumniStatus   =  $this->alumniPage->addAlumniPage($alumniId, $userId, $userIdtmp);
+                    $addMessageStatus  = $this->message->addMessage(    $userId, $userIdtmp,
+                                                                        $type    = CoreConst::AlUMNI_FILL_IN_MES,
+                                                                        $title   = '填写同学录',
+                                                                        $message = $userName . ' 邀请您填写同学录'
+                                                                    );
+                    if(!$addAlumniStatus || !$addMessageStatus){
+                        $this->response->jsonFail(Response::CODE_SERVER_ERROR, '抱歉，添加同学录失败');
+                    }
+                }
 
+                $this->response->jsonSuccess();
+            }else{
+                $this->response->jsonFail(Response::CODE_SERVER_ERROR, '抱歉，更新同学录失败');
+            }
         }
         $this->response->jsonSuccess();
 

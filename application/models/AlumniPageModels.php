@@ -119,4 +119,11 @@ class AlumniPageModels extends CI_Model{
         return $this->db->count_all_results();
     }
 
+    public function getUserIdListByAlumniId($alumniId){
+        $this->db->select('to_user');
+        $this->db->where('alumni_id', $alumniId);
+        $query = $this->db->get(self::$tableName);
+        return $query->result_array();
+    }
+
 }
