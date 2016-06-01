@@ -34,7 +34,7 @@ function getVerticalNavtar($nav_num){
 function getAlumniVerticalNavtar($nav_num){
     $nav_list = array(
         array("name" => "填写同学录" , "url" => "Alumni/fillInAlumni"),
-        array("name" => "查看同学录" , "url" => ""),
+        array("name" => "查看同学录" , "url" => "Alumni/overviweAlumni"),
     );
     $ret = "";
     foreach($nav_list as $i => $temp)

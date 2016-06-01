@@ -29,5 +29,11 @@ class Alumni extends CI_Controller{
         $js = "fillin_alumni_js.html";
         $this->paramsPrepared($navbarNum, $mainContent, $js);
     }
+    public function overviweAlumni(){
+        $navbarNum = 1;
+        $mainContent = "overview_alumni.html";
+        $js = "overview_alumni_js.html";
+        $this->paramsPrepared($navbarNum, $mainContent, $js);
+    }
 
 }

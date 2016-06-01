@@ -1,0 +1,119 @@
+<script>
+    (function(){
+        var dom = {
+            alumni_list : $("#"),
+            fillInAlumniModal : $('#fill_in_alumni_modal'),
+
+        };
+        var fillInAlumni = {
+            init : function(){
+                this.getAlumniNeedToFillIn();
+                this.initUM();
+                this.submitAlumni();
+            },
+            initUM : function(){
+                console.log(dom.fillInAlumniModal.find('.modal-body').width());
+                UM.getEditor('myEditor').setWidth("98%");
+            },
+            getAlumniNeedToFillIn : function(){
+                var postData = {
+                };
+                $.ajax({
+                    type: 'GET',
+                    url: '{{php}}echo base_url(){{/php}}api/user/alumni/getAlumniNeedToFillIn',
+                    data: postData,
+                    dataType: 'json',
+                    success: function (data) {
+                        if(data['status'] == 0){
+                            console.log(data);
+                            var userInfoList = data['data']['userInfoList'];
+                            var html = "";
+                            for(var i = 0; i < userInfoList.length; i++){
+                                html += fillInAlumni.generateUserSingleItem(userInfoList[i]);
+                            }
+                            dom.alumniNeedToFillIn.empty();
+                            dom.alumniNeedToFillIn.append(html);
+                            fillInAlumni.showFillInAlumniModal(dom.alumniNeedToFillIn.find(".fill_in_alumni_btn"));
+                        }else{
+                            alert(data['description']);
+                        }
+                    },
+                    error: function (data) {
+                        console.log(data);
+                        alert('操作失败');
+                    }
+                });
+            },
+
+            showFillInAlumniModal : function(btn){
+                btn.on('click', function(){
+                    dom.fillInAlumniModal.modal('show');
+                    var alumniPageId = this.getAttribute('alumni_page_id');
+                    dom.fillInAlumniModal.find('#alumni_page_id').val(alumniPageId);
+                });
+            },
+            generateUserSingleItem : function(userInfo){
+                var html = "";
+                if(userInfo['user_avatar']  == ""){
+                    userInfo['user_avatar'] = "{{php}}echo base_url();{{/php}}static/img/public/default-avatar.jpg";
+                }
+                html += '<div class="user_single col-xs-12">' +
+                            '<div class="header-img-sm col-xs-4 col-md-2">' + 
+                                '<img src="' + userInfo['user_avatar'] + '">' + 
+                            '</div>' + 
+                            '<div class="request-info col-xs-8 col-md-8">' + 
+                                '<div class="user_nickname">' + userInfo['user_nickname'] +  '</div>' + 
+                                '<div class="user_name">' + userInfo['user_name'] + '</div>' + 
+                                '<div class="user_school">沈阳工业大学</div>';
+                if(userInfo['status'] == '1'){
+                    html += '<div class="is_fill_in" style="color:red">已经填写过</div>';
+                }
+                html +=         '</div>' + 
+                            '<div class="control-btn">' + 
+                                '<button type="button" alumni_page_id = "' + userInfo['id'] + '" user_id = "' + userInfo['user_id'] + '" class="fill_in_alumni_btn btn btn-info">想对TA说</button>' +
+                            '</div>'+ 
+                        '</div>';
+                return html
+            },
+            submitAlumni : function(){
+                var submitBtn = dom.fillInAlumniModal.find('#fill_in_alumni_btn');
+                submitBtn.on('click', function(){
+                    var alumniPageId = dom.fillInAlumniModal.find('#alumni_page_id').val();
+                    var message = UM.getEditor('myEditor').getContent();
+                    var postData = {
+                        'alumni_page_id': alumniPageId,
+                        'message' : message,
+                    };
+                    console.log(message);
+                    UM.getEditor('myEditor').getContent();
+                    submitBtn.html("正在提交中……请稍后");
+                    submitBtn.attr('disabled', 'disabled');
+                    $.ajax({
+                        type: 'POST',
+                        url: '{{php}}echo base_url(){{/php}}api/user/alumni/fillInAlumniPage',
+                        data: postData,
+                        dataType: 'json',
+                        success: function (data) {
+                            console.log(data);
+                            if(data['status'] == 0){
+                                alert("留言成功");
+                                dom.fillInAlumniModal.modal('hide');
+                            }else{
+                                alert(data['description']);
+                            }
+                            submitBtn.html("提交");
+                            submitBtn.removeAttr('disabled', 'disabled');
+                        },
+                        error: function (data) {
+                            console.log(data);
+                            alert('操作失败');
+                            submitBtn.html("提交");
+                            submitBtn.removeAttr('disabled', 'disabled');
+                        }
+                    });
+                });
+            },
+        };
+        fillInAlumni.init();
+    })();
+</script>
