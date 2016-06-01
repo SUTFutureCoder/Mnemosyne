@@ -1,39 +1,30 @@
 <script>
     (function(){
         var dom = {
-            alumni_list : $("#"),
-            fillInAlumniModal : $('#fill_in_alumni_modal'),
-
+            alumniList : $("#alumni_list"),
+            singleAlumniPageModal : $('#single_alumni_page_modal'),
         };
-        var fillInAlumni = {
+
+        var alumni = {
             init : function(){
-                this.getAlumniNeedToFillIn();
-                this.initUM();
-                this.submitAlumni();
+                this.loadAlumniList();
             },
-            initUM : function(){
-                console.log(dom.fillInAlumniModal.find('.modal-body').width());
-                UM.getEditor('myEditor').setWidth("98%");
-            },
-            getAlumniNeedToFillIn : function(){
-                var postData = {
-                };
+            loadAlumniList : function(){
                 $.ajax({
                     type: 'GET',
-                    url: '{{php}}echo base_url(){{/php}}api/user/alumni/getAlumniNeedToFillIn',
-                    data: postData,
+                    url: '{{php}}echo base_url(){{/php}}api/user/alumni/getalumni',
                     dataType: 'json',
                     success: function (data) {
+                        console.log(data);
                         if(data['status'] == 0){
-                            console.log(data);
-                            var userInfoList = data['data']['userInfoList'];
+                            var alumniInfoList = data['data'];
                             var html = "";
-                            for(var i = 0; i < userInfoList.length; i++){
-                                html += fillInAlumni.generateUserSingleItem(userInfoList[i]);
+                            for(var i = 0; i < alumniInfoList.length; i++){
+                                html += alumni.generateAlumniItem(alumniInfoList[i]);
                             }
-                            dom.alumniNeedToFillIn.empty();
-                            dom.alumniNeedToFillIn.append(html);
-                            fillInAlumni.showFillInAlumniModal(dom.alumniNeedToFillIn.find(".fill_in_alumni_btn"));
+                            dom.alumniList.empty();
+                            dom.alumniList.append(html);
+                            alumni.showSingleAlumniPageModal();
                         }else{
                             alert(data['description']);
                         }
@@ -45,75 +36,32 @@
                 });
             },
 
-            showFillInAlumniModal : function(btn){
-                btn.on('click', function(){
-                    dom.fillInAlumniModal.modal('show');
-                    var alumniPageId = this.getAttribute('alumni_page_id');
-                    dom.fillInAlumniModal.find('#alumni_page_id').val(alumniPageId);
+            showSingleAlumniPageModal : function(){
+                dom.alumniList.find('.overview_alumni_btn').on('click', function(){
+                    dom.singleAlumniPageModal.modal('show');
                 });
             },
-            generateUserSingleItem : function(userInfo){
+            generateAlumniItem : function(AlumniInfo){
                 var html = "";
-                if(userInfo['user_avatar']  == ""){
-                    userInfo['user_avatar'] = "{{php}}echo base_url();{{/php}}static/img/public/default-avatar.jpg";
+                if(AlumniInfo['cover']  == 0){
+                    AlumniInfo['cover'] = "{{php}}echo base_url();{{/php}}static/img/public/alumni_cover1.png";
                 }
+                console.log(AlumniInfo['cover']);
                 html += '<div class="user_single col-xs-12">' +
                             '<div class="header-img-sm col-xs-4 col-md-2">' + 
-                                '<img src="' + userInfo['user_avatar'] + '">' + 
+                                '<img src="' + AlumniInfo['cover'] + '">' + 
                             '</div>' + 
                             '<div class="request-info col-xs-8 col-md-8">' + 
-                                '<div class="user_nickname">' + userInfo['user_nickname'] +  '</div>' + 
-                                '<div class="user_name">' + userInfo['user_name'] + '</div>' + 
-                                '<div class="user_school">沈阳工业大学</div>';
-                if(userInfo['status'] == '1'){
-                    html += '<div class="is_fill_in" style="color:red">已经填写过</div>';
-                }
-                html +=         '</div>' + 
+                                '<div class="alumni_name">' + AlumniInfo['title'] +  '</div>' + 
+                                '<br/>' +
+                            '</div>' + 
                             '<div class="control-btn">' + 
-                                '<button type="button" alumni_page_id = "' + userInfo['id'] + '" user_id = "' + userInfo['user_id'] + '" class="fill_in_alumni_btn btn btn-info">想对TA说</button>' +
+                                '<button type="button" alumni_id = "' + AlumniInfo['id'] + '" class="overview_alumni_btn btn btn-info">查看</button>' +
                             '</div>'+ 
                         '</div>';
                 return html
             },
-            submitAlumni : function(){
-                var submitBtn = dom.fillInAlumniModal.find('#fill_in_alumni_btn');
-                submitBtn.on('click', function(){
-                    var alumniPageId = dom.fillInAlumniModal.find('#alumni_page_id').val();
-                    var message = UM.getEditor('myEditor').getContent();
-                    var postData = {
-                        'alumni_page_id': alumniPageId,
-                        'message' : message,
-                    };
-                    console.log(message);
-                    UM.getEditor('myEditor').getContent();
-                    submitBtn.html("正在提交中……请稍后");
-                    submitBtn.attr('disabled', 'disabled');
-                    $.ajax({
-                        type: 'POST',
-                        url: '{{php}}echo base_url(){{/php}}api/user/alumni/fillInAlumniPage',
-                        data: postData,
-                        dataType: 'json',
-                        success: function (data) {
-                            console.log(data);
-                            if(data['status'] == 0){
-                                alert("留言成功");
-                                dom.fillInAlumniModal.modal('hide');
-                            }else{
-                                alert(data['description']);
-                            }
-                            submitBtn.html("提交");
-                            submitBtn.removeAttr('disabled', 'disabled');
-                        },
-                        error: function (data) {
-                            console.log(data);
-                            alert('操作失败');
-                            submitBtn.html("提交");
-                            submitBtn.removeAttr('disabled', 'disabled');
-                        }
-                    });
-                });
-            },
         };
-        fillInAlumni.init();
+        alumni.init();
     })();
 </script>
