@@ -164,43 +164,44 @@ class UserModels extends CI_Model{
      * @param $userEmail
      * @param $userSign
      * @param $userStatus
+     * @param $userNickname
      * @return bool
      */
-    public function updateUser($userId, $userName = false, $userBirthday = false, $userSex = false,
-                               $userMobile = false, $userEmail = false, $userSign = false, $userStatus = false,
-                               $userNickname = false){
+    public function updateUser($userId, $userName = null, $userBirthday = null, $userSex = null,
+                               $userMobile = null, $userEmail = null, $userSign = null, $userStatus = null,
+                               $userNickname = null){
 
         $arrUpdateConds = array();
 
-        if (!empty($userName)){
+        if (null !== $userName){
             $arrUpdateConds['user_name']     = $userName;
         }
 
-        if (!empty($userBirthday)){
+        if (null !== $userBirthday){
             $arrUpdateConds['user_birthday'] = $userBirthday;
         }
 
-        if (FALSE !== ($userSex)){
+        if (null !== $userSex){
             $arrUpdateConds['user_sex']      = $userSex;
         }
 
-        if (!empty($userMobile)){
+        if (null !== $userMobile){
             $arrUpdateConds['user_mobile']   = $userMobile;
         }
 
-        if (!empty($userEmail)){
+        if (null !== $userEmail){
             $arrUpdateConds['user_email']    = $userEmail;
         }
 
-        if (!empty($userSign)){
+        if (null !== $userSign){
             $arrUpdateConds['user_sign']     = $userSign;
         }
 
-        if (!empty($userNickname)){
-            $arrUpdateConds['user_nickname']     = $userNickname;
+        if (null !== $userNickname){
+            $arrUpdateConds['user_nickname'] = $userNickname;
         }
 
-        if (FALSE !== $userStatus){
+        if (null !== $userStatus){
             $arrUpdateConds['user_status']   = $userStatus;
         }
 

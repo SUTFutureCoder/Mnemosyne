@@ -29,6 +29,7 @@ class UserInfo extends CI_Controller{
 
         //转为utf8
         $userName       = trim($this->input->post('userName', true));
+        $userNickName   = trim($this->input->post('userNickName', true));
 
         $userSex        = trim($this->input->post('userSex', true));
         $userBirthday   = trim($this->input->post('userBirthDay', true));
@@ -42,6 +43,7 @@ class UserInfo extends CI_Controller{
 
         if (!(Validator::isTrue(1 == preg_match("/^[\x{4e00}-\x{9fa5}]+$/u", $userName), '您的真实姓名请填写中文')
             && Validator::mbStringRange($userName, 1, 16, '您的姓名不能超过16个字符')
+            && Validator::mbStringRange($userNickName, 0, 32, '您的昵称不能超过32个字符')
             && Validator::isTrue(in_array($userSex, CoreConst::$userSex), '请输入正确的性别')
             && Validator::isTrue(false !== strtotime($userBirthday), '请输入正确的出生日期')
             //临时方法
@@ -58,7 +60,7 @@ class UserInfo extends CI_Controller{
 
         $userId = $this->session->user_id;
 
-        if (!$this->UserModels->updateUser($userId, $userName, $userBirthday, $userSex)){
+        if (!$this->UserModels->updateUser($userId, $userName, $userBirthday, $userSex, null, null, null, null, $userNickName)){
             $this->response->jsonFail(Response::CODE_SERVER_ERROR, '抱歉，提交失败');
         }
 
