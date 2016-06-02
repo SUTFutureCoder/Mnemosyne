@@ -8,6 +8,7 @@
         var alumni = {
             init : function(){
                 this.loadAlumniList();
+                this.changeAlumniPage();
             },
             loadAlumniList : function(){
                 $.ajax({
@@ -15,7 +16,6 @@
                     url: '{{php}}echo base_url(){{/php}}api/user/alumni/getalumni',
                     dataType: 'json',
                     success: function (data) {
-                        console.log(data);
                         if(data['status'] == 0){
                             var alumniInfoList = data['data'];
                             var html = "";
@@ -36,9 +36,96 @@
                 });
             },
 
+            changeAlumniPage : function(){
+                var pageSize = 1;
+                var modal = dom.singleAlumniPageModal;
+                var singleAlumniPageForm = dom.singleAlumniPageModal.find('.self-profile-form');
+                modal.find('#pre_page').on('click', function(){
+                    var alumniId =  singleAlumniPageForm.find('#alumni_id').val();
+                    var pageNow = modal.find('#alumni_page_select').val();
+                    alumni.loadUserAlumniPageInfo(alumniId, pageSize, parseInt(pageNow)  - 1);
+                });
+                modal.find('#next_page').on('click', function(){
+                    var alumniId =  singleAlumniPageForm.find('#alumni_id').val();
+                    var pageNow = modal.find('#alumni_page_select').val();
+                    alumni.loadUserAlumniPageInfo(alumniId, pageSize, parseInt(pageNow) + 1);
+                });
+                modal.find('#alumni_page_select').on('change', function(){
+                    var alumniId =  singleAlumniPageForm.find('#alumni_id').val();
+                    var pageNow = modal.find('#alumni_page_select').val();
+                    alumni.loadUserAlumniPageInfo(alumniId, pageSize, parseInt(pageNow));
+                });
+            },
+            loadUserAlumniPageInfo : function(alumniId, pageSize, pageNum){
+                var pageSize = typeof pageSize !== 'undefined' ?  pageSize : 1;
+                var pageNum = typeof pageNum !== 'undefined' ?  pageNum : 0;
+                $.ajax({
+                    type: 'GET',
+                    url: '{{php}}echo base_url(){{/php}}api/user/alumni/getAlumniPage?' + 'alumni_id=' + alumniId + '&page_size=' + 
+                        pageSize + '&page_num=' + pageNum,
+                    dataType: 'json',
+                    success: function (data) {
+                        if(data['status'] == 0){
+                            var alumniPageInfo = data['data']['alumni_user_page_info'];
+                            if(alumniPageInfo.length !== 0){
+                                alumni.fillinAlumniPageInfo(alumniPageInfo[0], data['data']['count'], pageNum);
+                            }else{
+                                alert("无此同学录信息");
+                            }
+                        }else{
+                            alert(data['description']);
+                        }
+                    },
+                    error: function (data) {
+                        console.log(data);
+                        alert('load 同学录页面信息失败');
+                    }
+                });
+
+            },
+
+            fillinAlumniPageInfo : function(alumniPageInfo, count, pageNum){
+                var singleAlumniPageForm = dom.singleAlumniPageModal.find('.self-profile-form');
+                singleAlumniPageForm.find('#alumni_id').val(alumniPageInfo['alumni_id']);
+                singleAlumniPageForm.find('#user_nickname').val(alumniPageInfo['user_nickname']);
+                singleAlumniPageForm.find('#user_name').val(alumniPageInfo['user_name']);
+                singleAlumniPageForm.find('#user_birthday').val(alumniPageInfo['user_birthday']);
+                singleAlumniPageForm.find('#user_mobile').val(alumniPageInfo['user_mobile']);
+                singleAlumniPageForm.find('#favorite_food').val(alumniPageInfo['user_favorite_food']);
+                singleAlumniPageForm.find('#favorite_animal').val(alumniPageInfo['user_favorite_animal']);
+                singleAlumniPageForm.find('#worship_people').val(alumniPageInfo['user_worship_people']);
+                singleAlumniPageForm.find('#want_to_go').val(alumniPageInfo['user_want_to_go']);
+                singleAlumniPageForm.find('#desire').val(alumniPageInfo['user_desire']);
+                singleAlumniPageForm.find('#favorite_star').val(alumniPageInfo['user_favorite_star']);
+                singleAlumniPageForm.find('#favorite_color').val(alumniPageInfo['user_favorite_color']);
+                singleAlumniPageForm.find("#blood-group-" + alumniPageInfo['user_bloodgroup']).attr('checked', true);
+                singleAlumniPageForm.find('#alumni_page_message').empty();
+                singleAlumniPageForm.find('#alumni_page_message').append(alumniPageInfo['message']);
+                dom.singleAlumniPageModal.find('#alumni_page_select').empty();
+                dom.singleAlumniPageModal.find('#alumni_page_select').append(alumni.generatePageSelect(count));
+                dom.singleAlumniPageModal.find('#alumni_page_select').val(pageNum);
+                dom.singleAlumniPageModal.find('#pre_page').removeAttr('disabled', 'disabled');
+                dom.singleAlumniPageModal.find('#next_page').removeAttr('disabled', 'disabled');
+                if(pageNum == 0){
+                    dom.singleAlumniPageModal.find('#pre_page').attr('disabled', 'disabled');
+                }else if(pageNum == count - 1){
+                    dom.singleAlumniPageModal.find('#next_page').attr('disabled', 'disabled');
+                }
+            },
+
+            generatePageSelect : function(count){
+                var html = "";
+                for(var i = 0; i < count; i++){
+                    html += '<option value=' + i + ' > 第' + i + '页 </option>';
+                }
+                return html;
+            },
+
             showSingleAlumniPageModal : function(){
                 dom.alumniList.find('.overview_alumni_btn').on('click', function(){
                     dom.singleAlumniPageModal.modal('show');
+                    var alumniId = this.getAttribute('alumni_id');
+                    alumni.loadUserAlumniPageInfo(alumniId);
                 });
             },
             generateAlumniItem : function(AlumniInfo){
@@ -46,7 +133,6 @@
                 if(AlumniInfo['cover']  == 0){
                     AlumniInfo['cover'] = "{{php}}echo base_url();{{/php}}static/img/public/alumni_cover1.png";
                 }
-                console.log(AlumniInfo['cover']);
                 html += '<div class="user_single col-xs-12">' +
                             '<div class="header-img-sm col-xs-4 col-md-2">' + 
                                 '<img src="' + AlumniInfo['cover'] + '">' + 

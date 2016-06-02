@@ -216,4 +216,22 @@ class Alumni extends CI_Controller{
         $this->response->jsonSuccess();
     }
 
+    public function getAlumniPage(){
+        checkLogin('api');
+        $this->load->model("AlumniModels", 'alumni');
+        $userId = $this->session->user_id;
+        $alumniId = $this->input->get('alumni_id', true);
+        $pageSize = $this->input->get('page_size', true);
+        $pageNum = $this->input->get('page_num', true);
+        $alumniUserPageInfo = $this->alumni->getUserAlumniPageInfo($userId, $alumniId, $pageSize, $pageNum);
+        $count = $this->alumni->countUserAlumniPageInfo($userId, $alumniId);
+        $this->response->jsonSuccess(array(
+            'alumni_user_page_info' => $alumniUserPageInfo,
+            'count' => $count,
+            'alumniid' => $alumniId,
+            'pagesize' => $pageSize,
+            'pagenum' => $pageNum
+        ));
+    }
+
 }

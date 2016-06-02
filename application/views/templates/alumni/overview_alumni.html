@@ -23,6 +23,7 @@
                                 <div class="self-profile-content">
                                     <form class="self-profile-form form-horizontal">
                                         <div class="container col-md-8 col-xs-12">
+                                            <input type="text" id="alumni_id" hidden/>
                                             <div class="form-group">
                                                 <label class="col-md-2 control-label" >血型</label>
                                                     <div class="col-md-10">
@@ -46,27 +47,27 @@
                                                 </div><!--form-group!-->
 
                                             <div class="form-group">
-                                                <label for="favorite_food" class="col-md-2 control-label">绰号</label>
+                                                <label for="user_nickname" class="col-md-2 control-label">绰号</label>
                                                 <div class="col-md-10">
-                                                    <input type="text" class="form-control" id="favorite_food" disabled='disabled'>
+                                                    <input type="text" class="form-control" id="user_nickname" disabled='disabled'>
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label for="favorite_food" class="col-md-2 control-label">真实姓名</label>
+                                                <label for="user_name" class="col-md-2 control-label">真实姓名</label>
                                                 <div class="col-md-10">
-                                                    <input type="text" class="form-control" id="favorite_food" disabled='disabled'>
+                                                    <input type="text" class="form-control" id="user_name" disabled='disabled'>
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label for="favorite_food" class="col-md-2 control-label">生日</label>
+                                                <label for="user_birthday" class="col-md-2 control-label">生日</label>
                                                 <div class="col-md-10">
-                                                    <input type="text" class="form-control" id="favorite_food" disabled='disabled'>
+                                                    <input type="text" class="form-control" id="user_birthday" disabled='disabled'>
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label for="favorite_food" class="col-md-2 control-label">手机号</label>
+                                                <label for="user_mobile" class="col-md-2 control-label">手机号</label>
                                                 <div class="col-md-10">
-                                                    <input type="text" class="form-control" id="favorite_food" disabled='disabled'>
+                                                    <input type="text" class="form-control" id="user_mobile" disabled='disabled'>
                                                 </div>
                                             </div>
 
@@ -81,50 +82,50 @@
                                              
 
                                             <div class="form-group">
-                                                <label for="favorite_food" class="col-md-2 control-label">最喜欢的动物</label>
+                                                <label for="favorite_animal" class="col-md-2 control-label">最喜欢的动物</label>
                                                 <div class="col-md-10">
-                                                    <input type="text" class="form-control" id="favorite_food" disabled='disabled'>
+                                                    <input type="text" class="form-control" id="favorite_animal" disabled='disabled'>
                                                 </div>
                                             </div>
 
                                             <div class="form-group">
-                                                <label for="favorite_food" class="col-md-2 control-label">最崇拜的人</label>
+                                                <label for="worship_people" class="col-md-2 control-label">最崇拜的人</label>
                                                 <div class="col-md-10">
-                                                    <input type="text" class="form-control" id="favorite_food" disabled='disabled'>
+                                                    <input type="text" class="form-control" id="worship_people" disabled='disabled'>
                                                 </div>
                                             </div>
 
                                             <div class="form-group">
-                                                <label for="favorite_food" class="col-md-2 control-label">我想去的地方</label>
+                                                <label for="want_to_go" class="col-md-2 control-label">我想去的地方</label>
                                                 <div class="col-md-10">
-                                                    <input type="text" class="form-control" id="favorite_food" disabled='disabled'>
+                                                    <input type="text" class="form-control" id="want_to_go" disabled='disabled'>
                                                 </div>
                                             </div>
 
                                             <div class="form-group">
-                                                <label for="favorite_food" class="col-md-2 control-label">我的愿望</label>
+                                                <label for="desire" class="col-md-2 control-label">我的愿望</label>
                                                 <div class="col-md-10">
-                                                    <input type="text" class="form-control" id="favorite_food" disabled='disabled'>
+                                                    <input type="text" class="form-control" id="desire" disabled='disabled'>
                                                 </div>
                                             </div>
                                             
                                             <div class="form-group">
-                                                <label for="favorite_food" class="col-md-2 control-label">喜欢的明星</label>
+                                                <label for="favorite_star" class="col-md-2 control-label">喜欢的明星</label>
                                                 <div class="col-md-10">
-                                                    <input type="text" class="form-control" id="favorite_food" disabled='disabled'>
+                                                    <input type="text" class="form-control" id="favorite_star" disabled='disabled'>
                                                 </div>
                                             </div>
 
                                             <div class="form-group">
-                                                <label for="favorite_food" class="col-md-2 control-label">喜欢的颜色</label>
+                                                <label for="favorite_color" class="col-md-2 control-label">喜欢的颜色</label>
                                                 <div class="col-md-10">
-                                                    <input type="text" class="form-control" id="favorite_food" disabled='disabled'>
+                                                    <input type="text" class="form-control" id="favorite_color" disabled='disabled'>
                                                 </div>
                                             </div>
                                         </div><!--self-profile-content-mid-->
                                         <div class="container col-xs-12 self-profile-content-footer">
                                             <div id="alumni_page_message">
-
+                                                <p>test</p>
                                             </div>
                                         </div><!--self-profile-content-footer-->
                                     </form>
@@ -136,8 +137,11 @@
                     </div><!--container-->
                 </div><!--tabs-content-self-profile-->
                 <center>
-                    <button type="button" class="btn btn-info">上一页</button>
-                    <button type="button" class="btn btn-info">下一页</button>
+                    <button type="button" id="pre_page" class="btn btn-info">上一页</button>
+                    <select id="alumni_page_select" style="width:80px">
+                        
+                    </select>
+                    <button type="button" id="next_page" class="btn btn-info">下一页</button>
                 </center> 
             </div>
             <div class="modal-footer">

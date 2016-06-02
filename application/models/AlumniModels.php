@@ -126,4 +126,29 @@ class AlumniModels extends CI_Model{
         return $result;
     }
 
+    public function getUserAlumniPageInfo($userId, $alumniId, $pageSize = false, $pageNum = 0){
+        $this->db->select('alumni_page.id alumni_page_id, alumni_id, user.user_name, user.user_nickname, user.user_birthday,
+                            user.user_mobile, user_alumni.user_bloodgroup, user_alumni.user_favorite_food, user_alumni.user_favorite_animal,
+                            user_alumni.user_worship_people, user_alumni.user_want_to_go, user_alumni.user_desire,
+                            user_alumni.user_favorite_star, user_alumni.user_favorite_color, alumni_page.message');
+        $this->db->from('alumni_page');
+        $this->db->where('alumni_page.alumni_id', $alumniId);
+        $this->db->where('alumni_page.user_id', $userId);
+        $this->db->join('user', 'alumni_page.to_user = user.user_id');
+        $this->db->join('user_alumni', 'alumni_page.to_user = user_alumni.user_id', 'left');
+        if(isset($pageSize)){
+            $this->db->limit($pageSize, $pageSize*$pageNum);
+        }
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+
+    public function countUserAlumniPageInfo($userId, $alumniId){
+        $this->db->from('alumni_page');
+        $this->db->where('alumni_page.alumni_id', $alumniId);
+        $this->db->where('alumni_page.user_id', $userId);
+        return $this->db->count_all_results();
+        
+    }
+
 }
