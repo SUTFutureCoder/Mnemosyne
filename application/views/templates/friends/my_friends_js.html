@@ -47,6 +47,9 @@
                         success: function (data) {
                             if(data['status'] == 0){
                                 alert("操作成功");
+
+                                //清除dom
+                                dom.friendList.find('#friend_single_friend_id_' + friend_id).remove();
                             }else{
                                 alert(data['description']);
                             }
@@ -60,7 +63,7 @@
             },
             generateFriendSingleItem : function(userInfo){
                 var html = "";
-                html += '<div class="friend_single col-xs-12">' +
+                html += '<div class="friend_single col-xs-12" id="friend_single_friend_id_' + userInfo['user_id'] + '">' +
                             '<div class="header-img-sm col-xs-4 col-md-2">' + 
                                 '<img src="' + userInfo['user_avatar'] + '">' + 
                             '</div>' + 

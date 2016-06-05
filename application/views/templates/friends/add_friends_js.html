@@ -37,6 +37,9 @@
                                         var friend_add_user_id = this.getAttribute("add_friend_id");
                                         addFriends.addFriend(friend_add_user_id);
                                     });
+
+                                    //清空表单
+                                    dom.searchFriendsForm.find('#search_friend_input').val('');
                                 }
                             } else{
                                 alert(data['description']);
