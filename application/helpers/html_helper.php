@@ -5,7 +5,7 @@ function getHorizontalNavbar($nav_num){
         array("name" => "修改信息", "url" => "user/index"),
         array("name" => "同学录", "url" => "alumni/fillInAlumni"),
         array("name" => "我的好友", "url" => "Friends/friendsView"),
-        array("name" => "表白", "url" => "index/showlove"),
+        array("name" => "表白", "url" => "Love/showlove"),
     );
     $ret = "";
     foreach($nav_list as $i => $temp)

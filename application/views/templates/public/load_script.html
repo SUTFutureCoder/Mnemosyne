@@ -42,6 +42,14 @@
                             messagePopover += '</div>';
                             console.log(messagePopover);
                             dom.messagePopover.attr('data-content', messagePopover);
+                            //当有信息时弹出
+                            if (messageList.length){
+                                //3秒关闭
+                                window.setTimeout(function () {
+                                    dom.messagePopover.popover('hide');
+                                }, 3000);
+                                dom.messagePopover.popover('show');
+                            }
                         } else {
                             dom.userInfoTable.find('#user_name').html();
                             alert(data['description']);

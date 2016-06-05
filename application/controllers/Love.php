@@ -13,6 +13,18 @@ class Love extends CI_Controller{
         $this->load->helper("login");
     }
 
+    /**
+     * 示爱前端
+     *
+     * 必须是好友才允许示爱
+     *
+     */
+    public function showlove(){
+        //
+
+
+    }
+
     public function expressLoveView(){
         $this->template->display("love/index.html");
     }
