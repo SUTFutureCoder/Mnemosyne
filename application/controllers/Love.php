@@ -10,6 +10,7 @@ class Love extends CI_Controller{
     public function __construct(){
         parent::__construct();
         $this->load->library("template");
+        $this->load->library('ModuleConst');
         $this->load->helper("login");
     }
 
@@ -20,13 +21,16 @@ class Love extends CI_Controller{
      *
      */
     public function showlove(){
-        //
+        //检测登录
+        checkLogin();
 
+        //读取好友列表
+        $this->template->assign("navbar", getHorizontalNavbar(4));
+        $this->template->assign("navbar_veritical", getVerticalNavtar(0));
+        $this->template->assign("main_content", 'friend_list_to_showlove.html');
+        $this->template->assign("js", 'friend_list_to_showlove.html');
+        $this->template->display("friends/friends.html");
+        $this->template->display("public/footer.html");
 
     }
-
-    public function expressLoveView(){
-        $this->template->display("love/index.html");
-    }
-
 }

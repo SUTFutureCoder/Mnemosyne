@@ -8,8 +8,11 @@
 class Message extends CI_Controller{
     private static $redirectURI = array(
         0 => "Alumni/fillInAlumni",
-        1 => "/Friends/friendsRequest"
+        1 => "/Friends/friendsRequest",
+        //表白
+        2 => 'ILOVEYOU',
     );
+
     public function __construct(){
         parent::__construct();
         $this->load->helper('html');
@@ -22,18 +25,37 @@ class Message extends CI_Controller{
     public function MessageResove()
     {
         checkLogin('api');
-        $userId = $this->session->user_id;
+        $userId     = $this->session->user_id;
         $messageType = $this->input->get('message_type', true);
-        $messageId = $this->input->get('message_id', true);
-        $message =  $this->message->getMessageById($messageId);
+        $messageId  = $this->input->get('message_id',    true);
+        $message    = $this->message->getMessageById($messageId);
         if($message[0]['to_user'] != $userId){
             die("骚年不是你的消息");
         }
         $MarkMessageStatus = $this->message->updateMessageStatus($userId, $messageId, CoreConst::MESSAGE_STATUS_READ);
         if(!$MarkMessageStatus){
-            die("test");
+            die("更新信息状态失败");
         }
-        redirect(self::$redirectURI[$messageType]);
+
+        //可拓展,不同类型有不同的解析方法
+        switch ($messageType){
+            case 0:
+            case 1:
+                redirect(self::$redirectURI[$messageType]);
+                break;
+            case 2:
+                if (empty($message[0]['describe'])){
+                    die('解析表白信息失败');
+                }
+                $arrDescInfo = json_decode($message[0]['describe'], true);
+
+                if (!is_array($arrDescInfo) || !$arrDescInfo['tpltype']){
+                    die('解析表白地址失败');
+                }
+                redirect(self::$redirectURI[$messageType] . '/' . $arrDescInfo['tpltype'] . '/' . $message[0]['user_id'] . '/' . $message[0]['to_user']);
+                break;
+        }
+
     }
 
 }

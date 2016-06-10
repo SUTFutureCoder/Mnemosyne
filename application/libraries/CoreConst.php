@@ -43,11 +43,14 @@ class CoreConst{
         self::USER_STATUS_ENABLE,
     );
 
+    //消息类型
     const AlUMNI_FILL_IN_MES = 0;
     const ADD_FRIENDS_MES = 1;
-    public static $messageTyep = array(
+    const SHOW_LOVE_MES   = 2;
+    public static $messageType = array(
         self::AlUMNI_FILL_IN_MES,
         self::ADD_FRIENDS_MES,
+        self::SHOW_LOVE_MES,
     );
 
     //Mnemosyne核心参数
@@ -55,10 +58,12 @@ class CoreConst{
     const LOG_UUID    = 'uuid:log';
     const USER_UUID   = 'uuid:user';
     const ALUMNI_UUID = 'uuid:alumni';
+    const SHOWLOVE_UUID = 'uuid:showlove';
     public static $uuid = array(
         self::LOG_UUID,
         self::USER_UUID,
         self::ALUMNI_UUID,
+        self::SHOWLOVE_UUID,
     );
 
     //模块列表，用于打LOG等

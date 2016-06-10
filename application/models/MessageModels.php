@@ -78,16 +78,45 @@ class MessageModels extends CI_Model{
 
     }
 
-    public function getMessageByUserId($userId, $status = 0){
-        $this->db->where('to_user', $userId);
-        $this->db->where('status', $status);
+    /**
+     *
+     * 通过目标用户id获取用户消息列表
+     *
+     * @param $toUserId
+     * @param null $status     0-未读 1-已读 null-全部
+     * @param null $fromUserId 如果这个填写，则获取一对一消息
+     * @param null $type       消息类型，如果为空则默认全部消息
+     * @return mixed
+     */
+    public function getMessageByUserId($toUserId, $status = null, $fromUserId = null, $type = null){
+        $this->db->where('to_user', $toUserId);
+
+        if (null !== $status){
+            $this->db->where('status',  $status);
+        }
+
+        if (null !== $fromUserId){
+            $this->db->where('user_id', $fromUserId);
+        }
+
+        if (null !== $type){
+            if (!isset(CoreConst::$messageType[$type])){
+                return false;
+            }
+            $this->db->where('type',    $type);
+        }
+
+        //时间排序
+        $this->db->order_by('create_time', 'desc');
+
         $row = $this->db->get(self::$tableName)->result_array();
         return $row;
     }
+
+
     public function getMessageById($id){
         $this->db->where('id', $id);
-        $query = $this->db->get(self::$tableName);
-        return $query->result_array();
+        return $this->db->get(self::$tableName)->result_array();
     }
 
 }

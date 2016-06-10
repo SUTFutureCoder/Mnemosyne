@@ -126,10 +126,13 @@ class UserInfo extends CI_Controller{
         );
     }
 
+    /**
+     * 获取用户type为0的未读信息
+     */
     public function getUserMessage(){
         $userId = $this->session->user_id;
         $this->load->model('MessageModels', 'message');
-        $message = $this->message->getMessageByUserId($userId);
+        $message = $this->message->getMessageByUserId($userId, 0);
         $this->response->jsonSuccess(array(
             'message' => $message,
         ));
