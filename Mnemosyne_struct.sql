@@ -303,7 +303,7 @@ CREATE TABLE IF NOT EXISTS `message` (
   `type` tinyint(3) NOT NULL COMMENT '消息类型 0 为同学录填写',
   `title` varchar(16) NOT NULL  DEFAULT '' COMMENT '消息标题',
   `message` varchar(100) NOT NULL  DEFAULT '' COMMENT '消息内容',
-  `describe` varchar(100) NOT NULL  DEFAULT '' COMMENT '描述',
+  `describe` varchar(1024) NOT NULL  DEFAULT '' COMMENT '描述',
   `status`  tinyint(4) NOT NULL DEFAULT 0 COMMENT '消息是否读取 0 为未读取 1 为已经读取',
   `create_time` int(10) unsigned NOT NULL COMMENT '创建时间',
   `update_time`int(10) NOT NULL COMMENT '修改时间',
