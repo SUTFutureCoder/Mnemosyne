@@ -19,18 +19,23 @@ class Love extends CI_Controller{
      *
      * 必须是好友才允许示爱
      *
+     * 注意如果已经有情侣，则显示情侣相关信息。目前先暂时无视
+     *
+     *
+     * 使用表白系统之后，如何能体现出表白系统的优势？
+     *
+     * 用户会不会使用完表白系统，然后就用陌陌、微信竞对？
+     *
      */
     public function showlove(){
         //检测登录
         checkLogin();
 
-        //读取好友列表
+        //注入模板
         $this->template->assign("navbar", getHorizontalNavbar(4));
         $this->template->assign("navbar_veritical", getVerticalNavtar(0));
-        $this->template->assign("main_content", 'friend_list_to_showlove.html');
-        $this->template->assign("js", 'friend_list_to_showlove.html');
-        $this->template->display("friends/friends.html");
-        $this->template->display("public/footer.html");
-
+        $this->template->assign("js", 'showlove_js.html');
+        $this->template->display("love/showlove.html");
+//        $this->template->display("public/footer.html");
     }
 }

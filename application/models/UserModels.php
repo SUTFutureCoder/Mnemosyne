@@ -148,8 +148,7 @@ class UserModels extends CI_Model{
     {
         $this->db->where('user_mobile', $userLoginName);
         $this->db->or_where('user_email', $userLoginName);
-        $query  = $this->db->get(self::$tableName);
-        $result = $query->row_array();
+        $result  = $this->db->get(self::$tableName)->row_array();
         return $result;
     }
 

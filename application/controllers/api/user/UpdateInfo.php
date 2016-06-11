@@ -176,6 +176,11 @@ class UpdateInfo extends CI_Controller{
                 }
                 $this->UserModels->updateUser($userId, false, $userBirthday);
             }
+
+            //更新session
+            $this->session->set_userdata('user_name', $userName);
+            $this->session->set_userdata('user_nickname', $userNickname);
+
             $this->response->jsonSuccess();
             
         }

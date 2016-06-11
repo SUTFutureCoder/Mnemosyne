@@ -59,16 +59,6 @@ class Account extends CI_Controller{
         $token     = $this->token->setTokenToRedis($userInfo['user_id'], $platform);
         $signature = $this->token->getTokenSignature($token, $userInfo['user_id']);
 
-        //根据user_name检测是否初始化
-        if (empty($userInfo['user_name'])){
-            //没有真实姓名未初始化
-            $this->session->set_userdata('needinit', 1);
-        } else {
-            $this->session->set_userdata('user_name', $userInfo['user_name']);
-        }
-
-        $this->session->set_userdata('token', $token);
-
         //设置用户信息
         $this->recordUserInfo($userInfo, $platform, $token, $signature);
 
@@ -195,7 +185,8 @@ class Account extends CI_Controller{
             //没有真实姓名未初始化
             $this->session->set_userdata('needinit', 1);
         } else {
-            $this->session->set_userdata('user_name', $userInfo['user_name']);
+            $this->session->set_userdata('user_name',     $userInfo['user_name']);
+            $this->session->set_userdata('user_nickname', $userInfo['user_nickname']);
         }
 
         //添加一行便于测试

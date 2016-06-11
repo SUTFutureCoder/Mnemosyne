@@ -2,25 +2,69 @@
 {{include file='./public/base_header_navbar.html'}}
 
 <div class="main-content">
-    <div class="row">
-
-        <div class="navbar-vertical">
-            <div class="container col-xs-12 col-md-2">
-                <ul class="nav nav-pills nav-stacked">
-                    {{$navbar_veritical}}
-                </ul>
- 
-            </div> <!--container col-xs-12 col-md-3-->
-        </div><!--navbar-vertical-->
-
-        <div class="content-mid">
-            <div class="container col-xs-12 col-md-8">
-                {{include file="./friends/`$main_content`"}}
-            </div><!--container col-xs-12 col-md-6-->
-        </div><!--content-mid-->
-
-
-    </div><!--row-->
+    <div id="showlove_img">
+        <div id="showlove_back_img">
+            <img src="{{php}}echo base_url();{{/php}}static/love/img/application-community.png"/>
+            <!--<img src="{{php}}echo base_url();{{/php}}static/love/c137ba5ce5c9b1b83d7eef97cf4b980a.jpg"/>-->
+        </div>
+    </div>
+    <div id="showlove_send_animation">
+        <div id="showlove_send_animation_img">
+            <img src="{{php}}echo base_url();{{/php}}static/love/img/c137ba5ce5c9b1b83d7eef97cf4b980a.png"/>
+        </div>
+    </div>
+    <div class="col-sm-2" id="showlove_select">
+        <p>表白对象</p>
+        <form id="showlove_select_form">
+            <select class="form-control" id="showlove_select_option">
+            </select>
+            <br/>
+            <button type="button" id="showlove_select_submit" class="btn btn-default btn-success">确定</button>
+            <button type="button" id="showlove_select_to_search_btn" class="btn btn-default btn-info">从好友列表搜索</button>
+        </form>
+        <form id="showlove_search_form">
+            <div class="form-group">
+                <input type="text" class="form-control" id="showlove_search_input" placeholder="邮箱/手机号">
+            </div>
+            <button type="button" id="showlove_search_submit" class="btn btn-default btn-success">确定</button>
+            <button type="button" id="showlove_search_to_select_btn" class="btn btn-default btn-info">从好友列表选择</button>
+        </form>
+    </div>
+    <div id="showlove_input">
+        <div class="alert alert-warning" role="alert">基本信息</div>
+        <form id="showlove_basic">
+            <div class="form-group">
+                <label for="showlove_doge_nickname">您的昵称</label>
+                <input type="text" class="form-control" id="showlove_doge_nickname">
+            </div>
+            <div class="form-group">
+                <label for="showlove_ta_nickname">ta的昵称</label>
+                <input type="text" class="form-control" id="showlove_ta_nickname">
+            </div>
+            <div class="form-group">
+                <label for="showlove_ta_know_time">和ta相识的时间</label>
+                <input type="text" class="form-control form_datetime" id="showlove_ta_know_time">
+            </div>
+        </form>
+        <br/>
+        <div class="alert alert-warning" role="alert">选择表白模板</div>
+        <form id="showlove_tpl">
+            <select class="form-control" id="showlove_tpl_select">
+                <option value="0">经典</option>
+                <option value="1">极客</option>
+            </select>
+        </form>
+        <br/>
+        <div class="alert alert-warning" role="alert">要表白的内容</div>
+        <form id="showlove_message">
+            <textarea class="form-control" id="showlove_message_content" rows="4">缘是美丽的邂逅，爱是心跳的感觉，情是心灵的交会，恋是甜蜜的思念，走在爱与被爱的边缘，你见或者不见，爱你的心始终不改变！</textarea>
+        </form>
+        <br/>
+        <form id="showlove_submit">
+            <button type="button" id="showlove_submit_glance_btn" class="btn btn-primary">浏览</button>
+            <button type="button" id="showlove_submit_submit_btn" class="btn btn-success">发送</button>
+        </form>
+    </div>
 </div><!--main-content-->
 {{ include file='./public/load_script.html' }}
 {{ include file="./love/`$js`"}}

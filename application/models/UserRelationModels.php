@@ -30,9 +30,9 @@ class UserRelationModels extends CI_Model{
         $this->db->trans_start();
         $this->db->insert(self::$tableName, array(
             'user_id'   => $userId,
-            'user_relate'   => $userRelate,
-            'type'        => $type,
-            'intimacy'        => 0,
+            'user_relate'  => $userRelate,
+            'type'         => $type,
+            'intimacy'     => 0,
             'create_time'  => time(),
         ));
 
@@ -64,9 +64,10 @@ class UserRelationModels extends CI_Model{
     }
 
     public function getUserFriendInfoJoinInUser($userId){
-        $this->db->select('*');
+        $this->db->select('user.user_id, user.user_name, user.user_sex, user.user_avatar, user.user_nickname');
         $this->db->from(self::$tableName);
         $this->db->where('user_relation.user_id', $userId);
+        $this->db->where('user_relation.type != -1');
         $this->db->join('user', 'user.user_id = user_relation.user_relate');
         $query = $this->db->get();
         $result = $query->result_array();
@@ -97,11 +98,44 @@ class UserRelationModels extends CI_Model{
         return $logContent['run_status'];
 
     }
-    public function isRelationExist($userId, $userRelate){
+
+    /**
+     * 检查和另一个用户是否有关系
+     *
+     * @param $userId
+     * @param $userRelateId
+     * @param null $relatType 关系类型
+     * @return mixed
+     */
+    public function isRelationExist($userId, $userRelateId, $relatType = null){
         $this->db->where(array(
             'user_id' => $userId,
-            'user_relate' => $userRelate,
+            'user_relate' => $userRelateId,
         ));
+
+        if (null !== $relatType){
+            $this->db->where('type', $relatType);
+        }
         return $this->db->count_all_results(self::$tableName);
+    }
+
+    /**
+     * 获取二者关系数据
+     *
+     * @param $userId
+     * @param $userRelateId
+     * @param null $relateType
+     * @return mixed
+     */
+    public function getRelation($userId, $userRelateId, $relateType = null){
+        $this->db->where(array(
+            'user_id'       => $userId,
+            'user_relate'   => $userRelateId,
+        ));
+
+        if (null !== $relateType){
+            $this->db->where('type', $relateType);
+        }
+        return $this->db->get(self::$tableName)->row_array();
     }
 }
