@@ -16,7 +16,7 @@ class ModuleConst{
      * 表白模块
      *
      */
-    private static $showLoveTplList = array(
+    public static $showLoveTplList = array(
         0 => array(
             'name' => '经典',
             'url'  => 'ILOVEYOU/classic/',

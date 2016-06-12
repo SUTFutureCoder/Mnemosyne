@@ -150,13 +150,25 @@
                 dom.showloveSelect.find('#showlove_search_form').toggle();
             },
 
+            loadData : function () {
+                //装载数据到变量
+                finalPostData.fromUserNickname = dom.showloveInput.find('#showlove_doge_nickname').val();
+                finalPostData.toUserNickname   = dom.showloveInput.find('#showlove_ta_nickname').val();
+                finalPostData.taKnowTime       = dom.showloveInput.find('#showlove_ta_know_time').val();
+                finalPostData.tpl              = dom.showloveInput.find('#showlove_tpl_select').val();
+                finalPostData.message          = dom.showloveInput.find('#showlove_message_content').val();
+            },
+
             showlove : function (){
+                //装载函数
+                main.loadData();
+
                 if (false == main.checkData()){
                     return false;
                 }
 
-                if (true != main.submitData()){
-                    alert('表白神器出现了点问题，请再次表白～');
+                if (false == main.submitData()){
+                    return false;
                 }
                 main.submitAnimation();
             },
@@ -191,6 +203,7 @@
 
             submitData : function (){
                 //向后端发送信息
+                var ajaxStatus = false;
                 $.ajax({
                     type: 'POST',
                     url:  '{{php}}echo base_url(){{/php}}api/love/Showlove/kokuhaku',
@@ -198,9 +211,10 @@
                     dataType: 'json',
                     success: function (data) {
                         if(data['status'] == 0){
-                            return true;
+                            ajaxStatus = true;
                         }else{
                             alert(data['description']);
+
                         }
                     },
                     error: function (data) {
@@ -208,6 +222,7 @@
                         alert('操作失败');
                     }
                 });
+                return ajaxStatus;
             },
 
             submitAnimation: function (){
@@ -222,15 +237,15 @@
                         },
                         function (){
                             dom.showloveBgImg.find('img').animate({marginLeft : '-30%', opacity: "0"}, 'slow', next);
+                            dom.showloveSelect.find('p').animate({marginLeft : '-30%', opacity: "0"}, 'slow', next);
                         },
                         function (){
                             animationObject.animate({left: '100%', width: 'toggle'}, 1000, next);
                         },
                         function (){
-                            //后端IO交互
-                        },
-                        function (){
                             //显示提示
+                            dom.showloveSelect.html('<p id="pleaseWait">❤请静候佳音❤</p>');
+                            dom.showloveSelect.find('#pleaseWait').animate({opacity: "1"}, 2000, next);
                         }
                 ];
 

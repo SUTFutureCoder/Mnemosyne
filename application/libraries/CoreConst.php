@@ -89,10 +89,12 @@ class CoreConst{
 
     //消息确认模块
     const MESSAGE_STATUS_UNREAD = 0;
-    const MESSAGE_STATUS_READ = 1;
+    const MESSAGE_STATUS_READ   = 1;
 
-    const AlUMNI_MESSAGE_CONFIRM = 0;
-    const FRIEND_MESSAGE_CONFIRM = 1;
+    const AlUMNI_MESSAGE_CONFIRM  = 0;
+    const FRIEND_MESSAGE_CONFIRM  = 1;
+    const SHOWLOVE_MESSAGE_CONFIRM = 2;
+
 
     const INFO_CONFRIM_STATUS_UNREAD = 0;
     const INFO_CONFRIM_STATUS_AGREE = 1;

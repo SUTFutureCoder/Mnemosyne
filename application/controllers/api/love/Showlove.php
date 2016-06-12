@@ -13,11 +13,85 @@ class Showlove extends CI_Controller{
     {
         parent::__construct();
         $this->load->library('session');
+        $this->load->helper('login_helper');
         $this->load->library('util/Validator');
         $this->load->library('util/Response');
     }
 
+    /**
+     * 表白提交接口
+     */
     public function kokuhaku(){
+        checkLogin();
+
+        $this->load->library('ModuleConst');
+
+        if (!(Validator::isNotEmpty($this->input->post('toUserId', true), '表白目标用户ID不能为空')
+                && Validator::isNumberic($this->input->post('toUserId', true), '表白目标用户ID需要是数字')
+                && Validator::mbStringRange($this->input->post('fromUserNickname', true), 1, 32, '您的昵称不能超过32个字符')
+                && Validator::mbStringRange($this->input->post('toUserNickname', true),   1, 32, '表白对象昵称不能超过32个字符')
+                && Validator::isNotEmpty($this->input->post('taKnowTime', true), '相识时间不能为空')
+                && Validator::isTime($this->input->post('taKnowTime', true), '相识时间格式错误')
+                && Validator::isTrue(isset(ModuleConst::$showLoveTplList[$this->input->post('tpl', true)]), '请重新选择表白模板')
+                && Validator::mbStringRange($this->input->post('message', true), 1, 1024, '表白内容不能超过1024个字符'))){
+            $this->response->jsonFail(Response::CODE_PARAMS_WRONG, Validator::getMessage());
+        }
+
+        $this->load->model('UserRelationModels');
+        $arrRelationData = $this->UserRelationModels->getRelation($this->session->user_id, $this->input->post('toUserId', true));
+        if (empty($arrRelationData) || !in_array($arrRelationData['type'], array(CoreConst::USER_RELATION_TYPE_FRIEND, CoreConst::USER_RELATION_TYPE_AMBIGUOUS))){
+            $this->response->jsonFail(Response::CODE_PARAMS_WRONG, '表白对象必须是好友或暧昧关系');
+        }
+
+        $strTimeStamp = strtotime($this->input->post('taKnowTime', true));
+
+        $strDataPrepare = json_encode(array(
+            'tpltype'           => ModuleConst::$showLoveTplList[$this->input->post('tpl', true)]['name'],
+            'fromUserNickname'  => $this->input->post('fromUserNickname', true),
+            'toUserNickname'    => $this->input->post('toUserNickname',   true),
+            'taKnowTime'        => array(
+                'orgin' => $this->input->post('taKnowTime', true),
+                'Y'     => date('Y', $strTimeStamp),
+                'm'     => date('m', $strTimeStamp),
+                'd'     => date('d', $strTimeStamp),
+            ),
+            'message'           => $this->input->post('message',    true),
+        ));
+
+
+        //准备发送信息
+        $this->load->model('InfoConfirmModels');
+        $this->load->model('MessageModels');
+        $isConfirmExists = $this->InfoConfirmModels->checkInfoIsExist($this->session->user_id,
+            $this->input->post('toUserId', true),
+            CoreConst::SHOWLOVE_MESSAGE_CONFIRM,
+            CoreConst::INFO_CONFRIM_STATUS_UNREAD);
+
+        if ($isConfirmExists > 0){
+            $this->response->jsonFail(Response::CODE_PARAMS_WRONG, '您的表白已发送过');
+        }
+
+        $addInfoConfirm = $this->InfoConfirmModels->addInfoConfirm(
+            $this->session->user_id,
+            $this->input->post('toUserId', true),
+            CoreConst::SHOWLOVE_MESSAGE_CONFIRM,
+            CoreConst::INFO_CONFRIM_STATUS_UNREAD
+        );
+
+        if ($addInfoConfirm){
+            if ($this->MessageModels->addMessage(
+                $this->session->user_id,
+                $this->input->post('toUserId', true),
+                CoreConst::SHOW_LOVE_MES,
+                '收到了一封表白信',
+                $this->session->user_name . '向您表白',
+                $strDataPrepare
+            )){
+                $this->response->jsonSuccess();
+            }
+        }
+
+        $this->response->jsonFail(Response::CODE_PARAMS_WRONG, '抱歉，您的表白发送失败，请重新发送');
 
     }
 

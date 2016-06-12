@@ -34,6 +34,14 @@ class Validator{
         return false;
     }
 
+    public static function isTime($value, $message = ''){
+        if (false !== strtotime($value)){
+            return true;
+        }
+        self::setMessage($message);
+        return false;
+    }
+
     public static function isString($value, $message = ''){
         if (is_string($value)){
             return true;
@@ -218,11 +226,11 @@ class Validator{
     }
 
     public static function setMessage($message){
-        if (isset(self::$message)){
-            self::$message .= '或' . $message;
-        } else {
+//        if (isset(self::$message)){
+//            self::$message .= '' . $message;
+//        } else {
             self::$message = $message;
-        }
+//        }
     }
 
     public static function getMessage(){
