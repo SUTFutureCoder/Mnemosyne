@@ -117,6 +117,9 @@
 
                             dom.showloveInput.find('#showlove_doge_nickname').val(showFromName);
                             dom.showloveInput.find('#showlove_ta_nickname').val(showToName);
+
+
+                            dom.showloveSelect.html('<p id="toUserName">' + data['data']['user_name'] + '</p>');
                         }else{
                             alert(data['description']);
                         }
@@ -148,7 +151,10 @@
             },
 
             showlove : function (){
-                main.checkData();
+                if (false == main.checkData()){
+                    return false;
+                }
+
                 if (true != main.submitData()){
                     alert('表白神器出现了点问题，请再次表白～');
                 }
