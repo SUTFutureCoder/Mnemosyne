@@ -25,7 +25,22 @@ class ILOVEYOU extends CI_Controller{
     }
 
     public function geek($fromUser = null, $toUser = null){
-        $this->checkLoveMess($fromUser, $toUser);
+        $arrMessInfo = $this->checkLoveMess($fromUser, $toUser);
+
+        if (empty($arrMessInfo['describe'])){
+            throw new MException(CoreConst::MODULE_SHOWLOVE, ErrorCodes::ERROR_SHOWLOVE_MESS_MISSING, '表白字段为空');
+        }
+
+        //注入模板
+        $arrDescribe = json_decode($arrMessInfo['describe'], true);
+
+        $this->template->assign('fromUserNickname', $arrDescribe['fromUserNickname']);
+        $this->template->assign('toUserNickname',   $arrDescribe['toUserNickname']);
+        $this->template->assign('taKnowTime_Y',     $arrDescribe['taKnowTime']['Y']);
+        $this->template->assign('taKnowTime_m',     $arrDescribe['taKnowTime']['m']);
+        $this->template->assign('taKnowTime_d',     $arrDescribe['taKnowTime']['d']);
+
+        $this->template->assign("lovemess", $arrDescribe['message']);
         $this->template->display("love/type/geek.html");
     }
 

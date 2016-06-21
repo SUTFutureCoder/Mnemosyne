@@ -17,8 +17,8 @@
 				<span class="space"/><span class="comments">* I have notice you for a long time.</span><br />
 				<span class="space"/><span class="comments">* so I write some code to expres love to you.</span><br />
 				<span class="space"/><span class="comments">*/</span><br />
-				Boy i &nbsp;= <span class="keyword">new</span> Boy&nbsp;(<span class="string">"方旭"</span>);<br />
-				Girl u = <span class="keyword">new</span> Girl(<span class="string">"MaryNee"</span>);<br />
+				Boy i &nbsp;= <span class="keyword">new</span> Boy&nbsp;(<span class="string">"{{$fromUserNickname}}"</span>);<br />
+				Girl u = <span class="keyword">new</span> Girl(<span class="string">"{{$toUserNickname}}"</span>);<br />
 				<span class="comments">// Now, I told you I love you. </span><br />
 				i.love(u);<br />
 				<span class="comments">// Luckily, you accepted and became my girlfriend eversince.</span><br />
@@ -39,17 +39,18 @@
 				<span class="comments">// After a romantic wedding, we will live happily ever after.</span><br />
 				i.marry(u);<br />
 				i.liveHappilyWith(u);<br />
+				<span class="comments">// {{$lovemess}}</span>
 			</div>
 			<div id="loveHeart">
 				<canvas id="garden"></canvas>
 				<div id="words">
 					<div id="messages">
-						Minyue, I have fallen in love with you for
+						{{$toUserNickname}}, I have fallen in love with you for
 						<div id="elapseClock"></div>
 					</div>
 					<div id="loveu">
 						Love u forever and ever.<br/>
-						<div class="signature">- hackerzhou</div>
+						<div class="signature">- {{$fromUserNickname}}</div>
 					</div>
 				</div>
 			</div>
@@ -60,16 +61,16 @@
 		var offsetY = $("#loveHeart").height() / 2 - 55;
 		var together = new Date();
 		//注意比实际时间大一个月
-		together.setFullYear(2015, 4, 30);
+		together.setFullYear({{$taKnowTime_Y}}, {{$taKnowTime_m}}, {{$taKnowTime_d}});
 		together.setHours(20);
 		together.setMinutes(0);
 		together.setSeconds(0);
 		together.setMilliseconds(0);
-		
+
 		if (!document.createElement('canvas').getContext) {
 			var msg = document.createElement("div");
 			msg.id = "errorMsg";
-			msg.innerHTML = "Your browser doesn't support HTML5!<br/>Recommend use Chrome 14+/IE 9+/Firefox 7+/Safari 4+"; 
+			msg.innerHTML = "Your browser doesn't support HTML5!<br/>Recommend use Chrome 14+/IE 9+/Firefox 7+/Safari 4+";
 			document.body.appendChild(msg);
 			$("#code").css("display", "none")
 			$("#copyright").css("position", "absolute");

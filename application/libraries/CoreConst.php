@@ -75,6 +75,7 @@ class CoreConst{
     const MODULE_SAL     = 'SAL';
     const MODULE_EMAIL   = 'EMAIL';
     const MODULE_BOS     = 'BOS';
+    const MODULE_SHOWLOVE = 'SHOWLOVE';
 
     public static $moduleList = array(
         self::MODULE_ACCOUNT,
@@ -85,6 +86,7 @@ class CoreConst{
         self::MODULE_SAL,
         self::MODULE_EMAIL,
         self::MODULE_BOS,
+        self::MODULE_SHOWLOVE,
     );
 
     //消息确认模块

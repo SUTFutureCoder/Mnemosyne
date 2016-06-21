@@ -52,6 +52,9 @@ class ErrorCodes {
     //上传部分
     const ERROR_UPLOAD_STRING_MIME_MISSING = 20001;
 
+    //表白部分
+    const ERROR_SHOWLOVE_MESS_MISSING = 30001;
+
     public static $error_codes = array(
         self::ERROR_PARAM_ERROR     => 'param error',
         self::ERROR_NETWORK_ERROR   => 'network error',
@@ -84,6 +87,9 @@ class ErrorCodes {
 
         //上传部分
         self::ERROR_UPLOAD_STRING_MIME_MISSING => 'upload base64 mime type missing',
+
+        //表白部分
+        self::ERROR_SHOWLOVE_MESS_MISSING => 'showlove describe missing',
     );
 
     /**

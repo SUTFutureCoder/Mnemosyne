@@ -18,11 +18,11 @@ class ModuleConst{
      */
     public static $showLoveTplList = array(
         0 => array(
-            'name' => '经典',
+            'name' => 'classic',
             'url'  => 'ILOVEYOU/classic/',
         ),
         1 => array(
-            'name' => '极客',
+            'name' => 'geek',
             'url'  => 'ILOVEYOU/geek/',
         ),
     );
