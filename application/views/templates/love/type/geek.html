@@ -7,6 +7,7 @@
 	<script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
 	<script type="text/javascript" src="{{php}}echo base_url();{{/php}}static/love/js/garden.js"></script>
     <script type="text/javascript" src="{{php}}echo base_url();{{/php}}static/love/js/functions.js"></script>
+    <link href="http://cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
 <body>
@@ -17,36 +18,24 @@
 				<span class="space"/><span class="comments">* I have notice you for a long time.</span><br />
 				<span class="space"/><span class="comments">* so I write some code to expres love to you.</span><br />
 				<span class="space"/><span class="comments">*/</span><br />
-				Boy i &nbsp;= <span class="keyword">new</span> Boy&nbsp;(<span class="string">"{{$fromUserNickname}}"</span>);<br />
-				Girl u = <span class="keyword">new</span> Girl(<span class="string">"{{$toUserNickname}}"</span>);<br />
+				var i = <span class="keyword">new</span> I(<span class="string">"{{$fromUserNickname}}"</span>);<br />
+				var u = <span class="keyword">new</span> U(<span class="string">"{{$toUserNickname}}"</span>);<br />
 				<span class="comments">// Now, I told you I love you. </span><br />
 				i.love(u);<br />
-				<span class="comments">// Luckily, you accepted and became my girlfriend eversince.</span><br />
-				u.accepted();<br />
-				<span class="comments">// Since then, I miss u every day.</span><br />
-				i.miss(u);<br />
-				<span class="comments">// And take care of u and our love.</span><br />
-				i.takeCareOf(u);<br />
-				<span class="comments">// You say that you won't be so easy to marry me.</span><br />
-				<span class="comments">// So I keep waiting and I have confidence that you will.</span><br />
-				<span class="keyword">boolean</span> isHesitate = <span class="keyword">true</span>;<br />
-				<span class="keyword">while</span> &nbsp;(isHesitate) {<br />
-				<span class="placeholder"/>i.waitFor(u);<br />
-				<span class="placeholder"/><span class="comments">// I think it is an important decision</span><br />
-				<span class="placeholder"/><span class="comments">// and you should think it over.</span><br />
-				<span class="placeholder"/>isHesitate = u.thinkOver();<br />
-				}<br />
-				<span class="comments">// After a romantic wedding, we will live happily ever after.</span><br />
-				i.marry(u);<br />
-				i.liveHappilyWith(u);<br />
-				<span class="comments">// {{$lovemess}}</span>
+				<span class="comments">/**</span><br />
+				<span class="comments">{{$lovemess}}</span><br/>
+				<span class="space"/><span class="comments">*/</span><br />
 			</div>
 			<div id="loveHeart">
 				<canvas id="garden"></canvas>
 				<div id="words">
 					<div id="messages">
 						{{$toUserNickname}}, I have fallen in love with you for
-						<div id="elapseClock"></div>
+						<div id="elapseClock"></div><br/>
+						<div id="ac_or_wa" style="text-align: center">
+							<button id="ac_or_wa_ac" data-determine="1" class="btn btn-success" type="submit">接受</button>
+							<button id="ac_or_wa_wa" data-determine="0" class="btn btn-default" type="submit">拒绝</button>
+						</div>
 					</div>
 					<div id="loveu">
 						Love u forever and ever.<br/>
@@ -89,6 +78,63 @@
 			adjustCodePosition();
 			$("#code").typewriter();
 		}
+
+        (function(){
+            var dom = {
+                heart     : $('#loveHeart'),
+                determine : $('#ac_or_wa')
+            };
+
+            var func = {
+                init : function(){
+                    //绑定事件
+                    dom.determine.find('button').click(func.determine);
+                },
+
+                determine: function(){
+                    var determine = $(this).attr('data-determine');
+                    $.ajax({
+                        type: 'POST',
+                        url: '{{php}}echo base_url(){{/php}}api/love/Showlove/determineLove',
+                        data: {
+                            determine : determine
+                        },
+                        dataType: 'json',
+                        success: function (data) {
+                            console.log(data);
+                            return 0;
+                            if (data['status'] == 0){
+                                if(data['data']['userInfo'] == null){
+                                    alert("没有此用户");
+                                }else{
+                                    dom.searchFriendModal.modal('show');
+                                    console.log(data['data']['userInfo']);
+                                    var html = addFriends.generateFriendSingleItem(data['data']['userInfo']);
+                                    dom.searchFriendModal.find(".row").empty();
+                                    dom.searchFriendModal.find(".row").append(html);
+                                    var btn = dom.searchFriendModal.find(".add_friend_button");
+                                    btn.on('click', function(){
+                                        var friend_add_user_id = this.getAttribute("add_friend_id");
+                                        addFriends.addFriend(friend_add_user_id);
+                                    });
+
+                                    //清空表单
+                                    dom.searchFriendsForm.find('#search_friend_input').val('');
+                                }
+                            } else{
+                                alert(data['description']);
+                            }
+                        },
+                        error: function (data) {
+                            console.log(data);
+                            alert('操作失败');
+                        }
+                    });
+                }
+            };
+
+            func.init();
+        })();
 	</script>
 </body>
 </html>

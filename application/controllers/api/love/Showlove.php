@@ -148,4 +148,17 @@ class Showlove extends CI_Controller{
         ));
     }
 
+    /**
+     *
+     */
+    public function determineLove(){
+        if (!Validator::isTrue(in_array($this->input->post('determine', true), array(0, 1)), '请选择正确的回复')){
+            $this->response->jsonFail(Response::CODE_PARAMS_WRONG, Validator::getMessage());
+        }
+
+        //注意事务
+        $this->load->model('UserRelationModels');
+
+    }
+
 }
