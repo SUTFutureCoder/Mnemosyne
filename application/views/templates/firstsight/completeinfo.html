@@ -169,7 +169,7 @@
                     }
 
                     initVar.userSex      = formData.find('#basic-info-form-sex').val();
-                    if (1 != $.inArray(initVar.userSex, ['0', '1', '2', '3'])){
+                    if (-1 == $.inArray(initVar.userSex, ["0", "1", "2", "3"])){
                         alert('请选择正确的性别');
                         formData.find('#basic-info-form-sex').focus();
                         return 0;
