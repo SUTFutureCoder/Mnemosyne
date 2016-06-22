@@ -1,0 +1,54 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <title>Our Love Story</title>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+    <link href="http://cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        #content{
+            width:  538px;
+            height: 478px;
+        }
+        .op-love-letter-v2-topbox{background: url(https://ss1.baidu.com/8aQDcnSm2Q5IlBGlnYG/stat/chuanqing/img/1-1-%E6%B0%94%E7%90%83%E8%83%8C%E6%99%AFtop.png) no-repeat;background-color:#DCF5F8; height:100%;padding: 18px 18px 0 18px;position:relative;_overflow:hidden; color:#29747D;}
+        .op-love-letter-v2-to-box{width: 12.3em;height: 1.69em;overflow: hidden;position: relative;background: url(https://ss1.baidu.com/8aQDcnSm2Q5IlBGlnYG/stat/chuanqing/img/1-3-%E6%B0%94%E7%90%83%E8%93%9D%E8%89%B2%E7%BA%BF.png) repeat bottom }
+        .op-love-letter-v2-to-font{display: block;background: url(https://ss1.baidu.com/8aQDcnSm2Q5IlBGlnYG/stat/chuanqing/img/1-4-%E6%B0%94%E7%90%83%E8%93%9D%E8%89%B2%E5%AD%97%E6%AF%8D.png) no-repeat;width: 45px;height: 19px;float: left;}
+        .op-love-letter-v2-from-font{display: block;background: url(https://ss1.baidu.com/8aQDcnSm2Q5IlBGlnYG/stat/chuanqing/img/1-4-%E6%B0%94%E7%90%83%E8%93%9D%E8%89%B2%E5%AD%97%E6%AF%8D.png) no-repeat 0 -40px;width: 70px;height: 19px;float: right;}
+        .op-love-letter-v2-from-box {z-index:3;width: 12.7em;height: 1.69em;overflow: hidden;float: right;margin-top: 24px;background: url(https://ss1.baidu.com/8aQDcnSm2Q5IlBGlnYG/stat/chuanqing/img/1-3-%E6%B0%94%E7%90%83%E8%93%9D%E8%89%B2%E7%BA%BF.png) repeat bottom}
+        .op-love-letter-v2-status-success .op-love-letter-v2-from-box{_margin-top: 0;}
+        .op-love-letter-v2-main-input{display:block;font-family: arial;font-size:13px;word-wrap:break-word;word-break:break-all; line-height: 30px; text-indent: 45px; outline: none; background: url(https://ss1.baidu.com/8aQDcnSm2Q5IlBGlnYG/stat/chuanqing/img/1-3-%E6%B0%94%E7%90%83%E8%93%9D%E8%89%B2%E7%BA%BF.png) repeat; overflow: hidden; width:478px; resize: none; border: none;padding: 0;margin: 0;zoom:1;color:#29747D}
+        .op-love-letter-v2-bottombox{background: url(https://ss1.baidu.com/8aQDcnSm2Q5IlBGlnYG/stat/chuanqing/img/1-2-%E6%B0%94%E7%90%83%E8%83%8C%E6%99%AFbottom.png) bottom; height:154px;padding: 0 18px 0 18px;position:relative; color:#29747D;}
+        .op-love-letter-v2-to-input, .op-love-letter-v2-from-input, .op-love-letter-v2-main-input,.op-love-letter-v2-to-span,.op-love-letter-v2-from-span,.op-love-letter-v2-date{color:#29747D }
+        .op-love-letter-v2-fn { border-top: 1px dashed #b2dfe3; padding: 0px 0 45px 0;}
+    </style>
+</head>
+<body>
+<div id="content">
+<div class="op-love-letter-v2-outbox">
+    <div class="op-love-letter-v2-topbox">
+        <div class="op-love-letter-v2-topbg" style="height: 152px;"></div>
+        <div class="op-love-letter-v2-topcontent">
+            <div class="op-love-letter-v2-to-box c-clearfix">
+                <div class="op-love-letter-v2-to-font"></div>
+                <p>{{$toUserNickname}}</p>
+                <span class="op-love-letter-v2-to-span" style="color: rgb(41, 116, 125);"></span>
+            </div>
+            <p style="height:90px;" class="op-love-letter-v2-main-input OP_LOG_INPUT" data-click="{fm:'beha'}">{{$lovemess}}</p>
+        </div>
+    </div>
+    <div class="op-love-letter-v2-bottombox">
+        <div class="op-love-letter-v2-bottombg"></div>
+        <div class="op-love-letter-v2-bottomcontent">
+            <div class="op-love-letter-v2-from-box c-clearfix">
+                <p>{{$fromUserNickname}}</p>
+                <span class="op-love-letter-v2-from-span" style="color: rgb(41, 116, 125);"></span>
+                <div class="op-love-letter-v2-from-font"></div>
+                <div class="op-love-letter-v2-date" style="color: rgb(41, 116, 125);">{{$writeTime}}</div>
+            </div>
+
+        </div>
+    </div>
+</div>
+</div>
+</body>
+</html>

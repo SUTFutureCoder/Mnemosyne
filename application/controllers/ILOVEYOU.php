@@ -23,10 +23,16 @@ class ILOVEYOU extends CI_Controller{
     }
 
     public function classic($fromUser = null, $toUser = null){
-        var_dump($this->showlovelib->checkLoveMess($fromUser, $toUser));
+        $this->checkAndAssignTemplate($fromUser, $toUser);
+        $this->template->display('love/type/classic.html');
     }
 
     public function geek($fromUser = null, $toUser = null){
+        $this->checkAndAssignTemplate($fromUser, $toUser);
+        $this->template->display("love/type/geek.html");
+    }
+
+    public function checkAndAssignTemplate($fromUser = null, $toUser = null){
         $arrMessInfo = $this->showlovelib->checkLoveMess($fromUser, $toUser);
 
         if (empty($arrMessInfo['describe'])){
@@ -36,6 +42,10 @@ class ILOVEYOU extends CI_Controller{
         //注入模板
         $arrDescribe = json_decode($arrMessInfo['describe'], true);
 
+
+        //经过转换后的填写时间
+        $strCreateTime = date('Y.m.d', $arrMessInfo['create_time']);
+
         $this->template->assign('fromUserNickname', $arrDescribe['fromUserNickname']);
         $this->template->assign('toUserNickname',   $arrDescribe['toUserNickname']);
         $this->template->assign('taKnowTime_Y',     $arrDescribe['taKnowTime']['Y']);
@@ -43,16 +53,8 @@ class ILOVEYOU extends CI_Controller{
         $this->template->assign('taKnowTime_d',     $arrDescribe['taKnowTime']['d']);
         $this->template->assign('toUserId',         $toUser);
         $this->template->assign('fromUserId',       $fromUser);
+        $this->template->assign('writeTime',        $strCreateTime);
         $this->template->assign("lovemess",         $arrDescribe['message']);
-        $this->template->display("love/type/geek.html");
-    }
-
-    /**
-     * 示例
-     */
-    public function expressLoveView(){
-        $this->load->library('template');
-        $this->template->display("love/type/geek.html");
     }
 
 }
