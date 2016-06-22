@@ -103,26 +103,13 @@
                         },
                         dataType: 'json',
                         success: function (data) {
-                            console.log(data);
-                            return 0;
                             if (data['status'] == 0){
-                                if(data['data']['userInfo'] == null){
-                                    alert("没有此用户");
-                                }else{
-                                    dom.searchFriendModal.modal('show');
-                                    console.log(data['data']['userInfo']);
-                                    var html = addFriends.generateFriendSingleItem(data['data']['userInfo']);
-                                    dom.searchFriendModal.find(".row").empty();
-                                    dom.searchFriendModal.find(".row").append(html);
-                                    var btn = dom.searchFriendModal.find(".add_friend_button");
-                                    btn.on('click', function(){
-                                        var friend_add_user_id = this.getAttribute("add_friend_id");
-                                        addFriends.addFriend(friend_add_user_id);
-                                    });
-
-                                    //清空表单
-                                    dom.searchFriendsForm.find('#search_friend_input').val('');
-                                }
+								console.log(data);
+								if (1 == data['data']['determine']){
+									alert('恭喜，已成为情侣关系');
+								} else {
+									alert('对方即将收到您的拒绝回应');
+								}
                             } else{
                                 alert(data['description']);
                             }

@@ -164,8 +164,8 @@ class Showlove extends CI_Controller{
         $intToUserId   = $this->input->post('toUserId',   true);
 
         //确认是否发过
-        $this->load->library('Showlove');
-        $arrMessInfo = $this->showlove->checkLoveMess($intFromUserId, $intToUserId);
+        $this->load->library('Showlovelib');
+        $arrMessInfo = $this->showlovelib->checkLoveMess($intFromUserId, $intToUserId);
 
         if (empty($arrMessInfo['id'])){
             throw new MException(CoreConst::MODULE_SHOWLOVE, ErrorCodes::ERROR_SHOWLOVE_MESS_MISSING);
@@ -173,7 +173,7 @@ class Showlove extends CI_Controller{
 
         //标记已读
         $this->load->model('MessageModels');
-        $MarkMessageStatus = $this->messagemodels->updateMessageStatus($intFromUserId, $arrMessInfo['id'], CoreConst::MESSAGE_STATUS_READ);
+        $MarkMessageStatus = $this->MessageModels->updateMessageStatus($intFromUserId, $arrMessInfo['id'], CoreConst::MESSAGE_STATUS_READ);
         if(!$MarkMessageStatus){
             throw new MException(CoreConst::MODULE_MESSAGE,  ErrorCodes::ERROR_MESSAGE_UPDATE_STATUS);
         }
@@ -182,11 +182,11 @@ class Showlove extends CI_Controller{
         $this->load->model('InfoConfirmModels');
         //获取info_confirm status ID
         $arrInfoConfirmData = $this->InfoConfirmModels->checkInfoIsExist($intFromUserId, $intToUserId, CoreConst::SHOWLOVE_MESSAGE_CONFIRM, CoreConst::INFO_CONFRIM_STATUS_UNREAD);
-        if (!is_array($arrInfoConfirmData) && count($arrInfoConfirmData) != 1){
-            $this->response->jsonFail(Response::CODE_PARAMS_WRONG, '不存在的表白申请');
+        if (!is_array($arrInfoConfirmData) || count($arrInfoConfirmData) != 1){
+            $this->response->jsonFail(Response::CODE_PARAMS_WRONG, '表白不存在或已作出决定');
         }
 
-        $intInfoConfirmId   = $arrInfoConfirmData['id'];
+        $intInfoConfirmId   = $arrInfoConfirmData[0]['id'];
         //更新
         if (1 == $boolDetermine){
             //同意
@@ -198,7 +198,7 @@ class Showlove extends CI_Controller{
         //更新关系
         $this->load->model('UserRelationModels');
         if ($this->UserRelationModels->updateRelation($intFromUserId, $intToUserId, CoreConst::USER_RELATION_TYPE_LOVERS)){
-            $this->response->jsonSuccess();
+            $this->response->jsonSuccess(array('determine' => $boolDetermine));
         } else {
             $this->response->jsonFail(Response::CODE_PARAMS_WRONG, '决定失败');
         }

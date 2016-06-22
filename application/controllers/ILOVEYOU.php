@@ -17,17 +17,17 @@ class ILOVEYOU extends CI_Controller{
         $this->load->library('ModuleConst');
         $this->load->library('session');
         $this->load->library('template');
-        $this->load->library('Showlove');
+        $this->load->library('Showlovelib');
         $this->load->helper('login');
         checkLogin();
     }
 
     public function classic($fromUser = null, $toUser = null){
-        var_dump($this->showlove->checkLoveMess($fromUser, $toUser));
+        var_dump($this->showlovelib->checkLoveMess($fromUser, $toUser));
     }
 
     public function geek($fromUser = null, $toUser = null){
-        $arrMessInfo = $this->showlove->checkLoveMess($fromUser, $toUser);
+        $arrMessInfo = $this->showlovelib->checkLoveMess($fromUser, $toUser);
 
         if (empty($arrMessInfo['describe'])){
             throw new MException(CoreConst::MODULE_SHOWLOVE, ErrorCodes::ERROR_SHOWLOVE_MESS_MISSING);

@@ -8,7 +8,7 @@
  * Date: 16-6-22
  * Time: 上午11:17
  */
-class Showlove {
+class Showlovelib {
 
     private static $_ci = null;
 
