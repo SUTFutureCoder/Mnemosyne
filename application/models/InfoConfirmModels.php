@@ -72,13 +72,14 @@ class InfoConfirmModels extends CI_Model
         return $result;
     }
 
-    public function checkInfoIsExist($userId, $toUser, $type, $status = 0){
+    public function checkInfoIsExist($userId, $toUser, $type, $status = CoreConst::INFO_CONFRIM_STATUS_UNREAD){
         $this->db->where('user_id', $userId);
         $this->db->where('to_user', $toUser);
         $this->db->where('type', $type);
         $this->db->where('status', $status);
-        return $this->db->count_all_results(self::$tableName);
+        return $this->db->get(self::$tableName)->result_array();
     }
+
     public function updateInfoConfrimStatus($userId, $id, $status){
         $this->db->trans_start();
         $arrUpdateConds = array();

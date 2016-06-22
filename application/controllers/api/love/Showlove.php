@@ -67,7 +67,7 @@ class Showlove extends CI_Controller{
             CoreConst::SHOWLOVE_MESSAGE_CONFIRM,
             CoreConst::INFO_CONFRIM_STATUS_UNREAD);
 
-        if ($isConfirmExists > 0){
+        if(is_array($isConfirmExists) && count($isConfirmExists) > 0){
             $this->response->jsonFail(Response::CODE_PARAMS_WRONG, '您的表白已发送过');
         }
 
@@ -181,11 +181,27 @@ class Showlove extends CI_Controller{
         //更新info_confirm    status
         $this->load->model('InfoConfirmModels');
         //获取info_confirm status ID
-//        $this->InfoConfirmModels->updateInfoConfrimStatus($intToUserId, )
+        $arrInfoConfirmData = $this->InfoConfirmModels->checkInfoIsExist($intFromUserId, $intToUserId, CoreConst::SHOWLOVE_MESSAGE_CONFIRM, CoreConst::INFO_CONFRIM_STATUS_UNREAD);
+        if (!is_array($arrInfoConfirmData) && count($arrInfoConfirmData) != 1){
+            $this->response->jsonFail(Response::CODE_PARAMS_WRONG, '不存在的表白申请');
+        }
 
-        //注意事务
+        $intInfoConfirmId   = $arrInfoConfirmData['id'];
+        //更新
+        if (1 == $boolDetermine){
+            //同意
+            $this->InfoConfirmModels->updateInfoConfrimStatus($this->session->user_id, $intInfoConfirmId, CoreConst::INFO_CONFRIM_STATUS_AGREE);
+        } else {
+            $this->InfoConfirmModels->updateInfoConfrimStatus($this->session->user_id, $intInfoConfirmId, CoreConst::INFO_CONFRIM_STATUS_REFUSE);
+        }
+
+        //更新关系
         $this->load->model('UserRelationModels');
-
+        if ($this->UserRelationModels->updateRelation($intFromUserId, $intToUserId, CoreConst::USER_RELATION_TYPE_LOVERS)){
+            $this->response->jsonSuccess();
+        } else {
+            $this->response->jsonFail(Response::CODE_PARAMS_WRONG, '决定失败');
+        }
     }
 
 }

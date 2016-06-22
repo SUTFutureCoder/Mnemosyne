@@ -138,4 +138,32 @@ class UserRelationModels extends CI_Model{
         }
         return $this->db->get(self::$tableName)->row_array();
     }
+
+
+    public function updateRelation($userId, $userRelateId, $relateType){
+        //事务
+        $this->db->trans_start();
+        $this->db->where('(user_id = ' . $userId . ' AND user_relate = ' . $userRelateId . ') OR ( user_id = ' . $userRelateId  . ' AND user_relate = ' . $userId . ')');
+        $this->db->update(self::$tableName, array(
+            'type'        =>  $relateType,
+            'update_time' => time(),
+        ));
+
+        //打log
+        $logContent = array(
+            'user_id'     => $userId,
+            'user_Relate' => $userRelateId,
+            'update_relate_type' => $relateType,
+        );
+
+
+        $this->db->trans_complete();
+        if (!$this->db->trans_status()){
+            $logContent['run_status'] = 0;
+        } else {
+            $logContent['run_status'] = 1;
+        }
+        $this->UserLogModels->addUserLog($userId, $logContent, self::$tableName, __METHOD__);
+        return $logContent['run_status'];
+    }
 }

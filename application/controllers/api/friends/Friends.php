@@ -92,7 +92,7 @@ class Friends extends CI_Controller{
     private function sendFriendConfirmMessage($userId, $userName, $send_to){
         $isInfoConfirmExist = $this->infoConfirm->checkInfoIsExist($userId, $send_to,
             CoreConst::FRIEND_MESSAGE_CONFIRM, CoreConst::INFO_CONFRIM_STATUS_UNREAD);
-        if($isInfoConfirmExist > 0){
+        if(is_array($isInfoConfirmExist) && count($isInfoConfirmExist) > 0){
             $this->response->jsonFail(Response::CODE_PARAMS_WRONG, "您的好友请求已经发送过");
         }
         $addInfoConfirm = $this->infoConfirm->addInfoConfirm($userId, $send_to,
