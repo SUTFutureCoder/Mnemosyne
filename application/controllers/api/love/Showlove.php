@@ -152,9 +152,36 @@ class Showlove extends CI_Controller{
      *
      */
     public function determineLove(){
-        if (!Validator::isTrue(in_array($this->input->post('determine', true), array(0, 1)), '请选择正确的回复')){
+        if (!(Validator::isTrue(in_array($this->input->post('determine', true), array(0, 1)), '请选择正确的回复')
+                && Validator::isNumberic($this->input->post('fromUserId',  true), '表白用户id出错')
+                && Validator::isNumberic($this->input->post('toUserId',  true), '接收表白用户id出错')
+                && Validator::isTrue($this->session->user_id == $this->input->post('toUserId', true), '只能被表白对象才能选择接收与否'))){
             $this->response->jsonFail(Response::CODE_PARAMS_WRONG, Validator::getMessage());
         }
+
+        $boolDetermine = $this->input->post('determine',  true);
+        $intFromUserId = $this->input->post('fromUserId', true);
+        $intToUserId   = $this->input->post('toUserId',   true);
+
+        //确认是否发过
+        $this->load->library('Showlove');
+        $arrMessInfo = $this->showlove->checkLoveMess($intFromUserId, $intToUserId);
+
+        if (empty($arrMessInfo['id'])){
+            throw new MException(CoreConst::MODULE_SHOWLOVE, ErrorCodes::ERROR_SHOWLOVE_MESS_MISSING);
+        }
+
+        //标记已读
+        $this->load->model('MessageModels');
+        $MarkMessageStatus = $this->messagemodels->updateMessageStatus($intFromUserId, $arrMessInfo['id'], CoreConst::MESSAGE_STATUS_READ);
+        if(!$MarkMessageStatus){
+            throw new MException(CoreConst::MODULE_MESSAGE,  ErrorCodes::ERROR_MESSAGE_UPDATE_STATUS);
+        }
+
+        //更新info_confirm    status
+        $this->load->model('InfoConfirmModels');
+        //获取info_confirm status ID
+//        $this->InfoConfirmModels->updateInfoConfrimStatus($intToUserId, )
 
         //注意事务
         $this->load->model('UserRelationModels');

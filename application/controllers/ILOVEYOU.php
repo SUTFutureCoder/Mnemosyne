@@ -17,18 +17,20 @@ class ILOVEYOU extends CI_Controller{
         $this->load->library('ModuleConst');
         $this->load->library('session');
         $this->load->library('template');
+        $this->load->library('Showlove');
         $this->load->helper('login');
+        checkLogin();
     }
 
     public function classic($fromUser = null, $toUser = null){
-        var_dump($this->checkLoveMess($fromUser, $toUser));
+        var_dump($this->showlove->checkLoveMess($fromUser, $toUser));
     }
 
     public function geek($fromUser = null, $toUser = null){
-        $arrMessInfo = $this->checkLoveMess($fromUser, $toUser);
+        $arrMessInfo = $this->showlove->checkLoveMess($fromUser, $toUser);
 
         if (empty($arrMessInfo['describe'])){
-            throw new MException(CoreConst::MODULE_SHOWLOVE, ErrorCodes::ERROR_SHOWLOVE_MESS_MISSING, '表白字段为空');
+            throw new MException(CoreConst::MODULE_SHOWLOVE, ErrorCodes::ERROR_SHOWLOVE_MESS_MISSING);
         }
 
         //注入模板
@@ -39,42 +41,11 @@ class ILOVEYOU extends CI_Controller{
         $this->template->assign('taKnowTime_Y',     $arrDescribe['taKnowTime']['Y']);
         $this->template->assign('taKnowTime_m',     $arrDescribe['taKnowTime']['m']);
         $this->template->assign('taKnowTime_d',     $arrDescribe['taKnowTime']['d']);
-
-        $this->template->assign("lovemess", $arrDescribe['message']);
+        $this->template->assign('toUserId',         $toUser);
+        $this->template->assign('fromUserId',       $fromUser);
+        $this->template->assign("lovemess",         $arrDescribe['message']);
         $this->template->display("love/type/geek.html");
     }
-
-    /**
-     * 检查表白信息是否合法，保护隐私
-     *
-     * @param $fromUser
-     * @param $toUser
-     * @return bool
-     */
-    private function checkLoveMess($fromUser, $toUser){
-        if (null === $fromUser || null === $toUser){
-            die('参数缺失');
-        }
-
-        checkLogin();
-
-        $userId = $this->session->user_id;
-        if (empty($userId) || ($userId != $fromUser && $userId != $toUser)){
-            die('身份验证失败');
-        }
-
-        //查消息记录确认
-        $this->load->model('MessageModels');
-        $arrMessInfo = $this->MessageModels->getMessageByUserId($toUser, null, $fromUser, 2);
-
-        //选取最近的一条表白
-        if (is_array($arrMessInfo) && isset($arrMessInfo[0])){
-            return $arrMessInfo[0];
-        } else {
-            die('没能够找到表白信息');
-        }
-    }
-
 
     /**
      * 示例

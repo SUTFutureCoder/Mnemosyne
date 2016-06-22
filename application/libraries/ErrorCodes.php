@@ -54,6 +54,12 @@ class ErrorCodes {
 
     //表白部分
     const ERROR_SHOWLOVE_MESS_MISSING = 30001;
+    const ERROR_SHOWLOVE_ID_MISSING   = 30002;
+    const ERROR_SHOWLOVE_USER_IDENTITY_ERROR = 30003;
+    const ERROR_SHOWLOVE_NOT_FOUND    = 30004;
+
+    //消息部分
+    const ERROR_MESSAGE_UPDATE_STATUS = 30005;
 
     public static $error_codes = array(
         self::ERROR_PARAM_ERROR     => 'param error',
@@ -90,6 +96,12 @@ class ErrorCodes {
 
         //表白部分
         self::ERROR_SHOWLOVE_MESS_MISSING => 'showlove describe missing',
+        self::ERROR_SHOWLOVE_ID_MISSING   => 'showlove ID missing',
+        self::ERROR_SHOWLOVE_USER_IDENTITY_ERROR => 'showlove user identity error',
+        self::ERROR_SHOWLOVE_NOT_FOUND    => 'showlove data not found',
+
+        //消息部分
+        self::ERROR_MESSAGE_UPDATE_STATUS => 'upate message status error',
     );
 
     /**
