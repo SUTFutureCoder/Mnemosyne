@@ -41,9 +41,27 @@ abstract class CITestCase extends PHPUnit_Framework_TestCase
 	public function requireController($class, $prefix = null)
 	{
 		$filepath = APPPATH.'controllers'.DIRECTORY_SEPARATOR.$prefix.DIRECTORY_SEPARATOR.$class.'.php';
+		var_dump($filepath);
 		if (file_exists($filepath))
 		{
 			require_once($filepath);
 		}
 	}
+
+	public function setParam($data, $method = 'POST'){
+		if ($method == 'GET'){
+			$_GET = $data;
+		} else if ($method == 'POST'){
+			$_POST = $data;
+		}
+	}
+
+	public function getApi($obj, $strFuncName){
+		ob_start();
+		$obj->$strFuncName();
+		$content = ob_get_contents();
+		ob_end_clean();
+		return $content;
+	}
+
 }

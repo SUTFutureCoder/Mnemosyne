@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>test超时</title>
+</head>
+<body>
+
+
+</body>
+<script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script>
+    (function(){
+        var test = {
+            init : function(){
+                this.choseUserSchoolAndChassInfo();
+                this.loadBaseInfo();
+            },
+            choseUserSchoolAndChassInfo: function(){
+                    $.ajax({
+                        async: false,
+                        type: 'GET',
+                        url: '{{php}}echo base_url(){{/php}}api/user/userInfo/getUserSchoolAndClass',
+                        dataType: 'json',
+                        success: function (data) {
+                            console.log(data);
+                            console.log("test");
+                            var school_id = data['data'][0]['school_unique_id'];
+                            var class_id = data['data'][0]['class_unique_id'];
+                            //BaseInfoDom.baseInfoTable.find("#user_school_select").val(school_id);
+                            //updateBaseInfo.updateClassList(class_id);
+                        },
+                        error: function (data) {
+                            console.log(data);
+                            alert('获取班级信息失败');
+                        }
+                    });
+                 
+            },
+            loadBaseInfo : function(){
+                var postData = {
+                    info : "user_mobile,user_email,user_name,user_birthday,user_nickname,user_avatar",
+                };
+                $.ajax({
+                    type: 'POST',
+                    async: false,
+                    url: '{{php}}echo base_url(){{/php}}api/user/userInfo/loadUserInfo',
+                    data: postData,
+                    dataType: 'json',
+                    success: function (data) {
+                        var userInfo = data['data']['userinfo'];
+                        //updateBaseInfo.preLoadBaseInfo(userInfo);
+                    },
+                    error: function (data) {
+                        console.log(data);
+                        alert('操作失败');
+                    }
+                });
+                
+            },
+
+        };
+        test.init();
+    })();
+</script>
+</html>

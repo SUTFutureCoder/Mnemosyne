@@ -1,0 +1,36 @@
+PHPUnit 3.7.28 by Sebastian Bergmann.
+
+Configuration read from /var/www/html/Mnemosyne/phpunit.xml
+
+
+Fatal error: Class 'Redis' not found in /var/www/html/Mnemosyne/application/libraries/util/RedisLib.php on line 22
+
+Call Stack:
+    0.0002     228704   1. {main}() /usr/bin/phpunit:0
+    0.0019     518696   2. PHPUnit_TextUI_Command::main() /usr/bin/phpunit:46
+    0.0020     519320   3. PHPUnit_TextUI_Command->run() /usr/share/php/PHPUnit/TextUI/Command.php:129
+    0.0250    3662768   4. PHPUnit_TextUI_TestRunner->doRun() /usr/share/php/PHPUnit/TextUI/Command.php:176
+    0.0272    3953312   5. PHPUnit_Framework_TestSuite->run() /usr/share/php/PHPUnit/TextUI/TestRunner.php:349
+    0.0273    3954320   6. call_user_func() /usr/share/php/PHPUnit/Framework/TestSuite.php:655
+    0.0273    3954608   7. UserAlumniModelsTest::setUpBeforeClass() /usr/share/php/PHPUnit/Framework/TestSuite.php:655
+    0.0273    3954656   8. CI_Loader->model() /var/www/html/Mnemosyne/application/tests/models/UserAlumniModelsTest.php:20
+    0.0276    3986104   9. UserAlumniModels->__construct() /var/www/html/Mnemosyne/system/core/Loader.php:323
+    0.0277    3986624  10. CI_Loader->database() /var/www/html/Mnemosyne/application/models/UserAlumniModels.php:25
+    0.0280    4018544  11. DB() /var/www/html/Mnemosyne/system/core/Loader.php:363
+    0.0322    4888032  12. CI_DB_driver->__construct() /var/www/html/Mnemosyne/system/database/DB.php:201
+    0.0322    4897208  13. MLog::notice() /var/www/html/Mnemosyne/system/database/DB_driver.php:382
+    0.0322    4897360  14. MLog::getLogStatus() /var/www/html/Mnemosyne/application/libraries/util/MLog.php:153
+    0.0323    4897640  15. Uuid::genUUID() /var/www/html/Mnemosyne/application/libraries/util/MLog.php:40
+    0.0323    4897768  16. RedisLib::incr() /var/www/html/Mnemosyne/application/libraries/util/Uuid.php:29
+    0.0323    4897872  17. RedisLib::getInstance() /var/www/html/Mnemosyne/application/libraries/util/RedisLib.php:77
+
+
+A PHP Error was encountered
+
+Severity:    Error
+Message:     Class 'Redis' not found
+Filename:    /var/www/html/Mnemosyne/application/libraries/util/RedisLib.php
+Line Number: 22
+
+Backtrace:
+

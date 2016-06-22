@@ -1,0 +1,264 @@
+<link href="{{php}}echo base_url();{{/php}}static/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+<script type="text/javascript" src="{{php}}echo base_url();{{/php}}static/js/bootstrap-datetimepicker.min.js" charset="UTF-8"></script>
+<script type="text/javascript" src="{{php}}echo base_url();{{/php}}static/js/locales/bootstrap-datetimepicker.zh-CN.js" charset="UTF-8"></script>
+<script>
+    (function(){
+        var dom = {
+            showloveBgImg  : $('#showlove_img'),
+            showloveSelect : $('#showlove_select'),
+            showloveInput  : $('#showlove_input'),
+            showloveAnimationObject: $('#showlove_send_animation'),
+        };
+
+        var finalPostData = {
+        };
+
+        var main = {
+            init : function(){
+                //初始化页面，获取数据并且绑定事件
+                main.bindSelect();
+                main.bindSearch();
+                main.bindTimePicker();
+
+                //点击切换对象选择模式
+                dom.showloveSelect.find('#showlove_select_to_search_btn,#showlove_search_to_select_btn').click(main.bindTaSelect);
+
+                //点击发送按钮
+                dom.showloveInput.find('#showlove_submit_submit_btn').click(main.showlove);
+            },
+
+            bindSelect : function () {
+                var objSelect = dom.showloveSelect.find('#showlove_select_option');
+                //获取用户好友列表并填入到option中，如果没有则提示需要加好友
+                $.ajax({
+                    type: 'POST',
+                    url: '{{php}}echo base_url(){{/php}}api/friends/Friends/getFriendInfoList',
+                    dataType: 'json',
+                    success: function (data) {
+                        if(data['status'] == 0){
+                            if (data['data'].length == 0){
+                                alert('请添加好友后再表白～');
+                                return 0;
+                            }
+
+                            for (var i in data['data']){
+                                if ('' != data['data'][i]['user_nickname']){
+                                    var tmpStr = '<option value="' + data['data'][i]['user_id'] + '">' + data['data'][i]['user_name'] + '-(' + data['data'][i]['user_nickname'] +')</option>';
+                                } else {
+                                    var tmpStr = '<option value="' + data['data'][i]['user_id'] + '">' + data['data'][i]['user_name'] + '</option>';
+                                }
+
+                                objSelect.append(tmpStr);
+                            }
+                        }else{
+                            alert(data['description']);
+                        }
+                    },
+                    error: function (data) {
+                        console.log(data);
+                        alert('操作失败');
+                    }
+                });
+
+
+                //绑定点击确定事件
+                dom.showloveSelect.find('#showlove_select_submit').click(function(){
+                    main.doGetTargetUserInfo('select', objSelect.val())
+                });
+            },
+
+            bindSearch : function (){
+                dom.showloveSelect.find('#showlove_search_submit').click(function(){
+                    var objSearchFill = dom.showloveSelect.find('#showlove_search_input');
+                    if ('' == objSearchFill.val()){
+                        alert('搜索邮箱或手机号不能为空');
+                        objSearchFill.focus();
+                        return 0;
+                    }
+
+                    main.doGetTargetUserInfo('search', objSearchFill.val());
+                });
+            },
+
+            doGetTargetUserInfo : function (type, val){
+                var tmpPostData = {
+                };
+
+                if ('search' == type){
+                    tmpPostData.type = 'search';
+                    tmpPostData.searchLoginname = val;
+                } else if('select' == type){
+                    tmpPostData.type = 'select';
+                    tmpPostData.userId = val;
+                } else {
+                    alert('您选择告白对象的方法有误');
+                    return 0;
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    url:  '{{php}}echo base_url(){{/php}}api/love/Showlove/getObjectInfo',
+                    data: tmpPostData,
+                    dataType: 'json',
+                    success: function (data) {
+                        if(data['status'] == 0){
+                            finalPostData.toUserId = data['data']['user_id'];
+
+                            var showToName   = data['data']['to_user_nickname'];
+                            var showFromName = data['data']['from_user_nickname'];
+
+                            if ('' == data['data']['to_user_nickname']){
+                                showToName = data['data']['user_name'];
+                            }
+
+                            if ('' == data['data']['from_user_nickname']){
+                                showFromName = data['data']['from_user_name'];
+                            }
+
+                            dom.showloveInput.find('#showlove_doge_nickname').val(showFromName);
+                            dom.showloveInput.find('#showlove_ta_nickname').val(showToName);
+
+
+                            dom.showloveSelect.html('<p id="toUserName">' + data['data']['user_name'] + '</p>');
+                        }else{
+                            alert(data['description']);
+                        }
+                    },
+                    error: function (data) {
+                        console.log(data);
+                        alert('操作失败');
+                    }
+                });
+            },
+
+            bindTimePicker : function (){
+                //计算推荐相识时间
+                var objNowTime = new Date();
+
+                //设置日期选择器
+                dom.showloveInput.find('#showlove_ta_know_time').datetimepicker({
+                    minView     : 2,
+                    startView   : 4,
+                    format      : 'yyyy-mm-dd',
+                    language    : 'zh-CN',
+                    initialDate : (objNowTime.getFullYear() - 2)+'-01-01',
+                });
+            },
+
+            bindTaSelect  : function (){
+                dom.showloveSelect.find('#showlove_select_form').toggle();
+                dom.showloveSelect.find('#showlove_search_form').toggle();
+            },
+
+            loadData : function () {
+                //装载数据到变量
+                finalPostData.fromUserNickname = dom.showloveInput.find('#showlove_doge_nickname').val();
+                finalPostData.toUserNickname   = dom.showloveInput.find('#showlove_ta_nickname').val();
+                finalPostData.taKnowTime       = dom.showloveInput.find('#showlove_ta_know_time').val();
+                finalPostData.tpl              = dom.showloveInput.find('#showlove_tpl_select').val();
+                finalPostData.message          = dom.showloveInput.find('#showlove_message_content').val();
+            },
+
+            showlove : function (){
+                //装载函数
+                main.loadData();
+
+                if (false == main.checkData()){
+                    return false;
+                }
+
+                if (false == main.submitData()){
+                    return false;
+                }
+                main.submitAnimation();
+            },
+
+            checkData  : function (){
+                //检查数据
+                if (undefined == finalPostData.toUserId){
+                    alert('请选择表白对象');
+                    return false;
+                }
+
+                if (undefined == finalPostData.fromUserNickname || '' == finalPostData.fromUserNickname){
+                    alert('您的昵称不能为空');
+                    return false;
+                }
+
+                if (undefined == finalPostData.toUserNickname   || '' == finalPostData.toUserNickname){
+                    alert('ta的昵称不能为空');
+                    return false;
+                }
+
+                if (undefined == finalPostData.taKnowTime || '' == finalPostData.taKnowTime){
+                    alert('和她相识时间不能为空');
+                    return false;
+                }
+
+                if (undefined == finalPostData.message || '' == finalPostData.message){
+                    alert('表白内容不能为空');
+                    return false;
+                }
+            },
+
+            submitData : function (){
+                //向后端发送信息
+                var submitStatus = false;
+                $.ajax({
+                    type:  'POST',
+                    async: false,
+                    url:   '{{php}}echo base_url(){{/php}}api/love/Showlove/kokuhaku',
+                    data:  finalPostData,
+                    dataType: 'json',
+                    success:  function (data) {
+                        if(data['status'] == 0){
+                            submitStatus = true;
+                        }else{
+                            alert(data['description']);
+                        }
+                    },
+                    error: function (data) {
+                        console.log(data);
+                        alert('操作失败');
+                    }
+                });
+                return submitStatus;
+            },
+
+            submitAnimation: function (){
+                //顺序执行动画队列
+                var animationObject = dom.showloveAnimationObject;
+                var animateQueue    = [
+                        function (){
+                            animationObject.animate({left: '50px'}, 0, next);
+                        },
+                        function (){
+                            dom.showloveInput.animate({marginTop : '-400px', height: 'toggle'}, 2000, next);
+                        },
+                        function (){
+                            dom.showloveBgImg.find('img').animate({marginLeft : '-30%', opacity: "0"}, 'slow', next);
+                            dom.showloveSelect.find('p').animate({marginLeft : '-30%', opacity: "0"}, 'slow', next);
+                        },
+                        function (){
+                            animationObject.animate({left: '100%', width: 'toggle'}, 1000, next);
+                        },
+                        function (){
+                            //显示提示
+                            dom.showloveSelect.html('<p id="pleaseWait">❤请静候佳音❤</p>');
+                            dom.showloveSelect.find('#pleaseWait').animate({opacity: "1"}, 2000, next);
+                        }
+                ];
+
+                function next(){
+                    animationObject.dequeue('animationQueue');
+                }
+
+                animationObject.queue('animationQueue', animateQueue);
+                next();
+
+            }
+        };
+
+        main.init();
+    })();
+</script>

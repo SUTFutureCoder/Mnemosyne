@@ -1,0 +1,129 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<title>Our Love Story</title>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<link href="{{php}}echo base_url();{{/php}}static/love/css/default.css" type="text/css" rel="stylesheet">
+	<script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+	<script type="text/javascript" src="{{php}}echo base_url();{{/php}}static/love/js/garden.js"></script>
+    <script type="text/javascript" src="{{php}}echo base_url();{{/php}}static/love/js/functions.js"></script>
+    <link href="http://cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+	<div id="mainDiv">
+		<div id="content">
+			<div id="code">
+				<span class="comments">/**</span><br />
+				<span class="space"/><span class="comments">* I have notice you for a long time.</span><br />
+				<span class="space"/><span class="comments">* so I write some code to expres love to you.</span><br />
+				<span class="space"/><span class="comments">*/</span><br />
+				var i = <span class="keyword">new</span> I(<span class="string">"{{$fromUserNickname}}"</span>);<br />
+				var u = <span class="keyword">new</span> U(<span class="string">"{{$toUserNickname}}"</span>);<br />
+				<span class="comments">// Now, I told you I love you. </span><br />
+				i.love(u);<br />
+				<span class="comments">/**</span><br />
+				<span class="comments">{{$lovemess}}</span><br/>
+				<span class="space"/><span class="comments">*/</span><br />
+			</div>
+			<div id="loveHeart">
+				<canvas id="garden"></canvas>
+				<div id="words">
+					<div id="messages">
+						{{$toUserNickname}}, I have fallen in love with you for
+						<div id="elapseClock"></div><br/>
+						<div id="ac_or_wa" style="text-align: center">
+							<button id="ac_or_wa_ac" data-determine="1" class="btn btn-success" type="submit">接受</button>
+							<button id="ac_or_wa_wa" data-determine="0" class="btn btn-default" type="submit">拒绝</button>
+						</div>
+					</div>
+					<div id="loveu">
+						Love u forever and ever.<br/>
+						<div class="signature">- {{$fromUserNickname}}</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		var offsetX = $("#loveHeart").width() / 2;
+		var offsetY = $("#loveHeart").height() / 2 - 55;
+		var together = new Date();
+		//注意比实际时间大一个月
+		together.setFullYear({{$taKnowTime_Y}}, {{$taKnowTime_m}}, {{$taKnowTime_d}});
+		together.setHours(20);
+		together.setMinutes(0);
+		together.setSeconds(0);
+		together.setMilliseconds(0);
+
+		if (!document.createElement('canvas').getContext) {
+			var msg = document.createElement("div");
+			msg.id = "errorMsg";
+			msg.innerHTML = "Your browser doesn't support HTML5!<br/>Recommend use Chrome 14+/IE 9+/Firefox 7+/Safari 4+";
+			document.body.appendChild(msg);
+			$("#code").css("display", "none")
+			$("#copyright").css("position", "absolute");
+			$("#copyright").css("bottom", "10px");
+		    document.execCommand("stop");
+		} else {
+			setTimeout(function () {
+				startHeartAnimation();
+			}, 5000);
+
+			timeElapse(together);
+			setInterval(function () {
+				timeElapse(together);
+			}, 500);
+
+			adjustCodePosition();
+			$("#code").typewriter();
+		}
+
+        (function(){
+            var dom = {
+                heart     : $('#loveHeart'),
+                determine : $('#ac_or_wa')
+            };
+
+            var func = {
+                init : function(){
+                    //绑定事件
+                    dom.determine.find('button').click(func.determine);
+                },
+
+                determine: function(){
+                    var determine = $(this).attr('data-determine');
+                    $.ajax({
+                        type: 'POST',
+                        url: '{{php}}echo base_url(){{/php}}api/love/Showlove/determineLove',
+                        data: {
+                            determine  : determine,
+                            fromUserId : {{$fromUserId}},
+                            toUserId   : {{$toUserId}}
+                        },
+                        dataType: 'json',
+                        success: function (data) {
+                            if (data['status'] == 0){
+								console.log(data);
+								if (1 == data['data']['determine']){
+									alert('恭喜，已成为情侣关系');
+								} else {
+									alert('对方即将收到您的拒绝回应');
+								}
+                            } else{
+                                alert(data['description']);
+                            }
+                        },
+                        error: function (data) {
+                            console.log(data);
+                            alert('操作失败');
+                        }
+                    });
+                }
+            };
+
+            func.init();
+        })();
+	</script>
+</body>
+</html>

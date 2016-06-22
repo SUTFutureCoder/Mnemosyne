@@ -50,6 +50,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @author		EllisLab Dev Team
  * @link		http://codeigniter.com/user_guide/database/
  */
+//搭载MLog日志和计时器模块
+require_once APPPATH . 'libraries/util/Timer.php';
 abstract class CI_DB_driver {
 
 	/**
@@ -354,6 +356,9 @@ abstract class CI_DB_driver {
 	 */
 	protected $_count_string = 'SELECT COUNT(*) AS ';
 
+	protected $_mlog = null;
+
+    protected static $_timer = null;
 	// --------------------------------------------------------------------
 
 	/**
@@ -372,7 +377,10 @@ abstract class CI_DB_driver {
 			}
 		}
 
-		log_message('info', 'Database Driver Class Initialized');
+		$this->_mlog  = new MLog();
+        self::$_timer = new Timer();
+        $this->_mlog->notice(CoreConst::MODULE_DATABASE, 'Database Driver Class Initialized');
+//		log_message('info', 'Database Driver Class Initialized');
 	}
 
 	// --------------------------------------------------------------------
@@ -429,8 +437,8 @@ abstract class CI_DB_driver {
 			// We still don't have a connection?
 			if ( ! $this->conn_id)
 			{
-				log_message('error', 'Unable to connect to the database');
-
+//				log_message('error', 'Unable to connect to the database');
+                $this->_mlog->fatal(CoreConst::MODULE_DATABASE, 'Unable to connect to the database');
 				if ($this->db_debug)
 				{
 					$this->display_error('db_unable_to_connect');
@@ -514,8 +522,8 @@ abstract class CI_DB_driver {
 	{
 		if (method_exists($this, '_db_set_charset') && ! $this->_db_set_charset($charset))
 		{
-			log_message('error', 'Unable to set database connection charset: '.$charset);
-
+//			log_message('error', 'Unable to set database connection charset: '.$charset);
+            $this->_mlog->fatal(CoreConst::MODULE_DATABASE, 'Unable to set database connection charset: '.$charset);
 			if ($this->db_debug)
 			{
 				$this->display_error('db_unable_to_set_charset', $charset);
@@ -582,6 +590,8 @@ abstract class CI_DB_driver {
 	/**
 	 * Execute the query
 	 *
+	 * 这里可以精准获取
+	 *
 	 * Accepts an SQL string as input and returns a result object upon
 	 * successful execution of a "read" type query. Returns boolean TRUE
 	 * upon successful execution of a "write" type query. Returns boolean
@@ -597,7 +607,8 @@ abstract class CI_DB_driver {
 	{
 		if ($sql === '')
 		{
-			log_message('error', 'Invalid query: '.$sql);
+//			log_message('error', 'Invalid query: '.$sql);
+            $this->_mlog->fatal(CoreConst::MODULE_DATABASE, 'Invalid query: '.$sql);
 			return ($this->db_debug) ? $this->display_error('db_invalid_query') : FALSE;
 		}
 		elseif ( ! is_bool($return_object))
@@ -637,6 +648,7 @@ abstract class CI_DB_driver {
 
 		// Start the Query Timer
 		$time_start = microtime(TRUE);
+        Timer::start();
 
 		// Run the Query
 		if (FALSE === ($this->result_id = $this->simple_query($sql)))
@@ -656,7 +668,8 @@ abstract class CI_DB_driver {
 			$error = $this->error();
 
 			// Log errors
-			log_message('error', 'Query error: '.$error['message'].' - Invalid query: '.$sql);
+//			log_message('error', 'Query error: '.$error['message'].' - Invalid query: '.$sql);
+            $this->_mlog->fatal(CoreConst::MODULE_DATABASE, 'Query error: '.$error['message'].' - Invalid query: '.$sql);
 
 			if ($this->db_debug)
 			{
@@ -682,6 +695,15 @@ abstract class CI_DB_driver {
 
 		// Stop and aggregate the query time results
 		$time_end = microtime(TRUE);
+        Timer::stop();
+
+        //写入日志
+        $this->_mlog->notice(CoreConst::MODULE_DATABASE, sprintf(
+            'sql[%s] cost[%s]',
+            json_encode($sql),
+            Timer::get()
+        ));
+
 		$this->benchmark += $time_end - $time_start;
 
 		if ($this->save_queries === TRUE)
@@ -870,8 +892,8 @@ abstract class CI_DB_driver {
 			{
 				$this->_trans_status = TRUE;
 			}
-
-			log_message('debug', 'DB Transaction Failure');
+            $this->_mlog->fatal(CoreConst::MODULE_DATABASE, 'DB Transaction Failure');
+//			log_message('debug', 'DB Transaction Failure');
 			return FALSE;
 		}
 

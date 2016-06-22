@@ -1,0 +1,84 @@
+<script>
+    (function(){
+        var dom = {
+            friendList : $('.friend_list'),
+        };
+        var friend = {
+            init : function(){
+                this.loadFriendInfoList();
+            },
+            loadFriendInfoList : function(){
+                var postData = {};
+                $.ajax({
+                    type: 'POST',
+                    url: '{{php}}echo base_url(){{/php}}api/friends/Friends/getFriendInfoList',
+                    data: postData,
+                    dataType: 'json',
+                    success: function (data) {
+                        if(data['status'] == 0){
+                            var userInfoList = data['data'];
+                            var html = "";
+                            for(var i = 0; i < userInfoList.length; i++){
+                                html += friend.generateFriendSingleItem(userInfoList[i]);
+                            }
+                            dom.friendList.empty();
+                            dom.friendList.append(html);
+                            friend.deleteFriendSubmit(dom.friendList.find(".delete_friend_button"));
+                        }else{
+                            alert(data['description']);
+                        }
+                    },
+                    error: function (data) {
+                        console.log(data);
+                        alert('操作失败');
+                    }
+                });
+            },
+            deleteFriendSubmit : function(btn){
+                btn.on('click', function(){
+                    friend_id = this.getAttribute("friend_id");
+                    postData = {'friend_id' : friend_id};
+
+                    $.ajax({
+                        type: 'POST',
+                        url: '{{php}}echo base_url(){{/php}}api/friends/Friends/deleteFriend',
+                        data: postData,
+                        dataType: 'json',
+                        success: function (data) {
+                            if(data['status'] == 0){
+                                alert("操作成功");
+
+                                //清除dom
+                                dom.friendList.find('#friend_single_friend_id_' + friend_id).remove();
+                            }else{
+                                alert(data['description']);
+                            }
+                        },
+                        error: function (data) {
+                            console.log(data);
+                            alert('操作失败');
+                        }
+                    });
+                });
+            },
+            generateFriendSingleItem : function(userInfo){
+                var html = "";
+                html += '<div class="friend_single col-xs-12" id="friend_single_friend_id_' + userInfo['user_id'] + '">' +
+                            '<div class="header-img-sm col-xs-4 col-md-2">' + 
+                                '<img src="' + userInfo['user_avatar'] + '">' + 
+                            '</div>' + 
+                            '<div class="request-info col-xs-8 col-md-8">' + 
+                                '<div class="user_nickname">' + userInfo['user_nickname'] +  '</div>' + 
+                                '<div class="user_name">' + userInfo['user_name'] + '</div>' + 
+                                '<div class="user_school">沈阳工业大学</div>' + 
+                            '</div>' + 
+                            '<div class="control-btn">' + 
+                                '<button type="button" friend_id = "' + userInfo['user_id'] + '" class="delete_friend_button btn btn-info">删除好友</button>' +
+                            '</div>'+ 
+                        '</div>';
+                return html
+            },
+        };
+        friend.init();
+    })();
+</script>

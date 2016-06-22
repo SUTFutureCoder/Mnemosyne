@@ -1,0 +1,68 @@
+<script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="http://cdn.bootcss.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script src="http://project-m.oss-cn-qingdao.aliyuncs.com/static/store.min.js"></script>
+<script src="{{php}}echo base_url();{{/php}}static/js/utils/crop_avatar.js"></script>
+<!--直接验证是否登录及附加全局变量 -->
+<script>
+    if (!store.get('token')){
+        window.location.href='{{php}}echo base_url();{{/php}}index/login';
+    } else {
+        var userToken = store.get('token');
+    }
+
+    (function(){
+        dom = {
+            messagePopover: $('.message_popover')
+        };
+        var messageLoad = {
+            init : function(){
+                this.loadPopoverFn();     
+                this.messageLoadFn();
+            },
+
+            loadPopoverFn: function(){
+                dom.messagePopover.popover();
+            },
+            messageLoadFn: function(){
+                $.ajax({
+                    type: 'GET',
+                    async : false,
+                    url: '{{php}}echo base_url(){{/php}}api/user/UserInfo/getUserMessage',
+                    dataType: 'json',
+                    success: function(data){
+                        if (data['status'] == 0){
+                            var messageList = data['data']['message'];
+                            console.log(messageList);
+                            var messagePopover = '<div class="message_unread container">';
+                            for(var i = 0; i < messageList.length; i++)
+                            {
+                                messagePopover += '<p><a href="{{php}}echo base_url();{{/php}}Message/MessageResove' + 
+                                                        '?message_type=' + messageList[i]['type'] + '&message_id=' + messageList[i]['id'] +                                                          '" >' + messageList[i]['message'] + '</a></p>';
+                            }
+                            messagePopover += '</div>';
+                            console.log(messagePopover);
+                            dom.messagePopover.attr('data-content', messagePopover);
+                            //当有信息时弹出
+                            if (messageList.length){
+                                //3秒关闭
+                                window.setTimeout(function () {
+                                    dom.messagePopover.popover('hide');
+                                }, 3000);
+                                dom.messagePopover.popover('show');
+                            }
+                        } else {
+                            dom.userInfoTable.find('#user_name').html();
+                            alert(data['description']);
+                        }
+                    },
+                    error: function(data){
+                        console.log(data);
+                        alert('加载用户消息失败');
+                    }
+                });
+            },
+
+        };
+        messageLoad.init();
+    })();
+</script>

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>jq裁剪图片图片</title>
+    <style type="text/css">
+        body{text-align:center;}
+        #label{border:1px solid #ccc;padding:10px;background-color:#fff;text-align:center;height:302px; width:302px;margin:20px auto;position:relative;}
+        #get_image{position:absolute;}
+        #edit_pic{position:absolute;display:none;background:#000;}
+        #cover_box{position: absolute;z-index: 9999;display:none;top:0px;left:0px;right:0px; bottom: 0px;}
+        #show_edit{margin: 0 auto;display:inline-block;}
+        #show_pic{height:100px;width:100px;border:2px solid #000;overflow:hidden;margin:0 auto;display:inline-block; }
+    </style>
+</head>
+<body>
+<h1>test</h1>
+<!--用于上传文件-->
+<input type="file" name="file" id="post_file">
+<button id="save_button">SAVE</button>
+<button id="upload">upload</button>
+<div id="label">
+    <canvas id="get_image"></canvas>
+    <p>
+        <!--显示整张图片,及裁剪位置-->
+        <canvas id="cover_box"></canvas>
+        <!--显示裁剪之后图片 -->
+        <canvas id="edit_pic"></canvas>
+    </p>
+</div>
+<form enctype="multipart/form-data" action="">
+
+</form>
+<p>
+    <span id="show_edit"></span>
+    <span id="show_pic"><img src=""></span>
+</p>
+</body>
+<script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="http://cdn.bootcss.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script>
+    (function(){
+        var dom = {
+            regional : $("#label")[0],
+            getImage : $("#get_image")[0],
+            editPic  : $("#edit_pic")[0],
+            editBox  : $("#cover_box")[0],
+            showEdit : $('#show_edit')[0],
+            showPic  : $('#show_pic')[0],
+            saveButton : $('#save_button')[0],
+            upload : $('#upload'),
+        };
+        var coordianteAndDistanceInfo = {
+            px : 0,
+            py : 0,
+            imageWidth : 0,
+            imageWidth : 0,
+            cropAreaBeginX : 15,
+            cropAreaBeginY : 15,
+            cropAreaWidth : 150,
+            cropAreaHeight : 150,
+        };
+
+        var cutImage = {
+            init : function(){
+                $('#post_file')[0].addEventListener("change", cutImage.handleFiles, false);
+                dom.saveButton.onclick = function(){
+                    dom.showPic.style.height = coordianteAndDistanceInfo.cropAreaHeight + 'px';
+                    dom.showPic.style.width = coordianteAndDistanceInfo.cropAreaWidth + 'px';
+
+                    var ctx = dom.editPic.getContext("2d");
+                    var images = new Image();
+                    images.src = dom.getImage.toDataURL();
+
+                    images.onload = function(){
+                        ctx.drawImage(images, coordianteAndDistanceInfo.cropAreaBeginX,
+                                coordianteAndDistanceInfo.cropAreaBeginY, coordianteAndDistanceInfo.cropAreaHeight,
+                                coordianteAndDistanceInfo.cropAreaWidth,0, 0, coordianteAndDistanceInfo.cropAreaHeight,
+                                coordianteAndDistanceInfo.cropAreaHeight
+                        );
+                        dom.showPic.getElementsByTagName('img')[0].src = dom.editPic.toDataURL();
+                    }
+                };
+                dom.upload.click(function(){
+                    var img = dom.editPic.toDataURL();
+                    var postData = {
+                        imgDecoded : img
+                    };
+                    cutImage.submitImage(postData);
+                });
+            },
+
+            handleFiles : function(){
+                var fileList = this.files[0];
+                var oFReader = new FileReader();
+                oFReader.readAsDataURL(fileList);
+                oFReader.onload = function (oFREvent) {
+                    cutImage.paintImage(oFREvent.target.result);
+                };
+            },
+
+            paintImage : function(url){
+                var createCavans = dom.getImage.getContext("2d");
+                var img = new Image();
+                img.src = url;
+
+                img.onload = function(){
+
+                    //不这样做图片会压住边框
+                    var regionalWidth = dom.regional.offsetWidth - 2;
+                    var regionalHeight =  dom.regional.offsetHeight - 2;
+                    if ( img.width < regionalWidth && img.height < regionalHeight) {
+                        coordianteAndDistanceInfo.imageWidth = img.width;
+                        coordianteAndDistanceInfo.imgHeight = img.height;
+
+                    } else {
+                        var pWidth = img.width / (img.height / regionalHeight);
+                        var pHeight = img.height / (img.width / regionalWidth);
+                        coordianteAndDistanceInfo.imgWidth = img.width > img.height ? regionalWidth : pWidth;
+                        coordianteAndDistanceInfo.imgHeight = img.height > img.width ? regionalHeight : pHeight;
+                    }
+
+                    coordianteAndDistanceInfo.px = (regionalWidth - coordianteAndDistanceInfo.imgWidth) / 2 + 'px';
+                    coordianteAndDistanceInfo.py = (regionalHeight - coordianteAndDistanceInfo.imgHeight) / 2 + 'px';
+
+                    dom.getImage.height = coordianteAndDistanceInfo.imgHeight;
+                    dom.getImage.width = coordianteAndDistanceInfo.imgWidth;
+                    dom.getImage.style.left = coordianteAndDistanceInfo.px;
+                    dom.getImage.style.top = coordianteAndDistanceInfo.py;
+
+                    createCavans.drawImage(img,0,0,
+                            coordianteAndDistanceInfo.imgWidth,coordianteAndDistanceInfo.imgHeight);
+                    cutImage.cutImage(dom.getImage.toDataURL());
+                    cutImage.drag();
+                };
+
+            },
+            cutImage : function(imgUrl){
+                dom.editBox.height = coordianteAndDistanceInfo.imgHeight;
+                dom.editBox.width = coordianteAndDistanceInfo.imgWidth;
+                dom.editBox.style.display = 'block';
+                dom.editBox.style.left = coordianteAndDistanceInfo.px;
+                dom.editBox.style.top = coordianteAndDistanceInfo.py;
+
+                var cover = dom.editBox.getContext("2d");
+                cover.fillStyle = "rgba(0, 0, 0, 0.5)";
+                cover.fillRect(0, 0,
+                        coordianteAndDistanceInfo.imgWidth, coordianteAndDistanceInfo.imgHeight);
+                cover.clearRect(coordianteAndDistanceInfo.cropAreaBeginX,coordianteAndDistanceInfo.cropAreaBeginY,
+                        coordianteAndDistanceInfo.cropAreaHeight, coordianteAndDistanceInfo.cropAreaWidth);
+
+                dom.showEdit.style.background = 'url(' + imgUrl + ')' + -coordianteAndDistanceInfo.cropAreaBeginX
+                        + 'px ' + -coordianteAndDistanceInfo.cropAreaBeginY + 'px no-repeat';
+                dom.showEdit.style.height =  coordianteAndDistanceInfo.cropAreaHeight + 'px';
+                dom.showEdit.style.width = coordianteAndDistanceInfo.cropAreaWidth + 'px';
+
+            },
+
+            drag : function(){
+                var draging = false;
+                var startX = 0;
+                var startY = 0;
+
+                dom.editBox.onmousemove = function(e){
+                    //获取与背景图片的距离
+                    //e.pageX 鼠标到浏览器左边缘的距离
+                    //dom.regional.offsetLeft + this.offsetLeft 图片到浏览器左边缘距离
+                    var pageX = e.pageX -  (dom.regional.offsetLeft + this.offsetLeft);
+                    var pageY = e.pageY - (dom.regional.offsetTop + this.offsetTop);
+
+                    //判断鼠标是否在图片内
+                    if(pageX > coordianteAndDistanceInfo.cropAreaBeginX &&
+                        pageX < coordianteAndDistanceInfo.cropAreaBeginX + coordianteAndDistanceInfo.imgWidth &&
+                        pageY > coordianteAndDistanceInfo.cropAreaBeginY  &&
+                        pageY < coordianteAndDistanceInfo.cropAreaBeginY + coordianteAndDistanceInfo.imgHeight){
+
+                        this.style.cursor = 'move';
+
+                        this.onmousedown = function(){
+                            draging = true;
+
+                            //记录上一次记录上一次截图的坐标, 没有上一次为初始位置
+                            this.ex = coordianteAndDistanceInfo.cropAreaBeginX;
+                            this.ey = coordianteAndDistanceInfo.cropAreaBeginY;
+
+                            //记录鼠标按下时的坐标
+                            startX = e.pageX - (dom.regional.offsetLeft + this.offsetLeft);
+                            startY = e.pageY - (dom.regional.offsetTop + this.offsetTop);
+                        };
+                        window.onmouseup = function(){
+                            draging = false;
+                        };
+                        if(draging){
+                            if(this.ex + (pageX - startX) < 0){
+                                coordianteAndDistanceInfo.cropAreaBeginX = 0;
+                            }else if(this.ex + (pageX - startX) + coordianteAndDistanceInfo.cropAreaWidth
+                                > coordianteAndDistanceInfo.imgWidth){
+                                coordianteAndDistanceInfo.cropAreaBeginX = coordianteAndDistanceInfo.imgWidth
+                                - coordianteAndDistanceInfo.cropAreaWidth;
+                            }else{
+                                coordianteAndDistanceInfo.cropAreaBeginX = this.ex + (pageX - startX);
+                            }
+
+                            if(this.ey + (pageY - startY) < 0){
+                                coordianteAndDistanceInfo.cropAreaBeginY = 0;
+                            }else if(this.ey + (pageY - startY) + coordianteAndDistanceInfo.cropAreaHeight
+                                > coordianteAndDistanceInfo.imgHeight){
+                                coordianteAndDistanceInfo.cropAreaBeginY = coordianteAndDistanceInfo.imgHeight
+                                - coordianteAndDistanceInfo.cropAreaHeight;
+                            }else{
+                                coordianteAndDistanceInfo.cropAreaBeginY = this.ey + (pageY - startY);
+                            }
+                            cutImage.cutImage(dom.getImage.toDataURL());
+                        }else{
+                            this.style.cursor = 'auto';
+                        }
+                    }
+
+                }
+            },
+
+            submitImage: function(postData) {
+                $.ajax({
+                    type: 'POST',
+                    url: '{{php}}echo base_url(){{/php}}ImageTest/uploadImage',
+                    data: postData,
+                    dataType: 'json',
+                    success: function (data) {
+                        alert("上传成功");
+                    },
+                    error: function (data) {
+                        console.log(data);
+                        alert('操作失败');
+                    }
+                });
+            }
+
+        };
+        cutImage.init();
+
+    })();
+</script>
+</html>

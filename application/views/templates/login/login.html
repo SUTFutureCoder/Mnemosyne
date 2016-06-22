@@ -1,0 +1,164 @@
+{{include file='./login/index_header.html'}}
+<header class="header">
+    <h1>Mnemosyne</h1>
+</header>
+<div class="main-content">
+    <div id="bg-video">
+        <!--<video src="{{php}}echo base_url();{{/php}}static/video/bg_index.mp4" autoplay="autoplay" loop="loop" controls="false" muted="muted"></video>-->
+    </div>
+    <div class="big_center_title">
+        <h1>Hidden in your memory</h1>
+        <div class="login">
+            <form id="login-form">
+                <p>
+                    <label for="login-form-name">手机</label>
+                    <input id="login-form-name" name="login-form-name"/>
+                </p>
+                <p>
+                    <label for="login-form-password">密码</label>
+                    <input type="password" id="login-form-password" name="login-form-passpord"/>
+                </p>
+
+                {{include file="./public/geettest_lib.html"}}
+
+                <button type="button" id="login-form-access-btn">翻开同学录</button>
+                <p><button type="button" data-toggle="modal" data-target="#register">注册新用户</button></p>
+            </form>
+
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="register" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">注册新用户</h4>
+            </div>
+            <form id="reg-form">
+            <div class="modal-body">
+                    <div class="form-group">
+                        <label for="reg-form-mobile">手机号</label>
+                        <input type="tel" class="form-control" id="reg-form-mobile">
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-form-email">邮箱</label>
+                        <input type="email" class="form-control" id="reg-form-email">
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-form-password">密码</label>
+                        <input type="password" class="form-control" id="reg-form-password">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="reg-form-password-confirm">确认密码</label>
+                        <input type="password" class="form-control" id="reg-form-password-confirm">
+                    </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" id="reg-form-confirm-btn" class="btn btn-primary">注册</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    (function(){
+        var dom = {
+            loginForm : $('#login-form'),
+            regForm   : $('#reg-form'),
+            mainContent : $('.main-content')
+        };
+
+        var userLoginReg = {
+
+            init : function(){
+                this.pageFn();
+                this.loginEventFn();
+                this.regEventFn();
+            },
+
+            pageFn:  function(){
+                var width = $(document.body).height();
+                dom.mainContent.height(width);
+            },
+
+            loginEventFn: function(){
+                dom.loginForm.on('click', '#login-form-access-btn', function(){
+                    var loginFormData = $(this).parent();
+                    console.log(loginFormData);
+                    var loginPostData = {
+                        'login_name' : loginFormData.find('#login-form-name').val(),
+                        'password'   : loginFormData.find('#login-form-password').val(),
+                        'geetest_challenge' : loginFormData.find('.geetest_challenge').val(),
+                        'geetest_validate'  : loginFormData.find('.geetest_validate').val(),
+                        'geetest_seccode'   : loginFormData.find('.geetest_seccode').val(),
+                        'platform'   : 2,
+                    };
+
+
+                    $.ajax({
+                        type: 'POST',
+                        url: '{{php}}echo base_url(){{/php}}api/account/account/login',
+                        data: loginPostData,
+                        dataType: 'json',
+                        success: function(data){
+                            if (data['status'] == 0){
+                                store.set('token', data['data']['token']);
+                                window.location.href='{{php}}echo base_url();{{/php}}user/index/';
+                            } else {
+                                alert(data['description']);
+                            }
+                        },
+                        error: function(data){
+                            console.log(data);
+                            alert('操作失败');
+                        }
+                    });
+                })
+            },
+
+            regEventFn: function(){
+                dom.regForm.on('click', '#reg-form-confirm-btn', function(){
+                    var regFormData = $(this).parent().parent();
+                    var regPostData = {
+                        'user_name' : regFormData.find('#reg-form-username').val(),
+                        'user_mobile'   : regFormData.find('#reg-form-mobile').val(),
+                        'user_email'    : regFormData.find('#reg-form-email').val(),
+                        'password'    : regFormData.find('#reg-form-password').val(),
+                        'password_confirm'    : regFormData.find('#reg-form-password-confirm').val(),
+                        'platform'    : 2,
+                    };
+                    console.log(regPostData);
+
+                    $.ajax({
+                        type: 'POST',
+                        url: '{{php}}echo base_url(){{/php}}api/account/account/regist',
+                        data: regPostData,
+                        dataType: 'json',
+                        success: function(data){
+                            if (data['status'] == 0){
+                                alert("注册成功");
+                                window.location.href='{{php}}echo base_url();{{/php}}index/login';
+                            } else {
+                                alert(data['description']);
+                            }
+                        },
+                        error: function(data){
+                            console.log(data);
+                            alert('操作失败');
+                        }
+                    });
+                })
+            },
+
+        };
+
+        userLoginReg.init();
+    })();
+</script>
+{{include file='./public/footer.html'}}

@@ -1,0 +1,323 @@
+<!--
+仅在未初始化完毕时加载此页，三步完成设置
+注意需要在loadscript后面加入
+-->
+<div id="complete-info-modal" class="modal fade" aria-labelledby="init-modallabel">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 id="init-modallabel">只需三步，找到组织</h4>
+            </div>
+            <div class="modal-body">
+                <div class="progress progress-striped active">
+                    <div id="complete-info-modal-process" class="progress-bar progress-bar-info progress-bar-striped active" role="progressbar" style="width: 50%">
+                    </div>
+                </div>
+                <div id="complete-info-modal-basic-info">
+                    <legend>完善信息</legend>
+                    <div class="form-group">
+                        <label for="basic-info-form-name">真实姓名</label>
+                        <input type="text" required="required" class="form-control" id="basic-info-form-name">
+                        <br/>
+                        <label for="basic-info-form-nickname">昵称</label>
+                        <input type="text" required="required" class="form-control" id="basic-info-form-nickname">
+                        <br/>
+                        <label for="basic-info-form-birthday">出生日期</label>
+                        <input type='text' required="required" class="form-control" id='basic-info-form-birthday'/>
+                        <br/>
+                        <label for="basic-info-form-sex">性别</label>
+                        <select class="form-control" id="basic-info-form-sex">
+                            <option value="1">男</option>
+                            <option value="2">女</option>
+                            <option value="0">其他</option>
+                            <option value="3">保密</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-success btn-block" id="basic-info-form-user-info-confirm" type="button">绑定班级</button>
+                </div>
+                <div id="complete-info-modal-bind-class">
+                    <legend>绑定班级</legend>
+                    <div class="form-group">
+                        <label for="bind-class-form-studentId">工大同学快速通道</label>
+                        <input type="text" required="required" placeholder="您可以填写您的学号" class="form-control" id="bind-class-form-studentId">
+                    </div>
+                    <button class="btn btn-success btn-block" id="basic-info-form-bind-class-confirm" type="button">绑定班级</button>
+                </div>
+                <div id="complete-info-modal-choose-friend">
+	                <div class="friend-recommend-list">
+                        <div class="option-header" >
+                            <h4 style="float:left">推荐好友</h4> 
+                            <div class="option" style="float:right">
+                                <button type="button" class="btn btn-default">
+                                    <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> 换一批
+                                </button>
+                                <button type="button" onclick="window.location.href='{{php}}echo base_url(){{/php}}Friends/addFriends'" class="btn btn-default">
+                                    <span class="glyphicon glyphicon-option-horizontal" aria-hidden="true"></span> 更多推荐
+                                </button>
+                            </div>
+                        </div>
+                        <div class="friend-info-list">
+
+                            <div class="friend-info-list-content-footer">
+                                <button class="btn btn-success btn-block" id="friend-confirm" type="button">确认并翻开同学录</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<link href="{{php}}echo base_url();{{/php}}static/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+<script type="text/javascript" src="{{php}}echo base_url();{{/php}}static/js/bootstrap-datetimepicker.min.js" charset="UTF-8"></script>
+<script type="text/javascript" src="{{php}}echo base_url();{{/php}}static/js/locales/bootstrap-datetimepicker.zh-CN.js" charset="UTF-8"></script>
+<script src="http://project-m.oss-cn-qingdao.aliyuncs.com/static/store.min.js"></script>
+<link href="{{php}}echo base_url();{{/php}}static/css/first-sight.css" rel="stylesheet">
+
+<script type="text/javascript">
+    (function(){
+        var userToken = store.get('token');
+
+        var dom = {
+            initInfoModal     : $('#complete-info-modal'),
+            basicInfoModal    : $('#complete-info-modal-basic-info'),
+            chooseFriendModal : $('#complete-info-modal-choose-friend')
+        };
+
+        var initVar = {
+            token           : userToken,
+            userName        : '',
+            userBirthDay    : '',
+            userNickName    : '',
+            userSex         : '',
+            userClassId     : '',
+            userStudentId   : '',
+            userSUTFastBind : 0
+        };
+
+        var arrFriendsChoosed = [];
+
+        var initReg = {
+
+            init : function(){
+                
+                this.displayInitModal();
+                this.initDateTimePicker();
+                this.userInfoInit();
+//                this.testInitModal();
+            },
+
+            displayInitModal: function(){
+                dom.initInfoModal.modal({backdrop: 'static', keyboard: false});
+            },
+
+            initDateTimePicker: function(){
+                //计算推荐出生时间
+                var objNowTime = new Date();
+
+                //设置日期选择器
+                dom.initInfoModal.find('#basic-info-form-birthday').datetimepicker({
+                    minView     : 2,
+                    startView   : 4,
+                    format      : 'yyyy-mm-dd',
+                    language    : 'zh-CN',
+                    initialDate : (objNowTime.getFullYear() - 23)+'-01-01',
+
+                });
+            },
+
+            testInitModal: function(){
+                var formData = dom.basicInfoModal;
+                formData.toggle();
+                var userRecommend = dom.chooseFriendModal;
+                userRecommend.toggle();
+            },
+
+            userInfoInit: function(){
+                //分布记录，最后一起提交
+                var formData = dom.basicInfoModal;
+                formData.on('click', '#basic-info-form-user-info-confirm', function(){
+                    //检查值
+                    initVar.userName = formData.find('#basic-info-form-name').val();
+                    var reg = /[\u4E00-\u9FA5\uF900-\uFA2D]/;
+                    if (!initVar.userName){
+                        alert('真实姓名不能为空');
+                    }
+
+                    initVar.userNickName = formData.find('#basic-info-form-nickname').val();
+                    var userNameLength = initVar.userName.length;
+                    for (var i = 0; i < userNameLength; i++){
+                        if (!reg.test(initVar.userName[i])){
+                            alert('请输入中文');
+                            formData.find('#basic-info-form-name').focus();
+                            return 0;
+                        }
+
+                        if (i > 12){
+                            alert('真实姓名不能超过12个字符');
+                            formData.find('#basic-info-form-name').focus();
+                            return 0;
+                        }
+                    }
+
+                    initVar.userBirthDay = formData.find('#basic-info-form-birthday').val();
+                    if ('' == initVar.userBirthDay){
+                        alert('请选择您的出生日期');
+                        formData.find('#basic-info-form-birthday').focus();
+                        return 0;
+                    }
+
+                    initVar.userSex      = formData.find('#basic-info-form-sex').val();
+                    if (-1 == $.inArray(initVar.userSex, ["0", "1", "2", "3"])){
+                        alert('请选择正确的性别');
+                        formData.find('#basic-info-form-sex').focus();
+                        return 0;
+                    }
+
+                    //隐藏表单
+                    formData.toggle();
+
+                    //准备班级绑定
+                    initReg.userBindClassInit();
+                });
+            },
+
+            userBindClassInit: function(){
+                //显示绑定
+                dom.initInfoModal.find('#complete-info-modal-process').animate(
+                        {width: '90%'},
+                        {speed: 'fast', easing: 'swing'}
+                );
+
+                var formData = dom.initInfoModal.find('#complete-info-modal-bind-class');
+                formData.toggle();
+
+                formData.on('click', '#basic-info-form-bind-class-confirm', function(){
+                    var sutStudentId = formData.find('#bind-class-form-studentId').val();
+
+                    if (sutStudentId){
+                        initVar.userSUTFastBind = 1;
+                        initVar.userStudentId   = sutStudentId;
+                    }
+
+
+                    //通信 提交用户信息并完成绑定
+                    $.ajax({
+                        type: 'POST',
+                        url: '{{php}}echo base_url(){{/php}}api/user/UserInfo/userInfoInit',
+                        data: initVar,
+                        dataType: 'json',
+                        success: function(data){
+                            if (data['status'] == 0){
+                                formData.toggle();
+                                initReg.userChooseFriend();
+                            } else {
+                                alert(data['description']);
+                            }
+                        },
+                        error: function(data){
+                            console.log(data);
+                            alert('操作失败');
+                        }
+                    });
+                });
+            },
+
+            userChooseFriend: function(){
+                dom.initInfoModal.find('#complete-info-modal-process')
+                        .removeClass('progress-bar-info')
+                        .addClass('progress-bar-success')
+                        .animate(
+                        {width: '100%'},
+                        {speed: 'fast', easing: 'swing'}
+                );
+
+                //ajax填充信息
+                $.ajax({
+                    type: 'GET',
+                    url:  '{{php}}echo base_url(){{/php}}api/friends/Friends/friendRecommend',
+//                    data: ,
+                    dataType: 'json',
+                    success: function(data){
+                        console.log(data);
+                        //解析data
+                        if (0 != data['status']){
+                            return 0;
+                        }
+
+                        //填入dom中
+                        var friendInfoList = dom.chooseFriendModal.find('.friend-info-list');
+                        for (var friends in data['data']['recommendInfoList']){
+                            var strDom = '<div class="friend-info-list-content">' +
+                                    '<div class="friend-info-list-content-single">' +
+                                    '<div class="friend-info-list-content-single-head">' +
+                                    '<img data-choosed="0" data-user-id="' + data['data']['recommendInfoList'][friends]['user_id'] + '" src="' + data['data']['recommendInfoList'][friends]['user_avatar'] + '"/></div>' +
+                                    '<div class="friend-info-list-content-single-desc"><p>' + data['data']['recommendInfoList'][friends]['user_name'] + '</p></div></div></div>';
+
+                            friendInfoList.prepend(strDom);
+                        }
+                    },
+                    error: function(data){
+                        console.log(data);
+                        alert('获取推荐好友失败');
+                    }
+                });
+
+                //绑定选中事件
+                dom.chooseFriendModal.on('click', '.friend-info-list-content-single-head img', function (){
+                    //判断之前是否选择
+                    var friendChoosed = $(this).attr('data-choosed');
+                    var friendUserId  = $(this).attr('data-user-id');
+                    if ('0' == friendChoosed){
+                        //添加选中框并添加到数组中
+                        $(this).css('border', '2px solid #0000ff');
+                        $(this).attr('data-choosed', '1');
+                        arrFriendsChoosed.push(friendUserId);
+                    } else {
+                        //取消选中框并从数组中移除
+                        $(this).css('border', '');
+                        var intIndexOfList = arrFriendsChoosed.indexOf(friendUserId);
+                        //移除数组
+                        arrFriendsChoosed.splice(intIndexOfList, 1);
+                        $(this).attr('data-choosed', '0');
+                    }
+                });
+
+                //当跳过时重新加载页面
+                dom.chooseFriendModal.find('#friend-confirm').on('click', function(){
+                    //确定选中数量，如有选中则发请求后刷新，否则直接刷新
+                    if (arrFriendsChoosed.length){
+                        $.ajax({
+                            type: 'POST',
+                            url:  '{{php}}echo base_url(){{/php}}api/friends/Friends/addFriendsByList',
+                            data: {
+                                'send_list': arrFriendsChoosed
+                            },
+                            dataType: 'json',
+                            success: function(data){
+                                if (0 != data['status']){
+                                    alert(data['description']);
+                                    return 0;
+                                }
+                                window.location.href=window.location.href;
+                            },
+                            error: function(data){
+                                console.log(data);
+                                alert('获取推荐好友失败');
+                            }
+                        });
+                    } else {
+                        window.location.href=window.location.href;
+                    }
+                });
+                var formData = dom.chooseFriendModal;
+                formData.toggle();
+
+
+            },
+        };
+
+        initReg.init();
+    })();
+</script>

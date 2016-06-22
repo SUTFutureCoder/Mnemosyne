@@ -1,0 +1,990 @@
+{{include file='./firstsight/index_header.html'}}
+{{include file='./public/base_header_navbar.html'}}
+<div class="main-content">
+    <div id="userinfo">
+        <div class="container">
+
+            <div class="tabs-header">
+                <ul class="nav nav-tabs">
+                    <li class="active"> 
+                        <a href="#tabs-content-base-info" data-toggle="tab">
+                            基本信息
+                        </a>
+                    </li>
+
+                    <li><a href="#tabs-content-self-profile" data-toggle="tab">个人资料</a></li>
+                    <!--<li><a href="#tabs-content-school-info" data-toggle="tab">学校信息</a></li>-->
+                </ul>
+            </div><!--tabs-header!-->
+
+            <div id="tabs-content" class="tab-content">
+                <div class="tab-pane fade in active" id="tabs-content-base-info">
+                    <div class="container">
+                        <table id="tabs-content-base-info-table" class="table">
+                            <tr>
+                                <td>手机号</td>
+                                <td id="user_mobile">13555791383</td>
+                                <td><button type="button" id="update_user_mobile_btn" class="btn btn-info btn-xs">更换</button></td>
+                            </tr>
+
+                            <tr>
+                                <td>邮箱</td>
+                                <td id="user_email">test@test.com</td>
+                                <td><button type="button" id="update_user_email_btn" class="btn btn-info btn-xs">更换</button></td>
+                            </tr>
+                            
+                            <tr>
+                                <td>真实姓名</td>
+                                <td id="user_name">林二狗</td>
+                                <td><button type="button" id="update_user_name_btn" class="btn btn-info btn-xs">更换</button></td>
+                            </tr>
+
+                            <tr>
+                                <td>昵称</td>
+                                <td id="user_nickname"></td>
+                                <td><button type="button" id="update_user_nickname_btn" class="btn btn-info btn-xs">更换</button></td>
+                            </tr>
+
+                            <tr>
+                                <td>生日</td>
+                                <td id="user_birthday">1993-9-10</td>
+                                <td><button type="button" id="update_user_birthday_btn" class="btn btn-info btn-xs">更换</button></td>
+                            </tr>
+
+                            <tr>
+                                <td>密码</td>
+                                <td id="user_password">••••••</td>
+                                <td><button type="button" id="update_user_password_btn" class="btn btn-info btn-xs">更换</button></td>
+                            </tr>
+                            <tr>
+                                <td>大学</td>
+                                <td id="user_college">
+                                    <form class="school_info_form form-inline">
+                                        <select id="user_school_select" class="form-control"> 
+                                            <option value="0">请选择学校</option>
+                                        </select>
+                                        <select id="user_class_select" class="form-control">
+                                            <option value="0">请选择班级</option>
+                                        </select>
+                                        
+                                    </form>
+                                </td>
+                                <td><button type="button" id="update_user_school_info_btn" class="btn btn-info btn-xs">更换</button></td>
+                            </tr>
+
+
+                        </table>
+                    </div><!--container base-info!-->
+                </div><!--tabs-content-base-info!-->
+
+                <div class="tab-pane fade " id="tabs-content-self-profile">
+                    <div class="container">
+                        <div class="row">
+                        <div id="tabs-content-self-profile-content" class="col-md-11">
+                            
+                            <div class="avatar-container col-md-3 col-xs-12">
+                                <div class="container col-md-12">
+                                    <div class="username">
+                                        <h3 id="avatar-container-username"></h3>
+                                    </div>
+                                    <div class="avatar-content">
+                                        <center><img class="avatar-mid" src="{{php}}echo base_url();{{/php}}static/img/public/default-avatar.jpg"/></center>
+                                        <!--<img class="avatar-mid" src="{{php}}echo base_url();{{/php}}static/img/public/test.png"/>-->
+                                    </div>
+
+                                    <div class="avatar-upload">
+                                        <button type="button" class="btn btn-info" id="avatar-start-crop-btn">更改头像</button>
+                                    </div>
+                                    <div class="avatar-upload-des">
+                                        <p> 支持JPG，JPEG，GIF，PNG，BMP，且小于5M<p>
+                                    </div>
+                                </div>
+                            </div><!--avatar-container!-->
+
+                            <div class="self-profile">
+                                <div class="container col-md-9 col-xs-12">
+                                    <div class="self-profile-content">
+                                        <form class="self-profile-form form-horizontal">
+                                            <div class="form-group">
+                                                <label class="col-md-2 control-label" >血型</label>
+                                                <div class="col-md-10">
+                                                    <label class="radio-inline">
+                                                        <input type="radio" name="blood-group" id="blood-group-A" value="A"> A
+                                                    </label>
+
+                                                    <label class="radio-inline">
+                                                        <input type="radio" name="blood-group" id="blood-group-B" value="B"> B
+                                                    </label>
+
+                                                    <label class="radio-inline">
+                                                        <input type="radio" name="blood-group" id="blood-group-AB" value="AB"> AB
+                                                    </label>
+
+                                                    <label class="radio-inline">
+                                                        <input type="radio" name="blood-group" id="blood-group-O" value="O"> O
+                                                    </label>
+
+                                                </div>
+                                                </div><!--form-group!-->
+
+                                                <div class="form-group">
+                                                    <label for="favorite_food" class="col-md-2 control-label">最喜欢吃</label>
+                                                    <div class="col-md-10">
+                                                        <input type="text" class="form-control" id="favorite_food">
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="favorite_animal" class="col-md-2 control-label">最喜欢的动物</label>
+                                                    <div class="col-md-10">
+                                                        <input type="text" class="form-control" id="favorite_animal">
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="worship_people" class="col-md-2 control-label">最崇拜的人</label>
+                                                    <div class="col-md-10">
+                                                        <input type="text" class="form-control" id="worship_people">
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="want_to_go" class="col-md-2 control-label">我想去的地方</label>
+                                                    <div class="col-md-10">
+                                                        <input type="text" class="form-control" id="want_to_go">
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="desire" class="col-md-2 control-label">我的愿望</label>
+                                                    <div class="col-md-10">
+                                                        <input type="text" class="form-control" id="desire">
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="favorite_star" class="col-md-2 control-label">喜欢的明星</label>
+                                                    <div class="col-md-10">
+                                                        <input type="text" class="form-control" id="favorite_star">
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="favorite_color" class="col-md-2 control-label">喜欢的颜色</label>
+                                                    <div class="col-md-10">
+                                                        <input type="text" class="form-control" id="favorite_color">
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <div class="col-md-offset-2 col-md-10">
+                                                        <button type="button" class="btn btn-info" id="self-profile-upload-btn">保存</button>
+                                                    </div>
+                                                </div>
+
+                                            
+                                        </form>
+                                    </div>
+                                </div><!--container!-->
+                            </div><!--self-profile!-->
+
+                        </div><!--tabs-content-self-profile-content!-->
+                        </div><!--row!-->
+
+                        
+                    </div><!--container self-profile!-->
+
+                </div><!--tabs-content-self-profile!-->
+                </div><!--tabs-content-school-info!-->
+
+            </div><!--tabs-content!-->
+
+
+        </div><!--container!-->
+    </div><!--userinfo!-->
+</div><!--main-content!-->
+
+<div class="modal fade" id="avatar-modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">上传头像</h4>
+            </div>
+            <div class="modal-body">
+                <div class="crop-avatar">
+                    <button class="btn btn-info avatar-source-file-upload">选择文件
+                        <input class="center-block" type="file" name="file" id="post_file">
+                    </button>
+
+                    <button type="button" class="btn btn-default" id="enlarge-crop-area-btn" aria-label="Left Align">
+                        <span class="glyphicon glyphicon-zoom-in" aria-hidden="true"></span>
+                    </button>
+                    <button type="button" class="btn btn-default" id="narrow-crop-area-btn" aria-label="Left Align">
+                        <span class="glyphicon glyphicon-zoom-out" aria-hidden="true"></span>
+                    </button>
+                    <div id="label">
+                        <canvas id="get_image"></canvas>
+                        <p>
+                            <!--显示整张图片,及裁剪位置-->
+                            <canvas id="cover_box"></canvas>
+                            <!--显示裁剪之后图片 -->
+                            <canvas id="edit_pic" width="300" height="300"></canvas>
+                        </p>
+                    </div> 
+
+                    <!--<button id="save_button">保存</button>-->
+                    <!--<button id="upload">上传</button>-->
+                    <button type="button" class="btn btn-info" id="preview-avatar-button">预览</button>
+                </div>
+
+                <div class="preview-avatar">
+                    <button type="button" class="btn btn-info" id="return-to-crop-avatar-btn">返回上一步</button>
+                    <p>
+                        <span id="show_edit"></span>
+                        <span id="show_pic"><img height="300px" src=""></span>
+                    </p>
+                    <button type="button" class="btn btn-info" id="upload-avatar-btn">保存</button>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div class="modal fade" id="baseinfo_modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button> 
+                <h4 class="modal-title">修改基本信息</h4> 
+            </div>
+            <div class="modal-body">
+                <div id="update_user_mobile_form">
+                    <div class="form-group">
+                        <label for="user_mobile_input">修改手机号</label>
+                        <input type="text" class="form-control" id="user_mobile_input"/>
+                    </div> 
+                    <button type="button" id="user_mobile_upload_btn" class="btn btn-primary">确认修改</button>
+                </div>
+                <div id="update_user_email_form">
+                    <div class="form-group">
+                        <label for="user_email_input">修改邮箱</label>
+                        <input type="text" class="form-control" id="user_email_input"/>
+                    </div>
+                    <button type="button" id="user_email_upload_btn" class="btn btn-primary">确认修改</button>
+                </div>
+                <div id="update_user_name_form">
+                    <div class="form-group">
+                        <label for="user_name_input">修改真实姓名</label>
+                        <input type="text" class="form-control" id="user_name_input"/>
+                    </div>
+                    <button type="button" id="user_name_upload_btn" class="btn btn-primary">确认修改</button>
+                </div>
+                <div id="update_user_nickname_form">
+                    <div class="form-group">
+                        <label for="user_nickname_input">修改绰号</label>
+                        <input type="text" class="form-control" id="user_nickname_input"/>
+                    </div>
+                    <button type="button" id="user_nickname_upload_btn" class="btn btn-primary">确认修改</button>
+                </div>
+                <div id="update_user_birthday_form">
+                    <div class="form-group">
+                        <label for="user_birthday_input">修改生日</label>
+                        <input type="text" class="form-control" id="user_birthday_input"/>
+                    </div>
+                    <button type="button" id="user_birthday_upload_btn" class="btn btn-primary">确认修改</button>
+                </div>
+                <div id="update_user_password_form">
+                    <div class="form-group">
+                        <label for="user_password_input">原密码</label>
+                        <input type="password" class="form-control" id="user_password_input"/>
+                        <label for="user_password_input">新密码</label>
+                        <input type="password" class="form-control" id="user_password_input1"/>
+                        <label for="user_password_input">确认新密码</label>
+                        <input type="password" class="form-control" id="user_password_input2"/>
+                    </div>
+                    <button type="button" id="user_password_upload_btn" class="btn btn-primary">确认修改</button>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+{{ include file='./public/load_script.html' }}
+<link href="{{php}}echo base_url();{{/php}}static/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+<script type="text/javascript" src="{{php}}echo base_url();{{/php}}static/js/bootstrap-datetimepicker.min.js" charset="UTF-8"></script>
+<script type="text/javascript" src="{{php}}echo base_url();{{/php}}static/js/locales/bootstrap-datetimepicker.zh-CN.js" charset="UTF-8"></script>
+<script>
+    (function(){
+        var dom = {
+            //头像全部
+            avatarContainer: $(".avatar-container"),
+            //仅图片部分
+            avatarContent: $(".avatar-content"),
+            avatarStartCropBtn : $("#avatar-start-crop-btn"),
+            regional : $("#label")[0],
+            getImage : $("#get_image")[0],
+            editPic  : $("#edit_pic")[0],
+            editBox  : $("#cover_box")[0],
+            showEdit : $('#show_edit')[0],
+            showPic  : $('#show_pic')[0],
+            saveButton : $('#save_button')[0],
+            upload : $('#upload'),
+            postFile: $(".crop-avatar #post_file"),
+            avatarModal : $("#avatar-modal"),
+        };
+        var coordianteAndDistanceInfo = {
+            px : 0,
+            py : 0,
+            imageWidth : 0,
+            imageWidth : 0,
+            cropAreaBeginX : 0,
+            cropAreaBeginY : 0,
+            cropAreaWidth : 150,
+            cropAreaHeight : 150,
+            showCropAreaWidth: 300,
+            showCropAreaHeight: 300,
+        };
+
+        var crop_image = {
+
+            init : function(){
+                dom.avatarModal.find("#enlarge-crop-area-btn").on('click', function(){
+                    crop_image.enlargeCropArea();
+                });
+                dom.avatarModal.find("#narrow-crop-area-btn").on('click', function(){
+                    crop_image.narrowCropArea();
+                });
+                dom.avatarModal.find("#preview-avatar-button").on('click', function(){
+                    crop_image.previedAvatar();
+                });
+
+                dom.avatarModal.find("#upload-avatar-btn").on('click', function(){
+                    var img = dom.editPic.toDataURL();
+                    var postData = {
+                        imgDecoded : img
+                    };
+                    crop_image.submitImage(postData);
+                });
+
+                dom.avatarModal.find("#return-to-crop-avatar-btn").on('click', function(){
+                    dom.avatarModal.find(".preview-avatar").hide();
+                    dom.avatarModal.find(".crop-avatar").show();
+                });
+
+                dom.avatarStartCropBtn.on('click', function(){
+                    crop_image.displayAvatarModal();
+                });
+                dom.postFile.change(function () {
+                    crop_image.handleFiles();
+                })
+            },
+            previedAvatar: function(){
+//                dom.showPic.style.height = coordianteAndDistanceInfo.cropAreaHeight + 'px';
+//                dom.showPic.style.width = coordianteAndDistanceInfo.cropAreaWidth + 'px';
+                dom.avatarModal.find(".preview-avatar").show();
+                dom.avatarModal.find(".crop-avatar").hide();
+
+                var ctx = dom.editPic.getContext("2d");
+                var images = new Image();
+                images.src = dom.getImage.toDataURL();
+
+                images.onload = function(){
+                    ctx.drawImage(images, coordianteAndDistanceInfo.cropAreaBeginX,
+                            coordianteAndDistanceInfo.cropAreaBeginY, coordianteAndDistanceInfo.cropAreaWidth,
+                            coordianteAndDistanceInfo.cropAreaHeight,0, 0, coordianteAndDistanceInfo.showCropAreaWidth,
+                            coordianteAndDistanceInfo.showCropAreaHeight
+                    );
+                    dom.showPic.getElementsByTagName('img')[0].src = dom.editPic.toDataURL();
+                }
+            },
+
+            enlargeCropArea:function(){
+                var cropHeight = coordianteAndDistanceInfo.cropAreaHeight + 10;
+                var cropWidth = coordianteAndDistanceInfo.cropAreaWidth + 10;
+                var beginX = coordianteAndDistanceInfo.cropAreaBeginX;
+                var beginY = coordianteAndDistanceInfo.cropAreaBeginY;
+                var imgHeight = coordianteAndDistanceInfo.imgHeight;
+                var imgWidth = coordianteAndDistanceInfo.imgWidth;
+                var enlargeEndX = cropWidth + beginX;
+                var enlargeEndY = cropHeight + beginY;
+                if(cropWidth < imgWidth && cropHeight < imgHeight){
+                    if(enlargeEndX > imgWidth && enlargeEndY > imgHeight) {
+                        coordianteAndDistanceInfo.cropAreaBeginX = beginX - (enlargeEndX - imgHeight);
+                    }
+                    if(enlargeEndY > imgHeight){
+                        coordianteAndDistanceInfo.cropAreaBeginY = beginY - (enlargeEndY - imgWidth);
+                    }
+                    crop_image.cutImage(dom.getImage.toDataURL());
+                    coordianteAndDistanceInfo.cropAreaHeight += 10;
+                    coordianteAndDistanceInfo.cropAreaWidth += 10;
+                }
+            },
+            narrowCropArea:function(){
+                var cropHeight = coordianteAndDistanceInfo.cropAreaHeight - 10;
+                var cropWidth = coordianteAndDistanceInfo.cropAreaWidth - 10;
+                if(cropHeight >= 50 && cropWidth >= 50){
+                    coordianteAndDistanceInfo.cropAreaHeight -= 10;
+                    coordianteAndDistanceInfo.cropAreaWidth -= 10;
+                    crop_image.cutImage(dom.getImage.toDataURL());
+                }
+            },
+
+
+            displayAvatarModal:function(){
+                dom.avatarModal.modal('show');
+                dom.avatarModal.find(".preview-avatar").hide();
+                dom.avatarModal.find(".crop-avatar").show()
+            },
+
+            hiddenAvatarModal:function(){
+                dom.avatarModal.modal('hide');
+            },
+
+            handleFiles: function () {
+                var fileList = dom.postFile[0].files[0];
+                var oFReader = new FileReader();
+                oFReader.readAsDataURL(fileList);
+                oFReader.onload = function (oFREvent) {
+                    crop_image.paintImage(oFREvent.target.result);
+                };
+            },
+
+            paintImage : function(url){
+                var createCavans = dom.getImage.getContext("2d");
+                var img = new Image();
+                img.src = url;
+
+                img.onload = function(){
+
+                    var regionalWidth = dom.regional.offsetWidth - 2;
+                    var regionalHeight =  dom.regional.offsetHeight - 2;
+                    if ( img.width < regionalWidth && img.height < regionalHeight) {
+                        coordianteAndDistanceInfo.imageWidth = img.width;
+                        coordianteAndDistanceInfo.imgHeight = img.height;
+
+                    } else {
+                        var pWidth = img.width / (img.height / regionalHeight);
+                        var pHeight = img.height / (img.width / regionalWidth);
+                        coordianteAndDistanceInfo.imgWidth = img.width > img.height ? regionalWidth : pWidth;
+                        coordianteAndDistanceInfo.imgHeight = img.height > img.width ? regionalHeight : pHeight;
+                    }
+
+                    coordianteAndDistanceInfo.px = (regionalWidth - coordianteAndDistanceInfo.imgWidth) / 2 + 'px';
+                    coordianteAndDistanceInfo.py = (regionalHeight - coordianteAndDistanceInfo.imgHeight) / 2 + 'px';
+
+                    dom.getImage.height = coordianteAndDistanceInfo.imgHeight;
+                    dom.getImage.width = coordianteAndDistanceInfo.imgWidth;
+                    dom.getImage.style.left = coordianteAndDistanceInfo.px;
+                    dom.getImage.style.top = coordianteAndDistanceInfo.py;
+
+                    createCavans.drawImage(img,0,0,
+                            coordianteAndDistanceInfo.imgWidth,coordianteAndDistanceInfo.imgHeight);
+                    crop_image.cutImage(dom.getImage.toDataURL());
+                    crop_image.drag();
+                };
+            },
+            cutImage : function(imgUrl){
+                dom.editBox.height = coordianteAndDistanceInfo.imgHeight;
+                dom.editBox.width = coordianteAndDistanceInfo.imgWidth;
+                dom.editBox.style.display = 'block';
+                dom.editBox.style.left = coordianteAndDistanceInfo.px;
+                dom.editBox.style.top = coordianteAndDistanceInfo.py;
+
+                var cover = dom.editBox.getContext("2d");
+                cover.fillStyle = "rgba(0, 0, 0, 0.5)";
+                cover.fillRect(0, 0,
+                        coordianteAndDistanceInfo.imgWidth, coordianteAndDistanceInfo.imgHeight);
+                cover.clearRect(coordianteAndDistanceInfo.cropAreaBeginX,coordianteAndDistanceInfo.cropAreaBeginY,
+                        coordianteAndDistanceInfo.cropAreaHeight, coordianteAndDistanceInfo.cropAreaWidth);
+
+//                dom.showEdit.style.background = 'url(' + imgUrl + ')' + -coordianteAndDistanceInfo.cropAreaBeginX
+//                        + 'px ' + -coordianteAndDistanceInfo.cropAreaBeginY + 'px no-repeat';
+//                dom.showEdit.style.height =  dom.regional.offsetHeight + 'px';
+//                dom.showEdit.style.width = dom.regional.offsetWidth + 'px';
+
+            },
+
+            drag : function(){
+                var draging = false;
+                var startX = 0;
+                var startY = 0;
+
+                dom.editBox.onmousemove = function(e){
+                    //获取与背景图片的距离
+                    //e.pageX 鼠标到浏览器左边缘的距离
+                    //dom.regional.offsetLeft + this.offsetLeft 图片到浏览器左边缘距离
+                    var pageX = e.pageX -  (dom.avatarModal.find(".modal-content").offset().left + dom.regional.offsetLeft + this.offsetLeft);
+                    var pageY = e.pageY - (dom.avatarModal.find(".modal-content").offset().top  + dom.regional.offsetTop + this.offsetTop);
+
+                    //判断鼠标是否在图片内
+                    if(pageX > coordianteAndDistanceInfo.cropAreaBeginX &&
+                            pageX < coordianteAndDistanceInfo.cropAreaBeginX + coordianteAndDistanceInfo.imgWidth &&
+                            pageY > coordianteAndDistanceInfo.cropAreaBeginY  &&
+                            pageY < coordianteAndDistanceInfo.cropAreaBeginY + coordianteAndDistanceInfo.imgHeight){
+
+                        this.style.cursor = 'move';
+
+                        this.onmousedown = function(){
+                            draging = true;
+
+                            //记录上一次记录上一次截图的坐标, 没有上一次为初始位置
+                            this.ex = coordianteAndDistanceInfo.cropAreaBeginX;
+                            this.ey = coordianteAndDistanceInfo.cropAreaBeginY;
+
+                            //记录鼠标按下时的坐标
+                            startX = e.pageX - (dom.avatarModal.find(".modal-content").offset().left + dom.regional.offsetLeft + this.offsetLeft);
+                            startY = e.pageY - (dom.avatarModal.find(".modal-content").offset().top  + dom.regional.offsetTop + this.offsetTop);
+                        };
+                        window.onmouseup = function(){
+                            draging = false;
+                        };
+                        if(draging){
+                            if(this.ex + (pageX - startX) < 0){
+                                coordianteAndDistanceInfo.cropAreaBeginX = 0;
+                            }else if(this.ex + (pageX - startX) + coordianteAndDistanceInfo.cropAreaWidth
+                                    > coordianteAndDistanceInfo.imgWidth){
+                                coordianteAndDistanceInfo.cropAreaBeginX = coordianteAndDistanceInfo.imgWidth
+                                        - coordianteAndDistanceInfo.cropAreaWidth;
+                            }else{
+                                coordianteAndDistanceInfo.cropAreaBeginX = this.ex + (pageX - startX);
+                            }
+
+                            if(this.ey + (pageY - startY) < 0){
+                                coordianteAndDistanceInfo.cropAreaBeginY = 0;
+                            }else if(this.ey + (pageY - startY) + coordianteAndDistanceInfo.cropAreaHeight
+                                    > coordianteAndDistanceInfo.imgHeight){
+                                coordianteAndDistanceInfo.cropAreaBeginY = coordianteAndDistanceInfo.imgHeight
+                                        - coordianteAndDistanceInfo.cropAreaHeight;
+                            }else{
+                                coordianteAndDistanceInfo.cropAreaBeginY = this.ey + (pageY - startY);
+                            }
+                            crop_image.cutImage(dom.getImage.toDataURL());
+                        }else{
+                            this.style.cursor = 'auto';
+                        }
+                    }
+
+                }
+            },
+
+            submitImage: function(postData) {
+                $.ajax({
+                    type: 'POST',
+                    url: '{{php}}echo base_url(){{/php}}api/user/updateInfo/updateavatar',
+                    data: postData,
+                    dataType: 'json',
+                    success: function (data) {
+                        if (0 == data['status']){
+                            //更新照片
+                            crop_image.updateImageAvatarContent(data['data']);
+                            crop_image.hiddenAvatarModal();
+                        } else {
+                            alert(data['description']);
+                        }
+                    },
+                    error: function (data) {
+                        console.log(data);
+                        alert('操作失败');
+                    }
+                });
+            },
+
+            updateImageAvatarContent: function (url){
+                dom.avatarContent.find('.avatar-mid').attr('src', url);
+            }
+        };
+        var BaseInfoDom = {
+            baseInfoTable : $('#tabs-content-base-info-table'),
+            baseInfoModal : $('#baseinfo_modal'),
+        };
+        var updateBaseInfo = {
+            init : function(){
+                updateBaseInfo.loadBaseInfo();
+                updateBaseInfo.updateBaseInfoListener();
+                updateBaseInfo.initDateTimePicker();
+                updateBaseInfo.loadSchoolList();
+                var schoolIdDom = BaseInfoDom.baseInfoTable.find("#user_school_select");
+                schoolIdDom.on('change', function(){
+                    updateBaseInfo.updateClassList();
+                });
+                updateBaseInfo.choseUserSchoolAndClassInfo();
+            },
+            loadBaseInfo : function(){
+                var postData = {
+                    info : "user_mobile,user_email,user_name,user_birthday,user_nickname,user_avatar",
+                };
+                $.ajax({
+                    type: 'POST',
+                    async: false,
+                    url: '{{php}}echo base_url(){{/php}}api/user/userInfo/loadUserInfo',
+                    data: postData,
+                    dataType: 'json',
+                    success: function (data) {
+                        var userInfo = data['data']['userinfo'];
+                        updateBaseInfo.preLoadBaseInfo(userInfo);
+                    },
+                    error: function (data) {
+                        console.log(data);
+                        alert('操作失败');
+                    }
+                });
+                
+            },
+            loadSchoolList : function(){
+                $.ajax({
+                    type: 'GET',
+                    url: '{{php}}echo base_url(){{/php}}api/school/School/getSchoolList',
+                    async : false,
+                    dataType: 'json',
+                    success: function (data) {
+                        var schoolList = data['data']['school_list'];
+                        for(var school in schoolList){
+                            var schoolSingle = schoolList[school];
+                            BaseInfoDom.baseInfoTable.find("#user_school_select").append(
+                                $("<option value='" + schoolSingle['school_id'] + "'>" + schoolSingle['school_name'] + "</option>")
+                            );
+                        }
+                    },
+                    error: function (data) {
+                        console.log(data);
+                        alert('操作失败');
+                    }
+                });
+            },
+
+            updateClassList : function(class_id){
+                var schoolIdDom = BaseInfoDom.baseInfoTable.find("#user_school_select");
+                BaseInfoDom.baseInfoTable.find("#user_class_select").empty();
+                $.ajax({
+                    type: 'GET',
+                    url: '{{php}}echo base_url(){{/php}}api/school/School/getClassListBySchoolId' + '/' + schoolIdDom.val(),
+                    dataType: 'json',
+                    success: function (data) {
+                        var classList = data['data']['class_list'];
+                        for(var classTmp in classList){
+                            var classSingle = classList[classTmp];
+                            BaseInfoDom.baseInfoTable.find("#user_class_select").append(
+                                $("<option value='" + classSingle['class_id'] + "'>" + classSingle['class_name'] + "</option>")
+                            );
+                        }
+                        if(class_id){
+                            BaseInfoDom.baseInfoTable.find("#user_class_select").val(class_id);
+                        }
+                    },
+                    error: function (data) {
+                        console.log(data);
+                        alert('获取班级信息失败');
+                    }
+                });
+            },
+
+            choseUserSchoolAndClassInfo: function(){
+                $.ajax({
+                    type: 'GET',
+                    async: false,
+                    url: '{{php}}echo base_url(){{/php}}api/user/userInfo/getUserSchoolAndClass',
+                    dataType: 'json',
+                    success: function (data) {
+                        var school_id = data['data'][0]['school_unique_id'];
+                        var class_id = data['data'][0]['class_unique_id']
+                        BaseInfoDom.baseInfoTable.find("#user_school_select").val(school_id);
+                        updateBaseInfo.updateClassList(class_id);
+                    },
+                    error: function (data) {
+                        console.log(data);
+                        alert('获取班级信息失败');
+                    }
+                });
+             
+            },
+
+            preLoadBaseInfo :function(userInfo){
+                BaseInfoDom.baseInfoTable.find('#user_mobile').text(userInfo['user_mobile']);
+                BaseInfoDom.baseInfoTable.find('#user_email').text(userInfo['user_email']);
+                BaseInfoDom.baseInfoTable.find('#user_name').text(userInfo['user_name']);
+                BaseInfoDom.baseInfoTable.find('#user_nickname').text(userInfo['user_nickname']);
+                BaseInfoDom.baseInfoTable.find('#user_birthday').text(userInfo['user_birthday']);
+
+                dom.avatarContainer.find('#avatar-container-username').text(userInfo['user_name']);
+                if(userInfo['user_avatar'] != ""){
+                    dom.avatarContent.find('.avatar-mid').attr("src", userInfo['user_avatar']);
+                }else{
+                    dom.avatarContent.find('.avatar-mid').attr("src",
+                                    "{{php}}echo base_url();{{/php}}static/img/public/default-avatar.jpg");
+                }
+            },
+            updateBaseInfoListener : function(){
+                BaseInfoDom.baseInfoTable.find('#update_user_mobile_btn').on('click', function(){
+                    updateBaseInfo.updateMobile();
+                });
+                BaseInfoDom.baseInfoTable.find('#update_user_email_btn').on('click', function(){
+                    updateBaseInfo.updateEmail();
+                });
+                BaseInfoDom.baseInfoTable.find('#update_user_password_btn').on('click', function(){
+                    updateBaseInfo.updatePassword();
+                });
+                BaseInfoDom.baseInfoTable.find('#update_user_name_btn').on('click', function(){
+                    updateBaseInfo.updateOtherBaseInfo('user_name');
+                });
+                BaseInfoDom.baseInfoTable.find('#update_user_nickname_btn').on('click', function(){
+                    updateBaseInfo.updateOtherBaseInfo('user_nickname');
+                });
+                BaseInfoDom.baseInfoTable.find('#update_user_birthday_btn').on('click', function(){
+                    updateBaseInfo.updateOtherBaseInfo('user_birthday');
+                });
+                BaseInfoDom.baseInfoTable.find('#update_user_school_info_btn').on('click', function(){
+                    updateBaseInfo.updateSchoolAndClass();
+                });
+
+            },
+            modalFormToggle : function(toggleFormNum){
+                BaseInfoDom.baseInfoModal.modal('show');
+                var formList = new Array(
+                    BaseInfoDom.baseInfoModal.find('#update_user_mobile_form'),
+                    BaseInfoDom.baseInfoModal.find('#update_user_email_form'),
+                    BaseInfoDom.baseInfoModal.find('#update_user_name_form'),
+                    BaseInfoDom.baseInfoModal.find('#update_user_nickname_form'),
+                    BaseInfoDom.baseInfoModal.find('#update_user_birthday_form'),
+                    BaseInfoDom.baseInfoModal.find('#update_user_password_form')
+                );
+                for(i = 0; i < formList.length; i++){
+                    formList[i].hide();
+                    if(i == toggleFormNum){
+                        formList[i].show();
+                    }
+                }
+
+            },
+            updateMobile : function(){
+                updateBaseInfo.modalFormToggle(0);
+                BaseInfoDom.baseInfoModal.find('#user_mobile_upload_btn').on('click', function(){
+                    var postData = {
+                        'user_mobile': BaseInfoDom.baseInfoModal.find('#user_mobile_input').val()
+                    };
+                    $.ajax({
+                        type: 'POST',
+                        url: '{{php}}echo base_url(){{/php}}api/user/UpdateInfo/updateUserMobile',
+                        data: postData,
+                        dataType: 'json',
+                        success: function (data) {
+                            if (data['status'] == 0){
+                                alert("修改成功");
+                                BaseInfoDom.baseInfoModal.modal('hide');
+                            } else{
+                                alert(data['description']);
+                            }
+                        },
+                        error: function (data) {
+                            console.log(data);
+                            alert('操作失败');
+                        }
+                    });
+                });
+            },
+            updateEmail : function(){
+                updateBaseInfo.modalFormToggle(1);
+                BaseInfoDom.baseInfoModal.find('#user_email_upload_btn').on('click', function(){
+                    var postData = {
+                        'user_email': BaseInfoDom.baseInfoModal.find('#user_email_input').val()
+                    };
+                    $.ajax({
+                        type: 'POST',
+                        url: '{{php}}echo base_url(){{/php}}api/user/UpdateInfo/updateUserEmail',
+                        data: postData,
+                        dataType: 'json',
+                        success: function (data) {
+                            if (data['status'] == 0){
+                                alert("修改成功");
+                                BaseInfoDom.baseInfoModal.modal('hide');
+                            } else{
+                                alert(data['description']);
+                            }
+                        },
+                        error: function (data) {
+                            console.log(data);
+                            alert('操作失败');
+                        }
+                    });
+                });
+            },
+            updatePassword : function(){
+                updateBaseInfo.modalFormToggle(5);
+                BaseInfoDom.baseInfoModal.find('#user_password_upload_btn').on('click', function(){
+                    var postData = {
+                        'user_password': BaseInfoDom.baseInfoModal.find('#user_password_input').val(),
+                        'user_password_new1': BaseInfoDom.baseInfoModal.find('#user_password_input1').val(),
+                        'user_password_new2': BaseInfoDom.baseInfoModal.find('#user_password_input2').val()
+                    };
+                    $.ajax({
+                        type: 'POST',
+                        url: '{{php}}echo base_url(){{/php}}api/user/UpdateInfo/updateUserPassword',
+                        data: postData,
+                        dataType: 'json',
+                        success: function (data) {
+                            if (data['status'] == 0){
+                                alert("修改成功");
+                                BaseInfoDom.baseInfoModal.modal('hide');
+                            } else{
+                                alert(data['description']);
+                            }
+                        },
+                        error: function (data) {
+                            console.log(data);
+                            alert('操作失败');
+                        }
+                    });
+                });
+
+            },
+            updateOtherBaseInfo : function(type){
+                if(type == 'user_name'){
+                    updateBaseInfo.modalFormToggle(2);
+                    BaseInfoDom.baseInfoModal.find('#user_name_upload_btn').on('click', function(){
+                        var postData = {
+                            'user_name': BaseInfoDom.baseInfoModal.find('#user_name_input').val()
+                        };
+                        updateBaseInfo.uploadOtherBaseInfo(postData);
+                    });
+                }else if (type == 'user_nickname'){
+                    updateBaseInfo.modalFormToggle(3);
+                    BaseInfoDom.baseInfoModal.find('#user_nickname_upload_btn').on('click', function(){
+                        var postData = {
+                            'user_nickname': BaseInfoDom.baseInfoModal.find('#user_nickname_input').val()
+                        };
+                        updateBaseInfo.uploadOtherBaseInfo(postData);
+                    });
+                }else if (type == 'user_birthday'){
+                    updateBaseInfo.modalFormToggle(4);
+                    BaseInfoDom.baseInfoModal.find('#user_birthday_upload_btn').on('click', function(){
+                        var postData = {
+                            'user_birthday': BaseInfoDom.baseInfoModal.find('#user_birthday_input').val()
+                        };
+                        console.log(postData);
+                        updateBaseInfo.uploadOtherBaseInfo(postData);
+                    });
+                }
+            },
+            updateSchoolAndClass : function(){
+                alert("修改绑定班级"); 
+            },
+            initDateTimePicker : function(){
+                //计算推荐出生时间
+                var objNowTime = new Date();
+                BaseInfoDom.baseInfoModal.find('#user_birthday_input').datetimepicker({
+                    minView     : 2,
+                    startView   : 4,
+                    format      : 'yyyy-mm-dd',
+                    language    : 'zh-CN',
+                    initialDate : (objNowTime.getFullYear() - 23)+'-01-01',
+                });
+            },
+            uploadOtherBaseInfo : function(postData){
+                $.ajax({
+                    type: 'POST',
+                    url: '{{php}}echo base_url(){{/php}}api/user/UpdateInfo/updateUserBaseInfo',
+                    data: postData,
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data['status'] == 0){
+                            alert("修改成功");
+                            BaseInfoDom.baseInfoModal.modal('hide');
+                        } else{
+                            alert(data['description']);
+                        }
+                    },
+                    error: function (data) {
+                        console.log(data);
+                        alert('操作失败');
+                    }
+                });
+            }
+        };
+
+        var selfProfileDom = {
+            selfProfileFrom : $('.self-profile-form')
+        };
+
+        var self_profile = {
+            init : function(){
+                this.loadUserProfile();
+                this.updateUserProfile();
+            },
+            loadUserProfile : function() {
+                $.ajax({
+                    type: 'GET',
+                    async: false,
+                    url: '{{php}}echo base_url(){{/php}}api/user/Alumni/getUserAlumniInfo',
+                    dataType: 'json',
+                    success: function (data) {
+                        if(!(typeof(data['data']) == "undefined")){
+                            self_profile.fillInUserProfile(data['data']);
+                        }
+                    },
+                    error: function (data) {
+                        console.log(data);
+                        alert('加载个人资料失败');
+                    }
+                });
+            },
+            updateUserProfile : function(){
+                var t = this;
+                selfProfileDom.selfProfileFrom.find("#self-profile-upload-btn").on('click', function(){
+                    postData = t.getPostArr();
+                    $.ajax({
+                        type: 'POST',
+                        url: '{{php}}echo base_url(){{/php}}api/user/Alumni/updateUserAlumni',
+                        data: postData,
+                        dataType: 'json',
+                        success: function (data) {
+                            alert("修改成功");
+                        },
+                        error: function (data) {
+                            console.log(data);
+                            alert('加载个人资料失败');
+                        }
+                    });
+                })
+            },
+
+            getPostArr : function(){
+                var postData = {
+                    "user_favorite_food" : selfProfileDom.selfProfileFrom.find("#favorite_food").val(),
+                    "user_bloodgroup" : selfProfileDom.selfProfileFrom.find(":input[name='blood-group']:checked").val(),
+                    "user_favorite_animal" : selfProfileDom.selfProfileFrom.find("#favorite_animal").val(),
+                    "user_worship_people" : selfProfileDom.selfProfileFrom.find("#worship_people").val(),
+                    "user_want_to_go" : selfProfileDom.selfProfileFrom.find("#want_to_go").val(),
+                    "user_desire" : selfProfileDom.selfProfileFrom.find("#desire").val(),
+                    "user_favorite_star" : selfProfileDom.selfProfileFrom.find("#favorite_star").val(),
+                    "user_favorite_color" : selfProfileDom.selfProfileFrom.find("#favorite_color").val(),
+                };
+                return postData;
+            },
+
+            fillInUserProfile : function($userProfile){
+                selfProfileDom.selfProfileFrom.find("#favorite_food").attr('value', $userProfile['user_favorite_food']);
+                selfProfileDom.selfProfileFrom.find("#blood-group-" + $userProfile['user_bloodgroup']).attr('checked', true);
+                selfProfileDom.selfProfileFrom.find("#favorite_animal").attr('value', $userProfile['user_favorite_animal']);
+                selfProfileDom.selfProfileFrom.find("#worship_people").attr('value', $userProfile['user_worship_people']);
+                selfProfileDom.selfProfileFrom.find("#want_to_go").attr('value', $userProfile['user_want_to_go']);
+                selfProfileDom.selfProfileFrom.find("#desire").attr('value', $userProfile['user_desire']);
+                selfProfileDom.selfProfileFrom.find("#favorite_star").attr('value', $userProfile['user_favorite_star']);
+                selfProfileDom.selfProfileFrom.find("#favorite_color").attr('value', $userProfile['user_favorite_color']);
+                 
+            }
+
+        };
+        updateBaseInfo.init();
+        crop_image.init();
+        self_profile.init();
+
+    })();
+</script>
+

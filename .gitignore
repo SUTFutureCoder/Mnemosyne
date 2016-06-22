@@ -1,16 +1,22 @@
 .DS_Store
+.htaccess
+
+*.swp
 
 application/cache/*
 !application/cache/index.html
 !application/cache/.htaccess
 
 application/config/*
-
+bos/config.php
+bos/resroot/*
 
 application/logs/*
 !application/logs/index.html
 !application/logs/.htaccess
 
+
+application/views/templates_c/*
 user_guide_src/build/*
 user_guide_src/cilexer/build/*
 user_guide_src/cilexer/dist/*

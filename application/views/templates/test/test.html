@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>测试</title>
+</head>
+<body>
+    <h1>test</h1>
+    <canvas id="myCanvas" width="500" height="400"
+            style="border:1px solid #000000;"></canvas>
+    <img id="scream" src="{{php}}echo base_url();{{/php}}static/img/public/alumni_cover1.png" alt="The Scream" width="220" height="277"><p>Canvas:</p>
+</body>
+<script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="http://cdn.bootcss.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script>
+    (function(){
+        dom = {
+            cavans : $('#myCanvas'),
+            img    : $('#scream')
+        };
+        var testCanvas = {
+            init:function(){
+                //填充颜色
+                console.log(dom.cavans);
+                ctx = dom.cavans[0].getContext("2d");
+                ctx.fillStyle = "#FF0000";
+                ctx.fillRect(0, 0, 150, 75);
+                //画直线
+                ctx.moveTo(0,0);
+                ctx.lineTo(500,400);
+                ctx.stroke();
+                //画圆
+                ctx.beginPath();
+                //前两个参数圆心坐标
+                //第三个参数圆的半径
+                //第四个参数 起点 从右边开始画
+                //第五个参数 终点
+                ctx.arc(50, 50, 50, 0, 2*Math.PI);
+                ctx.stroke();
+
+                //文本
+                ctx.font = "30px Arial";
+                ctx.fillText("bricks",10,100);
+
+                //创建线性渐变
+                //createLinearGradient(x, y, x1, y1);
+                //x,y 开始渐变的起点, x1, y1渐变结束位置
+                var grd = ctx.createLinearGradient(0, 0, 100, 10);
+                grd.addColorStop(0, "red");
+                grd.addColorStop(0.5, "green");
+                grd.addColorStop(1, "blue");
+
+                //填充渐变
+                ctx.fillStyle=grd;
+                ctx.fillRect(0,200, 150, 50);
+
+                //插入图片
+                console.log(dom.img);
+                console.log(dom.img[0]);
+                ctx.drawImage(dom.img[0],100,200);
+
+            },
+        };
+        testCanvas.init();
+
+    })();
+</script>
+</html>

@@ -1,0 +1,34 @@
+.main-content {
+    padding: 20px;
+}
+
+.navbar-vertical .nav-pills li{
+    font-size:20px;
+}
+.content-mid {
+    height : 600px;
+}
+
+.search_friends {
+    margin: 0 0 20px 0;
+}
+.friends_recomend .friend_recomend_single, .friends_request .friend_request_single, .friends .friend_single{
+    border-bottom:1px solid #ddd;
+}
+
+.friend_recomend_single .recomend-friend-info, .friend_request_single .request-friend-info , .friend_single .friend-info{
+    margin-top: 15px;
+    font-size: 15px;
+}
+
+.friend_recomend_single .header-img-sm img, .friend_request_single .header-img-sm img, .friend_single .header-img-sm img{
+    width:100px;
+}
+
+.friend_recomend_single .control-btn, .friend_request_single .control-btn, .friend_single .control-btn{
+    margin-top: 20px;
+}
+.friend_request_single .control-btn .request_friend_button{
+    margin-right: 10px;
+}
+

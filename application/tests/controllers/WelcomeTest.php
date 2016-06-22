@@ -2,8 +2,8 @@
 /**
  * Created by PhpStorm.
  * User: lin
- * Date: 15-11-1
- * Time: 上午11:43
+ * Date: 15-11-21
+ * Time: 下午2:37
  */
 require APPPATH . '../application/tests/CITestCase.php';
 class WelcomeTest extends CITestCase{
@@ -15,6 +15,10 @@ class WelcomeTest extends CITestCase{
     }
 
     public function testTestUnitTest(){
-        $this->assertEquals('hello world', $this->controller->testUnitTest());
+        $param = array(
+            'test' => '123123123',
+        );
+        $this->setParam($param);
+        $this->assertEquals('hello world-123123123', $this->getApi($this->controller, 'testUnitTest'));
     }
 }

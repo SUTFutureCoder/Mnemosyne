@@ -1,0 +1,47 @@
+#tabs-content-self-profile-content {
+    
+    margin: 15px 0;
+    padding:0;
+    border-style:solid;
+    border-width:1px;
+    border-color:rgb(238, 238, 238);
+}
+
+.avatar-container{
+    margin: 0 0;
+    padding:0;
+    #height:498px;
+    #width:300px;
+    border-right-style:solid;
+    border-bottom-style:solid;
+    border-width:1px;
+    border-color:rgb(238, 238, 238);
+}
+
+.avatar-container .username h3{
+    text-align:center;
+}
+
+.avatar-container .avatar-content{
+    margin: 20px 0 20px 0;
+}
+.avatar-container .avatar-mid{
+    height:210px;
+    border:1px solid rgb(238, 238,238);
+}
+
+.self-profile .self-profile-content{
+    padding:20px 40px 50px 50px;
+}
+
+.self-profile .self-profile-content-mid{
+    padding: 20px 30px 10px 0;
+}
+.self-profile .self-profile-content-footer{
+    padding: 20px 30px 10px 20px;
+    
+}
+.self-profile-content-footer #alumni_page_message{
+    border:1px solid rgb(238, 238,238);
+    height: 260px;
+}
